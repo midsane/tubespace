@@ -1,5 +1,5 @@
 import { RateReview, Schedule } from "@mui/icons-material"
-import { Avatar, Button, Chip, Divider, Tooltip } from "@mui/material"
+import { Avatar, Button, Chip, Tooltip } from "@mui/material"
 
 export enum TaskStatus {
     "pending",
@@ -31,14 +31,14 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
                         alt="collaborator1-img"
                         src="https://mui.com/static/images/avatar/2.jpg" />
                 </div>
-                <h6 className="w-full py-4 h-1/4" >{taskTitle}</h6>
+                <h6 className="w-full py-2 h-1/4" >{taskTitle}</h6>
 
-                <div className="w-full h-1/3  justify-between flex items-center">
-                    {status === TaskStatus.pending && <Button size="small" color="secondary" variant="contained" >Chat</Button>}
-                    {status === TaskStatus.completed && <Button size="small" color="success" variant="contained" >View it</Button>}
+                <div className="w-full h-1/3 justify-between flex items-center">
+                    {status === TaskStatus.pending && <Button size="small" color="primary" variant="outlined" >Chat</Button>}
+                    {status === TaskStatus.completed && <Button size="small" color="secondary" variant="outlined" >View it</Button>}
 
                     <Tooltip title={timesRevised + " revisions"} >
-                        <RateReview sx={{ color: "rgb(112, 208, 246)"}} />
+                        <RateReview sx={{ color: "rgb(112, 208, 246)" }} />
                     </Tooltip>
                 </div>
 
@@ -46,10 +46,10 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
 
                     <div className="w-full h-1/4 flex flex-col justify-between items-center">
                         <Seperator
-                            chipColor="success"
+                            chipColor="secondary"
                             extraStyle="bg-red-300"
                             label="completed" />
-                        <div className="w-full flex justify-start gap-4 text-orange-300">
+                        <div className="w-full flex justify-start gap-4">
                             <Tooltip title="deadline" >
                                 <Schedule />
                             </Tooltip>
@@ -61,17 +61,17 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
 
                     <div className="w-full h-1/4 flex flex-col justify-between items-center">
                         <Seperator
-                            chipColor="secondary"
+                            chipColor="primary"
                             extraStyle="bg-red-300"
                             label="pending" />
-                        <div className="w-full flex justify-start gap-4 text-orange-300"> 
+                        <div className="w-full flex justify-start gap-4">
                             <Tooltip title="deadline" >
-                                <Schedule  />
+                                <Schedule />
                             </Tooltip>
-                       
+
                             <p className="opacity-85 text-sm flex justify-end h-full items-end">{deadline}</p>
                         </div>
-                         
+
                     </div>
                 }
 

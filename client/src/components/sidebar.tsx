@@ -2,11 +2,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import GroupsIcon from '@mui/icons-material/Groups';
 
-import React from "react";
-
 import { AddCircleOutline, Chat, Logout } from "@mui/icons-material";
 import { Home, Settings } from "lucide-react";
-import { WebsiteLogo } from "./websitelogo/websitelogo";
 
 export const Sidebar = () => {
     const onLaptopScreen = useSelector((state: any) => state.sidebar.onLaptopScreen);
@@ -18,11 +15,10 @@ export const Sidebar = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.5 }}
-                    className={`flex flex-col gap-4 bg-black text-slate-300 rounded-r-3xl h-screen w-[18vw]`}>
+                    className={`flex flex-col border border-white/10 gap-4 bg-black text-slate-300 rounded-r-3xl h-screen w-[18vw]`}>
 
-                    <WebsiteLogo />
 
-                    <div className="flex flex-col gap-2 p-10">
+                    <div className="flex flex-col py-32 gap-4 px-10">
                         {[["Home", <Home />], ["create", <AddCircleOutline />], ["collab", <GroupsIcon />], ["chat", <Chat />]].map((icon, ind) => 
                         <IconParentFull 
                             label={icon[0] as string} 
@@ -46,9 +42,9 @@ export const Sidebar = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.5 }}
-                    className={`flex flex-col justify-between py-10 bg-black text-slate-300 rounded-r-3xl h-screen w-[10vw]`}>
-                    <WebsiteLogo />
-                    <div className="flex flex-col gap-2 p-10">
+                    className={`flex flex-col justify-between py-32 bg-black text-slate-300 rounded-r-3xl h-screen w-[10vw]`}>
+                   
+                    <div className="flex flex-col gap-4 p-10">
                         {[<Home />, <AddCircleOutline />, <GroupsIcon />, <Chat />].map((icon, ind) => <IconParent key={ind}>{icon}</IconParent>)}
                     </div>
                     <div className="flex flex-col gap-2 p-10">
