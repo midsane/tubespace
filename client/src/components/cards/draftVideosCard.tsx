@@ -6,6 +6,7 @@ interface collaboratorsCardInterface {
     title: string
 }
 
+
 export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
     ({
         extraTStyle,
@@ -23,7 +24,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
                 <div className="w-full h-full justify-between  gap-1 flex items-center">
 
                     <Tooltip title={ "Video"} >
-                        <Movie sx={{ color: "rgb(112, 208, 246)" }} />
+                        <Movie sx={{ color: "rgb(243, 238, 238)" }} />
                     </Tooltip>
 
                     <Tooltip title={ "thumbnail"} >

@@ -12,14 +12,12 @@ export function Header() {
                     </Link>
                 </div>
                 <nav className="hidden md:flex items-center gap-8">
-                    <Link to="#" className="text-sm text-gray-300 hover:text-white transition-colors">
-                        Products
-                    </Link>
+                   
                     <Link to="/home" className="text-sm text-gray-300 hover:text-white transition-colors">
                         Home
                     </Link>
                     <Link to="#" className="text-sm text-gray-300 hover:text-white transition-colors">
-                        Community
+                        About us
                     </Link>
                     <Link to="#" className="text-sm text-gray-300 hover:text-white transition-colors">
                         Pricing
@@ -28,8 +26,8 @@ export function Header() {
                         Contact
                     </Link>
                 </nav>
-                <Button variant="contained" className="bg-white text-black hover:bg-gray-100">
-                    Download
+                <Button variant="contained" >
+                    Login
                 </Button>
             </div>
         </header>

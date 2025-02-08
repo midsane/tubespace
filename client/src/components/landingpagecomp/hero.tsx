@@ -15,21 +15,22 @@ export function HeroSection() {
             >
                 <div className="text-center mb-16">
                     <h1 className="text-4xl text-white md:text-6xl font-bold mb-6 tracking-tight">
-                        Protect Your Privacy, Share What
-                        <br />
-                        Matters
+                        streamlining your Youtube workflow with
+                    </h1>
+                    <h1 className="text-4xl bg-clip-text text-transparent font-bold mb-6 tracking-tight 
+                     md:text-6xl animate-gradient bg-[length:200%_200%] bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
+                        Review and automated uploading
                     </h1>
                     <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
-                        Easily crop out sensitive information on your screen during work calls. Keep your focus on what you want to
-                        share while maintaining full control over your privacy.
+                        {"assign work -> review -> confirm for uploading"}
                     </p>
                     <div className="flex gap-4 justify-center">
                         <Button variant="outlined" className="gap-2 border-white/10 bg-white/5 hover:bg-white/10">
                             <Play className="w-4 h-4" />
-                            Demo
+                            Enter
                         </Button>
                         <Button variant="outlined" className="bg-white text-black hover:bg-gray-100">
-                            Download
+                            see pricing
                         </Button>
                     </div>
                 </div>

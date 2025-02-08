@@ -2,14 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Liter&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Liter&display=swap");
 
 
+@keyframes gradient-move {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.animate-gradient {
+  animation: gradient-move 3s linear infinite;
+}
 
 .liter-regular {
   font-family: "Liter", serif;
   font-weight: 400;
   font-style: normal;
+  color: rgb(244, 237, 237);
 }
 
 :root {
@@ -31,7 +40,3 @@
   background-size: 24px 24px;
   opacity: 0.1;
 }
-
-
-
-
