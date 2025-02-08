@@ -1,5 +1,6 @@
 import {  Description, Movie, Panorama, Videocam } from "@mui/icons-material"
 import { Tooltip } from "@mui/material"
+import { CircularProgressBar } from "../ui/circularprogressbar"
 
 interface collaboratorsCardInterface {
     extraTStyle: string,
@@ -20,6 +21,14 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
                 </div>
 
                 <h6 className="w-full py-4 h-1/3 flex items-start justify-start" >{title}</h6>
+                <CircularProgressBar
+                    progress={2}                    size={180}
+                    strokeWidth={12}
+                    gradientStart="rgb(112, 208, 246) "
+                    gradientEnd="rgb(112, 208, 246)"
+                    backgroundColor="rgb(243, 238, 238)"
+                    textColor="rgb(112, 208, 246)"
+                />
 
                 <div className="w-full h-full justify-between  gap-1 flex items-center">
 
