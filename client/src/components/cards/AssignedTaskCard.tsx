@@ -25,7 +25,7 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
 
     }) => {
         return (
-            <div className={`${extraTStyle} flex flex-col px-10 gap-2 justify-center items-center rounded-xl border relative`} >
+            <div className={`${extraTStyle} min-w-72 flex flex-col px-9  gap-2 justify-center items-center rounded-xl border relative`} >
                 <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
                     <Avatar
                         alt="collaborator1-img"
@@ -47,14 +47,15 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
                     <div className="w-full h-1/4 flex flex-col justify-between items-center">
                         <Seperator
                             chipColor="secondary"
-                            extraStyle="bg-red-300"
+                            extraStyle="bg-zinc-800"
                             label="completed" />
-                        <div className="w-full flex justify-start gap-4">
+                        <div className="w-full flex justify-start gap-4 mb-1">
                             <Tooltip title="deadline" >
-                                <Schedule />
+                            <Schedule  sx={{opacity: "0.5"}}/>
                             </Tooltip>
 
-                            <p className="opacity-85 text-sm flex justify-end h-full items-end">{deadline}</p>
+                            <p className="opacity-55 text-sm flex justify-end h-full items-center">{deadline}</p>
+                            <Chip label="completed"  color="success"  variant="outlined" />
                         </div>
 
                     </div> :
@@ -62,14 +63,16 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
                     <div className="w-full h-1/4 flex flex-col justify-between items-center">
                         <Seperator
                             chipColor="primary"
-                            extraStyle="bg-red-300"
+                            extraStyle="bg-zinc-800"
                             label="pending" />
-                        <div className="w-full flex justify-start gap-4">
+                        <div className="w-full flex justify-start gap-4 mb-1">
                             <Tooltip title="deadline" >
-                                <Schedule />
+                                <Schedule  sx={{opacity: "0.5"}}/>
                             </Tooltip>
 
-                            <p className="opacity-85 text-sm flex justify-end h-full items-end">{deadline}</p>
+                            <p className="opacity-55 text-sm flex justify-end h-full items-center">{deadline}</p>
+                            <Chip label="pending" color="primary"  variant="outlined" />
+                        
                         </div>
 
                     </div>
@@ -82,10 +85,7 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
 
 
 const Seperator: React.FC<{ extraStyle: string, label: string, chipColor: string }> = ({ extraStyle, label, chipColor }) => {
-    return <div className={`relative h-[1px] w-full ${extraStyle}`} >
-        <div className="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 ">
-            <Chip label={label} size="small" color={chipColor} />
-        </div>
+    return <div className={`h-[1px] w-full ${extraStyle}`} >
     </div>
 }
 

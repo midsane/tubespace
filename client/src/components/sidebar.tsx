@@ -4,6 +4,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 
 import { AddCircleOutline, Chat, Logout } from "@mui/icons-material";
 import { Home, Settings } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const Sidebar = () => {
     const onLaptopScreen = useSelector((state: any) => state.sidebar.onLaptopScreen);
@@ -63,7 +64,8 @@ const IconParent: React.FC<{ children: any }> = ({ children }) => {
 
 
 const IconParentFull: React.FC<{ children: any, label: string }> = ({ children, label }) => {
-    return <span className="flex gap-4 text-slate-300 cursor-pointer hover:bg-zinc-900 ease-linear duration-75 active:scale-95 p-2 rounded">
+    const navigate = useNavigate()
+    return <span onClick={() => navigate("/"+label)} className="flex gap-4 text-slate-300 cursor-pointer hover:bg-zinc-900 ease-linear duration-75 active:scale-95 p-2 rounded">
         <div className="cursor-pointer" >{children}</div>
         <p>{label}</p>
     </span>

@@ -1,7 +1,6 @@
 import { AssignmentTurnedIn, PendingActions, Videocam, Workspaces } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 
-
 import { TabsWrappedLabel } from "./tabs";
 import { useState } from "react";
 import { AssignedCardSection } from "./homeTabSection/AssignedCardSection";
@@ -12,6 +11,7 @@ import { DraftVideosCardSection } from "./homeTabSection/draftVideosCardSection"
 export const Main = () => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
+  
 
 
     let TabSection = <></>
@@ -26,8 +26,9 @@ export const Main = () => {
             TabSection = <DraftVideosCardSection />
     }
 
+
     return (<div className={`h-full text-slate-300 bg-black ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]"}`}>
-        <div className=" h-[40%] relative rounded">
+        <div className=" h-[40%] mt-[2%] relative rounded">
             <div className="w-[85%] rounded-3xl flex justify-between translate-x-1/2 right-1/2 p-10 h-min-10 bg-black absolute bottom-0 border border-white/10 " >
                 <div className="w-1/3 flex " >
 
@@ -57,14 +58,16 @@ export const Main = () => {
             </div>
         </div>
 
-
-        <div className=" h-[55%] flex flex-col justify-around items-center">
+        <div className=" h-[55%] flex flex-col justify-around items-center relative">
+         
             <div className="w-[85%] h-[10%] rounded-3xl ">
                 <TabsWrappedLabel value={value} setValue={setValue} />
 
             </div>
 
             {TabSection}
+
+
         </div>
     </div>)
 }

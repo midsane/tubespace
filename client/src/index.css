@@ -10,6 +10,15 @@
   100% { background-position: 100% 50%; }
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
 .animate-gradient {
   animation: gradient-move 3s linear infinite;
 }
