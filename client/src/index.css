@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Liter&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@keyframes gradient-move {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
+.animate-gradient {
+  animation: gradient-move 3s linear infinite;
+}
+
+.liter-regular {
+  font-family: "Liter", serif;
+  font-weight: 400;
+  font-style: normal;
+  color: rgb(244, 237, 237);
+}
+
+:root {
+  --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+  --gradient-purple: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+
+.hero-gradient {
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(99, 102, 241, 0.15) 0%,
+    rgba(99, 102, 241, 0.05) 30%,
+    rgba(0, 0, 0, 0) 70%
+  );
+}
+
+.dotted-grid {
+  background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.1;
+}
