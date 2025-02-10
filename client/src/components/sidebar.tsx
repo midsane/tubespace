@@ -44,7 +44,6 @@ export const Sidebar = () => {
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.5 }}
                     className={`flex flex-col justify-between py-32 bg-black text-slate-300 rounded-r-3xl h-screen w-[10vw]`}>
-
                     <div className="flex flex-col gap-4 p-10">
                         {[<Home />, <AddCircleOutline />, <GroupsIcon />, <Chat />].map((icon, ind) => <IconParent key={ind}>{icon}</IconParent>)}
                     </div>
