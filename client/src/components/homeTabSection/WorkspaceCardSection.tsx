@@ -20,7 +20,7 @@ export const WorkspaceCardSection: React.FC = () => {
     return (
         <div
             ref={scrollDivRef}
-            className="w-[85%] overflow-x-scroll rounded-3xl flex justify-start gap-10 py-10 px-9  h-min-10 bg-black border border-white/10 h-[80%] items-center " >
+            className="w-[85%] scroll-smooth overflow-x-scroll rounded-3xl flex justify-start gap-10 py-10 px-9  h-min-10 bg-black border border-white/10 h-[80%] items-center " >
 
             <div onClick={handleRightSlide} className="absolute top-1/2 right-10 border border-zinc-700 rounded-full p-1 cursor-pointer active:scale-90 ease-linear duration-75 " >
                 <KeyboardArrowRightIcon />
