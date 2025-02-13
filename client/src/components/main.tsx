@@ -11,7 +11,7 @@ import { DraftVideosCardSection } from "./homeTabSection/draftVideosCardSection"
 export const Main = () => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
-  
+
 
 
     let TabSection = <></>
@@ -43,7 +43,6 @@ export const Main = () => {
 
                 </div>
 
-
                 <div className="fixed flex flex-col gap-2 top-[-35px] right-1/2 translate-x-1/2 rounded-3xl w-20 h-28 ">
 
                     <div className="w-full h-[70%] bg-blue-200 rounded-3xl" >
@@ -59,7 +58,7 @@ export const Main = () => {
         </div>
 
         <div className=" h-[55%] flex flex-col justify-around items-center relative">
-         
+
             <div className="w-[85%] h-[10%] rounded-3xl ">
                 <TabsWrappedLabel value={value} setValue={setValue} />
 
@@ -74,9 +73,14 @@ export const Main = () => {
 
 
 const ProfileInfo = ({ Svg, text1, text2 }: { Svg: React.ReactNode, text1: String, text2: String }) => {
+
     return (<div className="border-r-2 justify-between flex text-sm flex-col px-5 gap-2 border-white/10">
-        {Svg}
-        <p>{text1}</p>
-        <p>{text2}</p>
+
+        <div className="stat-figure text-accent">
+            {Svg}
+        </div>
+        <div className="stat-title">{text1}</div>
+        <div className="stat-value text-center">{text2}</div>
+        {/* <div className="stat-desc">↘︎ 90 (14%)</div> */}
     </div>)
 }

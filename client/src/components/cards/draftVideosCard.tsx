@@ -43,7 +43,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
     }) => {
         return (
             <div className={`${extraTStyle} flex-shrink-0 w-72 h-48 flex flex-col px-10 gap-2 justify-center items-center rounded-xl border relative`} >
-                {/* <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
+                <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
                     <Videocam />
                 </div>
 
@@ -91,7 +91,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
                     </div>
 
                     <Button variant="outlined" sx={{ height: "2rem" }} >View</Button>
-                </div> */}
+                </div>
             </div>
         )
     }
