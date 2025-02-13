@@ -25,7 +25,7 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
 
     }) => {
         return (
-            <div className={`${extraTStyle} min-w-72 flex flex-col px-9  gap-2 justify-center items-center rounded-xl border relative`} >
+            <div className={`${extraTStyle} w-72 h-48 flex-shrink-0 flex flex-col px-9  gap-2 justify-center items-center rounded-xl border relative`} >
                 <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
                     <Avatar
                         alt="collaborator1-img"

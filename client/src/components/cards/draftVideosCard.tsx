@@ -13,11 +13,12 @@ interface collaboratorsCardInterface {
 }
 
 
-export const CreateNewVideoCard: React.FC<{ extraTStyle: string }> = ({ extraTStyle }) => {
+export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTStyle }) => {
     return (
-        <div className={`${extraTStyle} flex flex-col px-9 gap-2 justify-center items-center rounded-xl border relative`} >
+        <div className={`${extraTStyle} flex-shrink-0 w-72 h-48 flex flex-col px-10 gap-2 justify-center items-center rounded-xl border relative`} >
             <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
                 <AddCircle />
+
             </div>
             <AddCircle />
 
@@ -29,7 +30,6 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string }> = ({ extraTSt
             <Button variant="outlined" >
                 Create
             </Button>
-
         </div>
     )
 }
@@ -42,8 +42,8 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
 
     }) => {
         return (
-            <div className={`${extraTStyle} min-w-72 flex flex-col px-10 gap-2 justify-center items-center rounded-xl border relative`} >
-                <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
+            <div className={`${extraTStyle} flex-shrink-0 w-72 h-48 flex flex-col px-10 gap-2 justify-center items-center rounded-xl border relative`} >
+                {/* <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
                     <Videocam />
                 </div>
 
@@ -91,7 +91,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
                     </div>
 
                     <Button variant="outlined" sx={{ height: "2rem" }} >View</Button>
-                </div>
+                </div> */}
             </div>
         )
     }

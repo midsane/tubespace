@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 
 
 export const OuterModal = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     if(!isOpen){
         return <></>
     }

@@ -4,7 +4,8 @@ import GroupsIcon from '@mui/icons-material/Groups';
 
 import { AddCircleOutline, Chat, Logout } from "@mui/icons-material";
 import { Home, Settings } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { WebsiteLogo } from "./websitelogo/websitelogo";
 
 export const Sidebar = () => {
     const onLaptopScreen = useSelector((state: any) => state.sidebar.onLaptopScreen);
@@ -18,8 +19,14 @@ export const Sidebar = () => {
                     transition={{ duration: 0.5 }}
                     className={`flex flex-col border border-white/10 gap-4 bg-black text-slate-300 rounded-r-3xl h-screen w-[18vw]`}>
 
+                    <div className="flex flex-col h-fit gap-4 pt-10 px-10">
+                         <Link to="/" className="flex items-center gap-3">
+                            <WebsiteLogo />
+                        </Link>
+                    </div>
 
-                    <div className="flex flex-col py-32 gap-4 px-10">
+
+                    <div className="flex flex-col py-20 gap-4 px-10 ">
                         {[["Home", <Home />], ["create", <AddCircleOutline />], ["collab", <GroupsIcon />], ["chat", <Chat />]].map((icon, ind) =>
                             <IconParentFull
                                 label={icon[0] as string}

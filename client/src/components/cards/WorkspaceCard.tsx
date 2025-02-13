@@ -29,7 +29,7 @@ export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
 
     }) => {
         return (
-            <div className={`${extraTStyle} flex min-w-72 flex-col px-9 gap-2 justify-center items-center rounded-xl border relative`} >
+            <div className={`${extraTStyle} flex w-72 h-48 flex-shrink-0 flex-col px-9 gap-2 justify-center items-center rounded-xl border relative`} >
                 <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
                     <WorkspacePremiumSharp />
                 </div>

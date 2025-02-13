@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { OuterModal } from "../components/outerModal"
 import { Sidebar } from "../components/sidebar"
 import { useSelector } from "react-redux"
-import { Avatar, Input } from "@mui/material";
+import { Avatar } from "@mui/material";
 import { Send } from "lucide-react";
 
 const BubbleColor = "bg-accent text-black"
@@ -63,13 +63,6 @@ const ChatArea: React.FC = () => {
 
         <div className="w-full flex gap-0 justify-end p-2">
             <div className="flex gap-2" >
-                {/* <Input
-                        margin="dense"
-                        fullWidth
-                        required
-                        color="primary"
-                        placeholder="type your message"
-                        sx={{ color: "black", borderRadius: "2%", padding: "2px 10px", backgroundColor: "white" }} /> */}
                 <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
                 <button className="btn btn-square btn-outline">
                     <Send />
