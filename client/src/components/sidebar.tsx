@@ -27,7 +27,7 @@ export const Sidebar = () => {
 
 
                     <div className="flex flex-col py-20 gap-4 px-10 ">
-                        {[["Home", <Home />], ["create", <AddCircleOutline />], ["collab", <GroupsIcon />], ["chat", <Chat />]].map((icon, ind) =>
+                        {[["Home", <Home />], ["Create", <AddCircleOutline />], ["Collab", <GroupsIcon />], ["Chat", <Chat />]].map((icon, ind) =>
                             <IconParentFull
                                 label={icon[0] as string}
                                 key={ind}>
@@ -36,7 +36,7 @@ export const Sidebar = () => {
                     </div>
 
                     <div className="flex flex-col gap-2 p-10">
-                        {[["settings", <Settings />], ["logout", <Logout />]].map((icon, ind) =>
+                        {[["Settings", <Settings />], ["Logout", <Logout />]].map((icon, ind) =>
                             <IconParentFull
                                 label={icon[0] as string}
                                 key={ind}>
