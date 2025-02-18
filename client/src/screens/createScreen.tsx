@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { BasicMenu } from "../components/menus/basicmenu";
 import { storeDispatchType } from "../store/store";
 import { modalActions } from "../store/modal";
+import { CreateNewSample } from "../components/modalCompnents/createNewSample";
 
 
 export const CreateScreen: React.FC = () => {
@@ -53,10 +54,7 @@ const CreateDraftBtn = () => {
     const dispatch: storeDispatchType = useDispatch()
     const createNewSample = () => {
         dispatch(modalActions.openMoal({
-            title: "Create new Sample", content: <div className="flex gap-2" >
-                <input className="px-2 py-1 rounded" placeholder="enter name for new sample" />
-                <Button variant="outlined" >create</Button>
-            </div>
+            title: "Create new Sample", content: <CreateNewSample />
         }))
     }
 

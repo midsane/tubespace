@@ -1,7 +1,13 @@
 import { AddCircle, Description, Done, Movie, Panorama, Pending, Title, Videocam } from "@mui/icons-material"
 import { Button, Tooltip } from "@mui/material"
 import { CircularProgressBar } from "../ui/circularprogressbar"
-import React from "react"
+import { useRef } from "react"
+import { storeDispatchType } from "../../store/store"
+import { useDispatch } from "react-redux"
+
+import { modalActions } from "../../store/modal"
+import { draftSampleActions } from "../../store/Draftvideo.slice"
+import { CreateNewSample } from "../modalCompnents/createNewSample"
 
 
 const LOGO1SIZE = 18
@@ -12,8 +18,15 @@ interface collaboratorsCardInterface {
     title: string
 }
 
-
 export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTStyle }) => {
+
+    const dispatch: storeDispatchType = useDispatch()
+       const createNewSample = () => {
+           dispatch(modalActions.openMoal({
+               title: "Create new Sample", content: <CreateNewSample />
+           }))
+       }
+
     return (
         <div className={`${extraTStyle} flex-shrink-0 w-72 h-48 flex flex-col px-10 gap-2 justify-center items-center rounded-xl border relative`} >
             <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
@@ -27,13 +40,12 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTS
                 <p className="opacity-55 text-sm text-center" >add/assign video details</p>
             </div>
 
-            <Button variant="outlined" >
+            <Button onClick={createNewSample} variant="outlined" >
                 Create
             </Button>
         </div>
     )
 }
-
 
 export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
     ({

@@ -3,8 +3,19 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import React, { useRef } from "react";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { storeDispatchType, storeStateType } from "../../store/store";
+
+export interface DraftVideosInterface {
+    title: string,
+    description: string,
+    thumbnail: string | File | null,
+    video: string | File | null,
+}
 
 export const DraftVideosCardSection: React.FC = () => {
+    const DraftArr = useSelector((state: storeStateType) => state.draft);
+    const dispatch: storeDispatchType = useDispatch()
     const scrollDivRef = useRef<HTMLDivElement>(null);
 
     const handleLeftSlide = () => {
@@ -33,22 +44,10 @@ export const DraftVideosCardSection: React.FC = () => {
             <CreateNewVideoCard
                 extraTStyle="bg-secondary border-white/10"
             />
-
-            <DraftVideosCard
-                title="sample video 1"
-                extraTStyle="bg-secondary border-white/10"
-            />
-
-
-            <DraftVideosCard
-                title="sample video 1"
-                extraTStyle="bg-secondary border-white/10"
-            />
-
-            <DraftVideosCard
-                title="sample video 1"
-                extraTStyle="bg-secondary border-white/10"
-            />
+            {DraftArr.map(draft => <DraftVideosCard {
+                ...draft}
+                extraTStyle="cursor-pointer hover:opacity-100 hover:border-accent opacity-80 bg-secondary border-white/10"
+                key={draft._id} />)}
 
         </div>
     )
@@ -56,6 +55,8 @@ export const DraftVideosCardSection: React.FC = () => {
 
 export const DraftVideosCardSection2: React.FC = () => {
     const scrollDivRef = useRef<HTMLDivElement>(null);
+    const DraftArr = useSelector((state: storeStateType) => state.draft);
+    const dispatch: storeDispatchType = useDispatch()
 
     const handleTopSide = () => {
         if (scrollDivRef.current) {
@@ -80,31 +81,12 @@ export const DraftVideosCardSection2: React.FC = () => {
             <CreateNewVideoCard
                 extraTStyle="cursor-pointer hover:opacity-100 hover:border-accent opacity-80 bg-secondary border-white/10"
             />
-
-            <DraftVideosCard
-                title="sample video 1"
+            {DraftArr.map(draft => <DraftVideosCard
+                {...draft}
                 extraTStyle="cursor-pointer hover:opacity-100 hover:border-accent opacity-80 bg-secondary border-white/10"
-            />
+                key={draft._id} />)}
 
-            <DraftVideosCard
-                title="sample video 1"
-                extraTStyle="cursor-pointer hover:opacity-100 hover:border-accent opacity-80 bg-secondary border-white/10"
-            />
-
-            <DraftVideosCard
-                title="sample video 1"
-                extraTStyle="cursor-pointer hover:opacity-100 hover:border-accent opacity-80 bg-secondary border-white/10"
-            />
-
-            <DraftVideosCard
-                title="sample video 1"
-                extraTStyle="cursor-pointer hover:opacity-100 hover:border-accent opacity-80 bg-secondary border-white/10"
-            />
-
-            <DraftVideosCard
-                title="sample video 1"
-                extraTStyle="cursor-pointer hover:opacity-100 hover:border-accent opacity-80 bg-secondary border-white/10"
-            />
         </div>
     </div>)
 }
+

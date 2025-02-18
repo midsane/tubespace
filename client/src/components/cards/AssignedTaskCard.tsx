@@ -6,7 +6,6 @@ export enum TaskStatus {
     "completed"
 }
 
-
 interface AssignedCardInterface {
     extraTStyle: string,
     taskTitle: string,
@@ -82,7 +81,6 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
             </div>
         )
     }
-
 
 const Seperator: React.FC<{ extraStyle: string, label: string, chipColor: string }> = ({ extraStyle, label, chipColor }) => {
     return <div className={`h-[1px] w-full ${extraStyle}`} >
