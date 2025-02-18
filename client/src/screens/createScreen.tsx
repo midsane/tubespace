@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { OuterModal } from "../components/outerModal";
 import { Sidebar } from "../components/sidebar";
-import { Save } from "lucide-react";
+import { Delete, Plus, PlusCircle, Save, Trash } from "lucide-react";
 import { Assignment, Cancel, CancelOutlined, CheckCircle, Pending } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { DraftVideosCardSection2 } from "../components/homeTabSection/draftVideosCardSection";
@@ -35,7 +35,9 @@ enum MenuType {
 
 const CreateArea = () => {
     const [showMenu, setShowMenu] = useState<MenuType>(MenuType.close)
-    return (<div className="w-[70%] justify-center items-center h-fit flex flex-col gap-2" >
+    return (<div className="w-[70%] justify-center items-center h-fit flex flex-col gap-2 pt-2" >
+        <HeadSection title="sample video" />
+        <CreateDraftBtn />
         <IndicatorArea />
         <div className="bg-secondary flex flex-col gap-8 p-8 rounded-lg">
             <InputArea showMenu={showMenu} setShowMenu={setShowMenu} placeholder="title" />
@@ -47,15 +49,35 @@ const CreateArea = () => {
     </div>)
 }
 
+const CreateDraftBtn = () => {
+    return (<span className="absolute top-20 left-80 w-fit h-fit p-2 rounded-lg border-3 active:scale-90 ease-linear duration-75 cursor-pointer border border-secondary"  >
+        <Tooltip title="create a new sample video" placement="top" arrow >
+            <span className="flex gap-2">
+            <PlusCircle className="" />
+            <p>Create..</p>
+            </span>
+        </Tooltip>
+    </span>)
+
+}
+
+
 const VideoArea = () => {
     return (<div className="w-[60%] h-24">
         <div className="bg-primary w-full h-full rounded-xl"></div>
     </div>)
 }
 
+const HeadSection: React.FC<{ title: string }> = ({ title }) => {
+    return <div className="bg-secondary p-1 rounded-lg px-4 flex justify-between w-1/2">
+        <h1 className="text-lg" >{title}</h1>
+        <Trash color="red" className="cursor-pointer active:scale-90 ease-linear duration-75" />
+    </div>
+}
+
 
 const IndicatorArea = () => {
-    return (<ul className="timeline">
+    return (<ul className="timeline text-sm">
         <li>
             <div className="timeline-start">25 Feb, 2024</div>
             <div className="timeline-middle">
@@ -107,10 +129,10 @@ const FilePicker: React.FC<{
             <span className="opacity-80">{label}</span>
             {!submitted && <div className="flex gap-2 justify-between">
                 <input disabled={false} type="file"
-                    className="file-input file-input-bordered file-input-info w-60 text-" />
+                    className="file-input file-input-bordered file-input-md file-input-info w-60 text-" />
                 <InputButton menuType={MenuType.thumbnail} showMenu={showMenu} setShowMenu={setShowMenu} />
             </div>}
-           {submitted && <div className="flex gap-10 items-center">
+            {submitted && <div className="flex gap-10 items-center">
                 <VideoArea />
                 <span onClick={() => setSubmitted(false)} className="opacity-75 hover:opacity-100 active:scale-95 duration-75 ease-linear cursor-pointer" >
                     <CancelOutlined fontSize="large" />
@@ -138,7 +160,7 @@ const InputArea: React.FC<{
     }
     return (
         <><div className="flex gap-2 w-full justify-between " >
-            <input type={placeholder} placeholder={placeholder} className="input input-bordered w-60" />
+            <input type={placeholder} placeholder={placeholder} className="input  input-bordered w-60" />
             <InputButton menuType={derivedMenutype} showMenu={showMenu} setShowMenu={setShowMenu} />
         </div>
         </>
@@ -153,7 +175,7 @@ const DescriptionArea: React.FC<{
 }> = ({ showMenu, setShowMenu, placeholder }) => {
     return (
         <><div className="flex gap-2" >
-            <textarea className="textarea textarea-bordered w-60" placeholder={placeholder}></textarea>
+            <textarea className="textarea textarea-bordered w-60 input-md" placeholder={placeholder}></textarea>
             <InputButton menuType={MenuType.description} showMenu={showMenu} setShowMenu={setShowMenu} />
         </div>
         </>
@@ -186,13 +208,13 @@ const InputButton: React.FC<{
     return <div className="flex gap-1">
         <Tooltip title="save changes" arrow>
             <button className="btn btn-square btn-outline">
-                <Save />
+                <Save size={18} />
             </button>
         </Tooltip>
         <Tooltip title="assign it to someone" placement="top" arrow >
             <span className="relative">
                 <button onClick={() => setShowMenu(menuType)} className="btn btn-square btn-outline">
-                    <Assignment />
+                    <Assignment fontSize="small" />
                 </button>
                 {showMenu === menuType && <span className="absolute left-1/2 z-20 menuDiv" ><BasicMenu /></span>}
             </span>

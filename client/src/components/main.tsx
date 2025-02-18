@@ -45,7 +45,7 @@ export const Main = () => {
 
                 <div className="fixed flex flex-col gap-2 top-[-35px] right-1/2 translate-x-1/2 rounded-3xl w-20 h-28 ">
 
-                    <div className="w-full h-[70%] bg-blue-200 rounded-3xl" >
+                    <div className="w-full h-[70%] bg-blue-200 mask mask-squircle" >
                         <img src="https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
                             className="object-cover rounded-3xl"
                         />
