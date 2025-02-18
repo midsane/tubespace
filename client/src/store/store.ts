@@ -2,11 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import modalReducer from "./modal"
 import sidebarReducer from "./sidebar.slice"
 
-const store = configureStore({
+export const store = configureStore({
     reducer: {
         modal: modalReducer,
         sidebar: sidebarReducer
     }
 })
 
-export { store }
+export type storeStateType = ReturnType<typeof store.getState>
+export type storeDispatchType = typeof store.dispatch

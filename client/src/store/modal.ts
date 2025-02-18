@@ -1,11 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ReactNode } from "react";
 
-const modalSlice =  createSlice({
+interface ModalActionsInterface {
+    content: ReactNode | null,
+    title: string | null
+}
+
+interface ModalStateInterface extends ModalActionsInterface {
+    isOpen: boolean,
+}
+
+const initialState: ModalStateInterface = {
+    isOpen: false,
+    content: null,
+    title: null
+}
+
+const modalSlice = createSlice({
     name: "modal",
-    initialState: false,
+    initialState,
     reducers: {
-        changeState: (state,action) => {
-            state = action.payload;
+        openMoal: (state, action: PayloadAction<ModalActionsInterface>) => {
+            state.isOpen = true
+            state.content = action.payload.content;
+            state.title = action.payload.title;
+
+        },
+
+        closeModal: (state) => {
+            state.isOpen = false
+            state.content = null;
+            state.title = null
         }
     }
 

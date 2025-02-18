@@ -6,7 +6,7 @@ export const LandingPage: React.FC = () => {
         <main className="min-h-screen bg-black">
             <Header />
             <HeroSection />
-            <Footer/>
+            <Footer />
         </main>
     )
 }

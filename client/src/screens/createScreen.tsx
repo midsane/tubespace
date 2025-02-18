@@ -1,19 +1,19 @@
-import { useSelector } from "react-redux";
-import { OuterModal } from "../components/outerModal";
+import { useDispatch, useSelector } from "react-redux";
 import { Sidebar } from "../components/sidebar";
-import { Delete, Plus, PlusCircle, Save, Trash } from "lucide-react";
-import { Assignment, Cancel, CancelOutlined, CheckCircle, Pending } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
+import { PlusCircle, Save, Trash } from "lucide-react";
+import { Assignment, CancelOutlined, CheckCircle, Pending } from "@mui/icons-material";
+import { Button, Tooltip } from "@mui/material";
 import { DraftVideosCardSection2 } from "../components/homeTabSection/draftVideosCardSection";
 import React, { useEffect, useState } from "react";
 import { BasicMenu } from "../components/menus/basicmenu";
+import { storeDispatchType } from "../store/store";
+import { modalActions } from "../store/modal";
 
 
 export const CreateScreen: React.FC = () => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
     return (
         <div className='w-screen h-screen flex justify-end' >
-            <OuterModal />
             <Sidebar />
             <div className={`h-full text-slate-300 ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]"}`}>
                 <div className="flex h-full justify-center bg-black items-center ">
@@ -50,11 +50,21 @@ const CreateArea = () => {
 }
 
 const CreateDraftBtn = () => {
+    const dispatch: storeDispatchType = useDispatch()
+    const createNewSample = () => {
+        dispatch(modalActions.openMoal({
+            title: "Create new Sample", content: <div className="flex gap-2" >
+                <input className="px-2 py-1 rounded" placeholder="enter name for new sample" />
+                <Button variant="outlined" >create</Button>
+            </div>
+        }))
+    }
+
     return (<span className="absolute top-20 left-80 w-fit h-fit p-2 rounded-lg border-3 active:scale-90 ease-linear duration-75 cursor-pointer border border-secondary"  >
         <Tooltip title="create a new sample video" placement="top" arrow >
-            <span className="flex gap-2">
-            <PlusCircle className="" />
-            <p>Create..</p>
+            <span onClick={createNewSample} className="flex gap-2">
+                <PlusCircle className="" />
+                <p>Create..</p>
             </span>
         </Tooltip>
     </span>)

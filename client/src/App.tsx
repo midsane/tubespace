@@ -9,6 +9,7 @@ import { SettingScreen } from './screens/settingScreen'
 import { CreateScreen } from './screens/createScreen'
 import { LandingPage } from './screens/landingpage'
 import { RootLayout } from './screens/rootlayout'
+import { Modal } from "./components/Modal"
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,7 @@ function App() {
 
   return (
     <Provider store={store}>
+      <Modal />
       <RouterProvider router={router}>
       </RouterProvider>
     </Provider>

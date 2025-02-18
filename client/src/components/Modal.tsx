@@ -1,51 +1,62 @@
-import React, { useState } from 'react';
+import { storeStateType, storeDispatchType } from '../store/store';
 import { UtensilsCrossed, Utensils } from 'lucide-react';
 import { motion } from "framer-motion"
 import { createPortal } from 'react-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { modalActions } from '../store/modal';
 
-interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title: string;
-    children: React.ReactNode;
-}
-
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
-    console.log("modal renderingb")
+export const Modal = () => {
+    const modalState = useSelector((state: storeStateType) => state.modal)
+    const dispatch: storeDispatchType = useDispatch()
     const [cancelHover, setCancelHover] = useState(false)
 
-    return (<>
-        {isOpen && <BackDrop />}
-        {isOpen && <div
-            className="fixed bottom-1/2 z-20 right-1/2 p-10 translate-x-1/2 translate-y-1/2 " >
-            <div className="px-10 py-8 flex flex-col gap-4 rounded-3xl bg-neutral-900 border border-zinc-700" onClick={(e) => e.stopPropagation()}>
-                <div className="flex justify-between items-center relative">
-                    <h2>{title}</h2>
+    if (!modalState.isOpen) return <></>
 
-                    <motion.button
-                        className='p-3 rounded-full absolute right-0 z-20 bg-black'
-                        onClick={onClose}
-                        onMouseEnter={() => setCancelHover(true)}
-                        onMouseLeave={() => setCancelHover(false)}
+    const onClose = () => {
+        dispatch(modalActions.closeModal())
+    }
 
-                    >
-                        {!cancelHover ?
-                            <ModalSvgButton onClose={onClose} color="bg-accent" key={cancelHover ? 1 : 0} Svg={<Utensils size={20} color='#ADD8E6' />} />
-                            :
-                            <ModalSvgButton onClose={onClose} color="bg-red-400" key={cancelHover ? 1 : 0} Svg={<UtensilsCrossed color="#FF6347" />} />
-                        }
-                    </motion.button>
-                </div>
-                <div className="p-10 bg-black rounded-lg">
-                    {children}
+    return (createPortal(
+
+        <motion.div
+            initial={{ opacity: 0, y: -150 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 150 }}
+            transition={{ duration: 0.5 }}
+            className="fixed z-40 bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2"
+        >
+            <BackDrop />
+            <div
+                className="fixed bottom-1/2 z-20 right-1/2 p-10 translate-x-1/2 translate-y-1/2 " >
+                <div className="px-10 py-8 flex flex-col gap-4 rounded-3xl bg-neutral-900 border border-zinc-700" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex justify-between items-center relative">
+                        <h2>{modalState.title}</h2>
+
+                        <motion.button
+                            className='p-3 rounded-full absolute right-0 z-20 bg-black'
+                            onClick={onClose}
+                            onMouseEnter={() => setCancelHover(true)}
+                            onMouseLeave={() => setCancelHover(false)}
+
+                        >
+                            {!cancelHover ?
+                                <ModalSvgButton onClose={onClose} color="bg-accent" key={cancelHover ? 1 : 0} Svg={<Utensils size={20} color='#ADD8E6' />} />
+                                :
+                                <ModalSvgButton onClose={onClose} color="bg-red-400" key={cancelHover ? 1 : 0} Svg={<UtensilsCrossed color="#FF6347" />} />
+                            }
+                        </motion.button>
+                    </div>
+                    <div className="p-10 bg-black rounded-lg">
+                        {modalState.content}
+                    </div>
                 </div>
             </div>
-        </div>}
-    </>
+        </motion.div>
+        , document.body)
     );
 };
 
-export default Modal;
 
 
 
@@ -55,7 +66,7 @@ interface ModalSvgButtonProps {
     onClose: () => void;
 }
 
-export const ModalSvgButton: React.FC<ModalSvgButtonProps> = ({ Svg, color, onClose }) => {
+const ModalSvgButton: React.FC<ModalSvgButtonProps> = ({ Svg, color, onClose }) => {
     return (<div
         onClick={onClose}
         className='absolute hover:scale-105 ease-linear duration-75 active:scale-75 top-0 w-fit p-2 translate-x-[-8px] translate-y-[-8px] aspect-square rounded-full  flex justify-center items-center left-0 z-20 '>
@@ -80,10 +91,8 @@ export const ModalSvgButton: React.FC<ModalSvgButtonProps> = ({ Svg, color, onCl
     </div>)
 }
 
-export const BackDrop = () => {
-    console.log(
-        "backdrop rendering"
-    )
+const BackDrop = () => {
+
     return (createPortal(<motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
