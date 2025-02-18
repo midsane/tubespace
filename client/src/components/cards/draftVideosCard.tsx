@@ -16,7 +16,8 @@ const LOGO2SIZE = 10
 
 interface collaboratorsCardInterface {
     extraTStyle: string,
-    title: string
+    title: string,
+    _id: string
 }
 
 export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTStyle }) => {
@@ -52,7 +53,8 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTS
 export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
     ({
         extraTStyle,
-        title
+        title,
+        _id
 
     }) => {
         return (
@@ -103,7 +105,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
                             </div>
                         </Tooltip>
                     </div>
-                    <ThreeDots />
+                    <ThreeDots _id={_id} />
                     <Button variant="outlined" sx={{ height: "2rem" }} >View</Button>
                 </div>
             </div>
@@ -112,11 +114,11 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
 
 
 
-export const ThreeDots = () => {
+export const ThreeDots = ({_id}: {_id: string}) => {
     const [showMenu, setShowMenu] = useState<boolean>(false)
      useEffect(() => {
             const handleClickOutside = (event: MouseEvent) => {
-                const ref = document.querySelector('.menuDiv');
+                const ref = document.getElementById('create-screen-three-dots-menu');
                 if (ref && ref.contains(event.target as Node)) {
                     return;
                 }
@@ -130,14 +132,15 @@ export const ThreeDots = () => {
                 document.removeEventListener("mousedown", handleClickOutside);
             };
         }, [showMenu]);
+        console.log(_id)
     return <span
         onClick={() => setShowMenu(prev => !prev)}
         className="flex flex-col gap-1 cursor-pointer absolute top-5 right-5 hover:bg-secondaryLight p-2 rounded-2xl">
         <Dots />
         <Dots />
         <Dots />
-        {showMenu && <div className="absolute z-20 top-[110%] right-0">
-            <ThreeDotsMenu />
+        {showMenu && <div id="create-screen-three-dots-menu" className="absolute z-20 top-[110%] right-0">
+            <ThreeDotsMenu _id={_id} />
         </div>}
     </span>
 }

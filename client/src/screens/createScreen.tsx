@@ -36,10 +36,10 @@ enum MenuType {
 
 const CreateArea = () => {
     const [showMenu, setShowMenu] = useState<MenuType>(MenuType.close)
-    return (<div className="w-[70%] justify-center items-center h-fit flex flex-col gap-2 pt-2" >
+    return (<div className="w-[70%] justify-center items-center h-full relative flex flex-col gap-2 " >
+    
         <HeadSection title="sample video" />
-        <CreateDraftBtn />
-        <IndicatorArea />
+        {/* <IndicatorArea /> */}
         <div className="bg-secondary flex flex-col gap-8 p-8 rounded-lg">
             <InputArea showMenu={showMenu} setShowMenu={setShowMenu} placeholder="title" />
             <DescriptionArea showMenu={showMenu} setShowMenu={setShowMenu} placeholder="description" />
@@ -58,7 +58,7 @@ const CreateDraftBtn = () => {
         }))
     }
 
-    return (<span className="absolute top-20 left-80 w-fit h-fit p-2 rounded-lg border-3 active:scale-90 ease-linear duration-75 cursor-pointer border border-secondary"  >
+    return (<span className="w-fit h-fit p-2 rounded-lg border-3 active:scale-90 ease-linear duration-75 cursor-pointer border border-secondary"  >
         <Tooltip title="create a new sample video" placement="top" arrow >
             <span onClick={createNewSample} className="flex gap-2">
                 <PlusCircle className="" />
@@ -77,9 +77,9 @@ const VideoArea = () => {
 }
 
 const HeadSection: React.FC<{ title: string }> = ({ title }) => {
-    return <div className="bg-secondary p-1 rounded-lg px-4 flex justify-between w-1/2">
-        <h1 className="text-lg" >{title}</h1>
-        <Trash color="red" className="cursor-pointer active:scale-90 ease-linear duration-75" />
+    return <div className=" border-b items-center border-secondaryLight absolute top-0 left-0 rounded-lg px-4 pt-5 flex justify-between w-full">
+        <h1 className="text-2xl" >{title}</h1>
+        <CreateDraftBtn />
     </div>
 }
 

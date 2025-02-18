@@ -6,12 +6,6 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { storeDispatchType, storeStateType } from "../../store/store";
 
-export interface DraftVideosInterface {
-    title: string,
-    description: string,
-    thumbnail: string | File | null,
-    video: string | File | null,
-}
 
 export const DraftVideosCardSection: React.FC = () => {
     const DraftArr = useSelector((state: storeStateType) => state.draft);
@@ -42,11 +36,11 @@ export const DraftVideosCardSection: React.FC = () => {
             </div>
 
             <CreateNewVideoCard
-                extraTStyle="bg-secondary border-white/10"
+                extraTStyle="bg-secondary border-white/10 hover:opacity-100 opacity-70 duration-75 ease-linear "
             />
             {DraftArr.map(draft => <DraftVideosCard {
                 ...draft}
-                extraTStyle="cursor-pointer hover:opacity-100 hover:border-accent opacity-80 bg-secondary border-white/10"
+                extraTStyle="cursor-pointer hover:opacity-100 opacity-70 bg-secondary border-white/10 duration-75 ease-linear "
                 key={draft._id} />)}
 
         </div>
@@ -79,11 +73,11 @@ export const DraftVideosCardSection2: React.FC = () => {
                 <KeyboardArrowDown />
             </div>
             <CreateNewVideoCard
-                extraTStyle="cursor-pointer hover:opacity-100 hover:border-accent opacity-80 bg-secondary border-white/10"
+                extraTStyle="cursor-pointer hover:opacity-100  opacity-70 bg-secondary border-white/10 duration-75 ease-linear "
             />
             {DraftArr.map(draft => <DraftVideosCard
                 {...draft}
-                extraTStyle="cursor-pointer hover:opacity-100 hover:border-accent opacity-80 bg-secondary border-white/10"
+                extraTStyle="cursor-pointer hover:opacity-100 opacity-70 bg-secondary border-white/10 duration-75 ease-linear "
                 key={draft._id} />)}
 
         </div>
