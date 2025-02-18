@@ -1,13 +1,14 @@
 import { AddCircle, Description, Done, Movie, Panorama, Pending, Title, Videocam } from "@mui/icons-material"
 import { Button, Tooltip } from "@mui/material"
 import { CircularProgressBar } from "../ui/circularprogressbar"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { storeDispatchType } from "../../store/store"
 import { useDispatch } from "react-redux"
 
 import { modalActions } from "../../store/modal"
 import { draftSampleActions } from "../../store/Draftvideo.slice"
 import { CreateNewSample } from "../modalCompnents/createNewSample"
+import { BasicMenu, ThreeDotsMenu } from "../menus/basicmenu"
 
 
 const LOGO1SIZE = 18
@@ -21,15 +22,15 @@ interface collaboratorsCardInterface {
 export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTStyle }) => {
 
     const dispatch: storeDispatchType = useDispatch()
-       const createNewSample = () => {
-           dispatch(modalActions.openMoal({
-               title: "Create new Sample", content: <CreateNewSample />
-           }))
-       }
+    const createNewSample = () => {
+        dispatch(modalActions.openMoal({
+            title: "Create new Sample", content: <CreateNewSample />
+        }))
+    }
 
     return (
         <div className={`${extraTStyle} flex-shrink-0 w-72 h-48 flex flex-col px-10 gap-2 justify-center items-center rounded-xl border relative`} >
-            <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
+            <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400 ">
                 <AddCircle />
 
             </div>
@@ -43,6 +44,7 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTS
             <Button onClick={createNewSample} variant="outlined" >
                 Create
             </Button>
+
         </div>
     )
 }
@@ -93,7 +95,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
                             </div>
                         </Tooltip>
 
-                        
+
                         <Tooltip title={"title: completed"} >
                             <div className="flex gap-0">
                                 <Title sx={{ fontSize: LOGO1SIZE, color: "rgb(112, 208, 246)" }} />
@@ -101,7 +103,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
                             </div>
                         </Tooltip>
                     </div>
-
+                    <ThreeDots />
                     <Button variant="outlined" sx={{ height: "2rem" }} >View</Button>
                 </div>
             </div>
@@ -110,3 +112,36 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
 
 
 
+export const ThreeDots = () => {
+    const [showMenu, setShowMenu] = useState<boolean>(false)
+     useEffect(() => {
+            const handleClickOutside = (event: MouseEvent) => {
+                const ref = document.querySelector('.menuDiv');
+                if (ref && ref.contains(event.target as Node)) {
+                    return;
+                }
+                if (showMenu) {
+                    setShowMenu(false);
+                }
+            };
+    
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [showMenu]);
+    return <span
+        onClick={() => setShowMenu(prev => !prev)}
+        className="flex flex-col gap-1 cursor-pointer absolute top-5 right-5 hover:bg-secondaryLight p-2 rounded-2xl">
+        <Dots />
+        <Dots />
+        <Dots />
+        {showMenu && <div className="absolute z-20 top-[110%] right-0">
+            <ThreeDotsMenu />
+        </div>}
+    </span>
+}
+
+const Dots = () => {
+    return (<div className="w-1 aspect-square rounded-full bg-label"></div>)
+}

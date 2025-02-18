@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Sidebar } from "../components/sidebar";
 import { PlusCircle, Save, Trash } from "lucide-react";
 import { Assignment, CancelOutlined, CheckCircle, Pending } from "@mui/icons-material";
-import { Button, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import { DraftVideosCardSection2 } from "../components/homeTabSection/draftVideosCardSection";
 import React, { useEffect, useState } from "react";
 import { BasicMenu } from "../components/menus/basicmenu";
