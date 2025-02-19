@@ -1,13 +1,14 @@
-import { Avatar } from "@mui/material"
+import { Avatar, Button, Input } from "@mui/material"
 import { BookOpen, FolderPen, Trash } from "lucide-react"
-import { FC, ReactNode } from "react"
+import { FC, ReactNode, useRef } from "react"
 import { Link } from "react-router-dom"
 import { storeDispatchType } from "../../store/store"
 import { useDispatch } from "react-redux"
 import { draftSampleActions } from "../../store/Draftvideo.slice"
+import { modalActions } from "../../store/modal"
 
 export const BasicMenu = () => {
-  return (<ul className="menu bg-base-200 rounded-box w-56">
+  return (<ul className=" bg-base-200 flex flex-col gap-2 rounded-box w-56 max-h-60 scroll-smooth  overflow-y-scroll overflow-x-hidden">
     {[
       { cname: "lavneesh", url: "https://mui.com/static/images/avatar/2.jpg", link: "/c/lavneesh" },
       { cname: "lavneesh", url: "https://mui.com/static/images/avatar/2.jpg", link: "/c/lavneesh" },
@@ -18,7 +19,7 @@ export const BasicMenu = () => {
   </ul>)
 }
 
-export const ThreeDotsMenu: FC<{_id: string}> = ({ _id }) => {
+export const ThreeDotsMenu: FC<{ _id: string, draftName: string }> = ({ _id, draftName }) => {
   return (<ul className="menu bg-base-200 rounded-box w-36">
     {
       [
@@ -26,23 +27,48 @@ export const ThreeDotsMenu: FC<{_id: string}> = ({ _id }) => {
         { txt: 'more details', svg: <BookOpen size={15} /> },
         { txt: 'delete', svg: <Trash size={15} /> }
       ]
-        .map(s => <ThreeDotTab _id={_id} key={s.txt} {...s} />)
+        .map(s => <ThreeDotTab draftName={draftName} _id={_id} key={s.txt} {...s} />)
     }
   </ul>)
 }
 
-const ThreeDotTab: FC<{ txt: string, svg: ReactNode, _id: string }> = ({ txt, svg, _id }) => {
+const ThreeDotTab: FC<{ txt: string, svg: ReactNode, draftName: string, _id: string }> = ({ txt, svg, _id, draftName }) => {
 
   const dispatch: storeDispatchType = useDispatch()
+  const renameRef = useRef<HTMLInputElement>(null);
   const handleClick = () => {
-    console.log(txt)
+
     switch (txt) {
       case "delete":
-        console.log('coming her')
-        dispatch(draftSampleActions.removeDraft({ _id }))
+        dispatch(modalActions.openMoal(
+          {
+            content: <></>,
+            buttons: true,
+            handleSubmit: () => {
+              dispatch(draftSampleActions.removeDraft({ _id }))
+              dispatch(modalActions.closeModal())
+            },
+            title: "Are you sure you want to delete!"
+          }
+        ))
+
+
+        break;
+      case 'rename':
+        dispatch(modalActions.openMoal({
+          content: <input ref={renameRef} defaultValue={draftName} className="px-2 py-1 w-full rounded" placeholder="type new name" />,
+          buttons: true,
+          handleSubmit: () => { 
+            dispatch(draftSampleActions.updateDrafts({ id: _id, updatedDraft: { DraftName: renameRef.current?.value } })) 
+            dispatch(modalActions.closeModal())
+          },
+          title: "Are you sure you want to rename"
+        }))
+        break;
 
     }
   }
+
   return (
     <div
       onClick={handleClick}
@@ -56,7 +82,7 @@ const ThreeDotTab: FC<{ txt: string, svg: ReactNode, _id: string }> = ({ txt, sv
 }
 
 const CollaboratorTab = ({ name, url, link }: { name: string, url: string, link: string }) => {
-  return <li><Link to={link} className="flex gap-2">
+  return <li><Link to={link} className="px-4 py-2 hover:bg-secondaryLight rounded-md flex gap-2">
     <Avatar src={url} >
     </Avatar>
     <p>{name}</p>

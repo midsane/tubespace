@@ -3,13 +3,12 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import React, { useRef } from "react";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
-import { storeDispatchType, storeStateType } from "../../store/store";
+import { useSelector } from "react-redux";
+import { storeStateType } from "../../store/store";
 
 
 export const DraftVideosCardSection: React.FC = () => {
     const DraftArr = useSelector((state: storeStateType) => state.draft);
-    const dispatch: storeDispatchType = useDispatch()
     const scrollDivRef = useRef<HTMLDivElement>(null);
 
     const handleLeftSlide = () => {
@@ -50,7 +49,7 @@ export const DraftVideosCardSection: React.FC = () => {
 export const DraftVideosCardSection2: React.FC = () => {
     const scrollDivRef = useRef<HTMLDivElement>(null);
     const DraftArr = useSelector((state: storeStateType) => state.draft);
-    const dispatch: storeDispatchType = useDispatch()
+    
 
     const handleTopSide = () => {
         if (scrollDivRef.current) {

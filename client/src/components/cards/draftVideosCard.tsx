@@ -1,14 +1,13 @@
 import { AddCircle, Description, Done, Movie, Panorama, Pending, Title, Videocam } from "@mui/icons-material"
-import { Button, Tooltip } from "@mui/material"
+import { Button, Input, Tooltip } from "@mui/material"
 import { CircularProgressBar } from "../ui/circularprogressbar"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { storeDispatchType } from "../../store/store"
 import { useDispatch } from "react-redux"
 
 import { modalActions } from "../../store/modal"
-import { draftSampleActions } from "../../store/Draftvideo.slice"
+import { ThreeDotsMenu } from "../menus/basicmenu"
 import { CreateNewSample } from "../modalCompnents/createNewSample"
-import { BasicMenu, ThreeDotsMenu } from "../menus/basicmenu"
 
 
 const LOGO1SIZE = 18
@@ -16,7 +15,7 @@ const LOGO2SIZE = 10
 
 interface collaboratorsCardInterface {
     extraTStyle: string,
-    title: string,
+    DraftName: string,
     _id: string
 }
 
@@ -25,7 +24,8 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTS
     const dispatch: storeDispatchType = useDispatch()
     const createNewSample = () => {
         dispatch(modalActions.openMoal({
-            title: "Create new Sample", content: <CreateNewSample />
+            title: "Create new Sample",
+            content: <CreateNewSample />
         }))
     }
 
@@ -53,7 +53,7 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTS
 export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
     ({
         extraTStyle,
-        title,
+        DraftName,
         _id
 
     }) => {
@@ -63,7 +63,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
                     <Videocam />
                 </div>
 
-                <h6 className="w-full py-4 h-1/3 flex items-start justify-start" >{title}</h6>
+                <h6 className="w-full py-4 h-1/3 flex items-start justify-start" >{DraftName}</h6>
                 <div className="flex gap-1 justify-around w-full pb-4  items-center">
                     <CircularProgressBar
                         progress={66.6}
@@ -105,7 +105,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
                             </div>
                         </Tooltip>
                     </div>
-                    <ThreeDots _id={_id} />
+                    <ThreeDots draftName={DraftName} _id={_id} />
                     <Button variant="outlined" sx={{ height: "2rem" }} >View</Button>
                 </div>
             </div>
@@ -114,25 +114,25 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
 
 
 
-export const ThreeDots = ({_id}: {_id: string}) => {
+export const ThreeDots = ({ _id, draftName }: { _id: string, draftName: string }) => {
     const [showMenu, setShowMenu] = useState<boolean>(false)
-     useEffect(() => {
-            const handleClickOutside = (event: MouseEvent) => {
-                const ref = document.getElementById('create-screen-three-dots-menu');
-                if (ref && ref.contains(event.target as Node)) {
-                    return;
-                }
-                if (showMenu) {
-                    setShowMenu(false);
-                }
-            };
-    
-            document.addEventListener("mousedown", handleClickOutside);
-            return () => {
-                document.removeEventListener("mousedown", handleClickOutside);
-            };
-        }, [showMenu]);
-        console.log(_id)
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const ref = document.getElementById('create-screen-three-dots-menu');
+            if (ref && ref.contains(event.target as Node)) {
+                return;
+            }
+            if (showMenu) {
+                setShowMenu(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showMenu]);
+
     return <span
         onClick={() => setShowMenu(prev => !prev)}
         className="flex flex-col gap-1 cursor-pointer absolute top-5 right-5 hover:bg-secondaryLight p-2 rounded-2xl">
@@ -140,7 +140,7 @@ export const ThreeDots = ({_id}: {_id: string}) => {
         <Dots />
         <Dots />
         {showMenu && <div id="create-screen-three-dots-menu" className="absolute z-20 top-[110%] right-0">
-            <ThreeDotsMenu _id={_id} />
+            <ThreeDotsMenu draftName={draftName} _id={_id} />
         </div>}
     </span>
 }

@@ -15,7 +15,21 @@ export const ChatScreen: React.FC = () => {
         <div className='w-screen h-screen flex justify-end' >
             <Sidebar />
             <div className={`h-full text-slate-300 ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]"}`}>
-                <div className="flex h-full justify-center  items-center ">
+                <div className="flex h-full justify-start relative items-center ">
+                    <div className="w-[70%] h-16 absolute top-0 left-0 z-20 p-2 flex gap-5 justify-start items-center bg-primary border-b border-secondaryLight" >
+                        <div className="w-fit h-fit p-1 rounded-full border border-blue-200 ">
+                            <Avatar alt="collaborator1" src="https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg" />
+
+                        </div>
+                        <div className="flex flex-col justify-start items-start">
+                            <p className="font-bold" >Satmak</p>
+                            <p className="badge badge-ghost badge-sm">
+                                Last online on 12th Feb, 2024.
+                            </p>
+                        </div>
+
+
+                    </div>
                     <ChatArea />
                     <PersonsForChat />
                 </div>
@@ -26,7 +40,7 @@ export const ChatScreen: React.FC = () => {
 
 const PersonsForChat = () => {
     return (
-        <div className="overflow-x-auto h-full bg-secondary">
+        <div className="overflow-x-auto h-full w-[30%] bg-secondary">
             <table className="table">
 
                 <thead>
@@ -377,21 +391,8 @@ const ChatArea: React.FC = () => {
 
     return <div
         ref={chatAreaRef}
-        className="flex flex-col justify-start items-center scrollbar-hide overflow-y-scroll h-full border-r border-secondary rounded w-[95%] gap-2" >
-        <div className="w-full h-16 p-2 flex gap-5 justify-start items-center bg-secondary" >
-            <div className="w-fit h-fit p-1 rounded-full border border-blue-200 ">
-                <Avatar alt="collaborator1" src="https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg" />
+        className="flex flex-col opacity-95 justify-start items-center scrollbar-hide overflow-y-scroll h-full border-r border-secondary rounded w-[70%] gap-2 pt-20 " >
 
-            </div>
-            <div className="flex flex-col justify-start items-start">
-                <p className="font-bold" >Satmak</p>
-                <p className="badge badge-ghost badge-sm">
-                    Last online on 12th Feb, 2024.
-                </p>
-            </div>
-
-
-        </div>
         <div className="flex flex-col w-full h-full">
             <div className="w-full flex gap-0 justify-start p-2">
                 <div className="w-fit h-fit p-1 rounded-full border border-blue-200 ">
@@ -400,6 +401,9 @@ const ChatArea: React.FC = () => {
 
                 <div className="flex flex-col gap-2" >
                     {["That's never been done in the history of the Jedi. It's insulting!", "What kind of nonsense is this",
+                        "this should not happen again", "is there any way to solve it", "i am done with you",
+                        "this should not happen again", "is there any way to solve it", "i am done with you",
+                        "this should not happen again", "is there any way to solve it", "i am done with you",
                         "this should not happen again", "is there any way to solve it", "i am done with you"
                     ].
                         map((msg, ind) =>
@@ -409,6 +413,7 @@ const ChatArea: React.FC = () => {
                 </div>
             </div>
 
+    
             <div className="w-full flex gap-0 justify-end p-2">
                 <div className="flex flex-col gap-2" >
                     <Bubble ind={0} End text="Calm down Anakin." />
@@ -418,10 +423,7 @@ const ChatArea: React.FC = () => {
                     <Avatar alt="collaborator1" src="https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg" />
                 </div>
             </div>
-        </div>
-
-
-        <div className="w-full flex gap-0 justify-end p-2 pt-14">
+            <div className="w-full flex gap-0 justify-end p-2 pt-14">
             <div className="flex gap-2" >
                 <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
                 <button className="btn btn-square btn-outline">
@@ -429,6 +431,8 @@ const ChatArea: React.FC = () => {
                 </button>
             </div>
         </div>
+
+        </div>  
 
     </div>
 }

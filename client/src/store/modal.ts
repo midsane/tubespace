@@ -3,7 +3,9 @@ import { ReactNode } from "react";
 
 interface ModalActionsInterface {
     content: ReactNode | null,
-    title: string | null
+    title: string | null,
+    buttons?: boolean,
+    handleSubmit?: () => void
 }
 
 interface ModalStateInterface extends ModalActionsInterface {
@@ -13,7 +15,9 @@ interface ModalStateInterface extends ModalActionsInterface {
 const initialState: ModalStateInterface = {
     isOpen: false,
     content: null,
-    title: null
+    title: null,
+    buttons: false,
+    handleSubmit: () => {}
 }
 
 const modalSlice = createSlice({
@@ -24,13 +28,19 @@ const modalSlice = createSlice({
             state.isOpen = true
             state.content = action.payload.content;
             state.title = action.payload.title;
+            state.buttons = action.payload.buttons || false;
+            if (action.payload.handleSubmit)
+                state.handleSubmit = action.payload.handleSubmit
+            else state.handleSubmit = () => {}
 
         },
 
         closeModal: (state) => {
             state.isOpen = false
             state.content = null;
-            state.title = null
+            state.title = null;
+            state.handleSubmit = () => {};
+            state.buttons = false;
         }
     }
 
