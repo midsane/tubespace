@@ -35,7 +35,7 @@ export const ThreeDotsMenu: FC<{ _id: string, draftName: string }> = ({ _id, dra
 const ThreeDotTab: FC<{ txt: string, svg: ReactNode, draftName: string, _id: string }> = ({ txt, svg, _id, draftName }) => {
 
   const dispatch: storeDispatchType = useDispatch()
-  const renameRef = useRef<HTMLInputElement>(null);
+  const renameRef = useRef<string>(draftName);
   const handleClick = () => {
 
     switch (txt) {
@@ -51,15 +51,14 @@ const ThreeDotTab: FC<{ txt: string, svg: ReactNode, draftName: string, _id: str
             title: "Are you sure you want to delete!"
           }
         ))
-
-
         break;
+
       case 'rename':
         dispatch(modalActions.openMoal({
-          content: <input ref={renameRef} defaultValue={draftName} className="px-2 py-1 w-full rounded" placeholder="type new name" />,
+          content: <input onChange={(e) => {renameRef.current = e.target.value}} defaultValue={draftName} className="px-2 py-1 w-full rounded" placeholder="type new name" />,
           buttons: true,
-          handleSubmit: () => { 
-            dispatch(draftSampleActions.updateDrafts({ id: _id, updatedDraft: { DraftName: renameRef.current?.value } })) 
+          handleSubmit: () => {
+            dispatch(draftSampleActions.updateDrafts({ id: _id, updatedDraft: { DraftName: renameRef.current } }))
             dispatch(modalActions.closeModal())
           },
           title: "Are you sure you want to rename"
