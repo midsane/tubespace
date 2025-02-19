@@ -3,7 +3,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 
 export const TabsWrappedLabel: React.FC<{ value: string, setValue: (text: string) => void }> = ({ value, setValue }) => {
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    const handleChange = (_: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
 

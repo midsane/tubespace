@@ -1,4 +1,4 @@
-import { Avatar, Button, Input } from "@mui/material"
+import { Avatar } from "@mui/material"
 import { BookOpen, FolderPen, Trash } from "lucide-react"
 import { FC, ReactNode, useRef } from "react"
 import { Link } from "react-router-dom"

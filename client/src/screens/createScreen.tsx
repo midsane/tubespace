@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Sidebar } from "../components/sidebar";
-import { PlusCircle, Save, Trash } from "lucide-react";
-import { Assignment, CancelOutlined, CheckCircle, Pending } from "@mui/icons-material";
+import { PlusCircle, Save } from "lucide-react";
+import { Assignment, CancelOutlined } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { DraftVideosCardSection2 } from "../components/homeTabSection/draftVideosCardSection";
 import React, { useEffect, useState } from "react";
@@ -84,46 +84,46 @@ const HeadSection: React.FC<{ title: string }> = ({ title }) => {
 }
 
 
-const IndicatorArea = () => {
-    return (<ul className="timeline text-sm">
-        <li>
-            <div className="timeline-start">25 Feb, 2024</div>
-            <div className="timeline-middle">
-                <CheckCircle color="primary" fontSize="small" />
-            </div>
-            <div className="timeline-end timeline-box">Title</div>
-            <hr className="bg-accent" />
-        </li>
-        <li>
-            <hr className="bg-accent " />
+// const IndicatorArea = () => {
+//     return (<ul className="timeline text-sm">
+//         <li>
+//             <div className="timeline-start">25 Feb, 2024</div>
+//             <div className="timeline-middle">
+//                 <CheckCircle color="primary" fontSize="small" />
+//             </div>
+//             <div className="timeline-end timeline-box">Title</div>
+//             <hr className="bg-accent" />
+//         </li>
+//         <li>
+//             <hr className="bg-accent " />
 
-            <div className="timeline-start">26 Feb, 2024</div>
-            <div className="timeline-middle">
-                <CheckCircle color="primary" fontSize="small" />
-            </div>
-            <div className="timeline-end timeline-box">description</div>
-            <hr />
-        </li>
-        <li>
-            <hr />
-            <div className="timeline-start"></div>
-            <div className="timeline-middle">
-                <Pending fontSize="small" />
-            </div>
-            <div className="timeline-end timeline-box">thumbnail</div>
-            <hr />
-        </li>
-        <li>
-            <hr />
-            <div className="timeline-start"></div>
-            <div className="timeline-middle">
-                <Pending fontSize="small" />
-            </div>
-            <div className="timeline-end timeline-box">Video</div>
-        </li>
+//             <div className="timeline-start">26 Feb, 2024</div>
+//             <div className="timeline-middle">
+//                 <CheckCircle color="primary" fontSize="small" />
+//             </div>
+//             <div className="timeline-end timeline-box">description</div>
+//             <hr />
+//         </li>
+//         <li>
+//             <hr />
+//             <div className="timeline-start"></div>
+//             <div className="timeline-middle">
+//                 <Pending fontSize="small" />
+//             </div>
+//             <div className="timeline-end timeline-box">thumbnail</div>
+//             <hr />
+//         </li>
+//         <li>
+//             <hr />
+//             <div className="timeline-start"></div>
+//             <div className="timeline-middle">
+//                 <Pending fontSize="small" />
+//             </div>
+//             <div className="timeline-end timeline-box">Video</div>
+//         </li>
 
-    </ul>)
-}
+//     </ul>)
+// }
 
 const FilePicker: React.FC<{
     label: string

@@ -45,9 +45,8 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
 
                     <div className="w-full h-1/4 flex flex-col justify-between items-center">
                         <Seperator
-                            chipColor="secondary"
                             extraStyle="bg-secondaryLight"
-                            label="completed" />
+                             />
                         <div className="w-full flex justify-start gap-4 mb-1">
                             <Tooltip title="deadline" >
                                 <Schedule sx={{ opacity: "0.5" }} />
@@ -61,9 +60,8 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
 
                     <div className="w-full h-1/4 flex flex-col justify-between items-center">
                         <Seperator
-                            chipColor="primary"
                             extraStyle="bg-secondaryLight"
-                            label="pending" />
+                             />
                         <div className="w-full flex justify-start gap-4 mb-1">
                             <Tooltip title="deadline" >
                                 <Schedule sx={{ opacity: "0.5" }} />
@@ -82,7 +80,7 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
         )
     }
 
-const Seperator: React.FC<{ extraStyle: string, label: string, chipColor: string }> = ({ extraStyle, label, chipColor }) => {
+const Seperator: React.FC<{ extraStyle: string }> = ({ extraStyle }) => {
     return <div className={`h-[1px] w-full ${extraStyle}`} >
     </div>
 }
