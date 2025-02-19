@@ -3,6 +3,7 @@ import { Button } from "@mui/material"
 import { Play } from "lucide-react"
 import { ShineBorder } from "../ui/shineboard"
 import { InteractiveGrid } from "../ui/interactivegrid"
+import { SplitText } from "../textAnimations/splitText"
 
 export function HeroSection() {
     return (
@@ -13,18 +14,24 @@ export function HeroSection() {
                 className="relative z-10 max-w-6xl mx-auto px-6"
                 borderClassName="border border-white/10 rounded-xl overflow-hidden"
             >
-                <div className="text-center mb-16">
-                    <h1 className="text-4xl text-white md:text-6xl font-bold mb-6 tracking-tight">
+                <div className="text-center pt-4 mb-16">
+                    <h1 className="max-[400px]:text-3xl text-4xl text-white md:text-6xl font-bold mb-6 tracking-tight">
                         streamlining your Youtube workflow with
                     </h1>
-                    <h1 className="text-4xl bg-clip-text text-transparent font-bold mb-6 tracking-tight 
+                    <h1 className="text-4xl max-[400px]:text-3xl bg-clip-text text-transparent font-bold mb-6 tracking-tight 
                      md:text-6xl animate-gradient bg-[length:200%_200%] bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
                         Review and automated uploading
                     </h1>
-                    <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
-                        {"assign work -> review -> confirm for uploading"}
-                    </p>
-                    <div className="flex gap-4 justify-center">
+                    <SplitText
+                        text={"assign work -> review -> confirm for uploading"}
+                        className="text-gray-400 max-[400px]:text-sm text-lg mb-8 max-w-2xl mx-auto"
+                        delay={50}
+                        animationFrom={{ opacity: 0, transform: 'translate3d(0,50px,0)' }}
+                        animationTo={{ opacity: 1, transform: 'translate3d(0,0,0)' }}
+                        threshold={0.1}
+                        rootMargin="-50px"
+                    />
+                    <div className="flex gap-4 mt-4 justify-center">
                         <Button variant="outlined" className="gap-2 border-white/10 bg-white/5 hover:bg-white/10">
                             <Play className="w-4 h-4" />
                             Enter

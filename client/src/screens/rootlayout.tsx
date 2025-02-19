@@ -17,11 +17,12 @@ export const RootLayout: React.FC = () => {
                 dispatch(sidebarActions.changeToLaptop())
             }
         }
+        handleResize()
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [sideBarState]);
     return (
-        <main className="min-h-screen bg-black liter-regular">
+        <main className="min-h-screen bg-black liter-regular  ">
             <Outlet />
         </main>
     )
