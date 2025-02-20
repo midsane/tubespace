@@ -19,12 +19,12 @@ export const AssignedCardSection: React.FC = () => {
         }
     }
     return (
-        <div ref={scrollDivRef} className="w-[85%] overflow-x-scroll scroll-smooth rounded-3xl flex justify-start gap-10 py-10 px-9 h-min-10 bg-black border border-white/10 h-[80%] items-center" >
+        <div ref={scrollDivRef} className="w-[90%] sm:w-[85%] overflow-x-scroll scroll-smooth rounded-3xl flex justify-start gap-14 sm:gap-10 sm:py-10 sm:px-9 pb-8 pt-12 px-9 h-min-10 bg-black border border-secondaryLight h-fit sm:h-[80%] items-center" >
 
-            <div onClick={handleRightSlide} className="absolute top-1/2 right-10 border border-zinc-700 rounded-full p-1 cursor-pointer active:scale-90 ease-linear duration-75 " >
+            <div onClick={handleRightSlide} className="absolute top-[105%] sm:top-1/2 z-10 right-2 sm:right-10 border border-zinc-700 rounded-full p-1 cursor-pointer active:scale-90 ease-linear duration-75 " >
                 <KeyboardArrowRightIcon />
             </div>
-            <div onClick={handleLeftSlide} className="absolute top-1/2 left-10  cursor-pointer border-zinc-700 border rounded-full p-1 active:scale-90 duration-75 ease-linear" >
+            <div onClick={handleLeftSlide} className="absolute top-[105%] sm:top-1/2 z-10 left-2 sm:left-10  cursor-pointer border-zinc-700 border rounded-full p-1 active:scale-90 duration-75 ease-linear" >
                 <KeyboardArrowLeftIcon />
             </div>
             <AssignedTaskCard

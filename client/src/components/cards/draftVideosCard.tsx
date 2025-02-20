@@ -1,9 +1,9 @@
 import { AddCircle, Description, Done, Movie, Panorama, Pending, Title, Videocam } from "@mui/icons-material"
-import { Button,Tooltip } from "@mui/material"
+import { Button, Tooltip } from "@mui/material"
 import { CircularProgressBar } from "../ui/circularprogressbar"
 import { useEffect, useState } from "react"
-import { storeDispatchType } from "../../store/store"
-import { useDispatch } from "react-redux"
+import { storeDispatchType, storeStateType } from "../../store/store"
+import { useDispatch, useSelector } from "react-redux"
 
 import { modalActions } from "../../store/modal"
 import { ThreeDotsMenu } from "../menus/basicmenu"
@@ -29,13 +29,14 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTS
         }))
     }
 
+    const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <div className={`${extraTStyle} flex-shrink-0 w-72 h-48 flex flex-col px-10 gap-2 justify-center items-center rounded-xl border relative`} >
+        <div className={`${extraTStyle} w-52 h-36 sm:w-72 sm:h-48 flex-shrink-0 flex flex-col px-2 sm:px-9 gap-2 justify-center items-center rounded-xl border relative`} >
             <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400 ">
-                <AddCircle />
+                <AddCircle sx={{ width: `${!onLaptopScreen ? "2rem" : "2.5rem"}`, height: `${!onLaptopScreen ? "2rem" : "2.5rem"}` }} />
 
             </div>
-            <AddCircle />
+            <AddCircle   sx={{ width: `${!onLaptopScreen? "2rem": "2.5rem"}`, height: `${!onLaptopScreen? "2rem": "2.5rem"}` }} />
 
             <div className="flex flex-col gap-0">
                 <p className="text-center">create new sample video</p>

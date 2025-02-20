@@ -17,6 +17,7 @@ export const ChatScreen: React.FC = () => {
             <Sidebar />
 
             <div className={`h-full text-slate-300 ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]"}`}>
+                
                 <div className="flex h-full justify-start relative items-center ">
                     <div className={`${onLaptopScreen ? "w-[70%]" : "w-full"} h-16 absolute top-20 left-0 z-20 p-2 flex gap-5 justify-start items-center bg-primary border-b border-secondaryLight`} >
 

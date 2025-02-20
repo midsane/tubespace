@@ -13,11 +13,13 @@ export const TabsWrappedLabel: React.FC<{ value: string, setValue: (text: string
                 value={value}
                 textColor="inherit"
                 indicatorColor="primary"
+                sx={{ fontSize: '0.875rem' }}
                 onChange={handleChange}
                 aria-label="wrapped bg-label tabs example"
             >
                 <Tab
                     value="one"
+                    sx={{ fontSize: '0.875rem' }}
                     label="Assigned Tasks"
                     wrapped
                 />
