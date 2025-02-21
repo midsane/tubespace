@@ -1,4 +1,4 @@
-import { AddCircle, Description, Done, Movie, Panorama, Pending, Title, Videocam } from "@mui/icons-material"
+import { AddCircle, Description, Done, Movie, Panorama, Pending, Title } from "@mui/icons-material"
 import { Button, Tooltip } from "@mui/material"
 import { CircularProgressBar } from "../ui/circularprogressbar"
 import { useEffect, useState } from "react"
@@ -8,12 +8,13 @@ import { useDispatch, useSelector } from "react-redux"
 import { modalActions } from "../../store/modal"
 import { ThreeDotsMenu } from "../menus/basicmenu"
 import { CreateNewSample } from "../modalCompnents/createNewSample"
+import { CardWrapper } from "./cardWrapper"
 
 
 const LOGO1SIZE = 18
 const LOGO2SIZE = 10
 
-interface collaboratorsCardInterface {
+export interface collaboratorsCardInterface {
     extraTStyle: string,
     DraftName: string,
     _id: string
@@ -31,23 +32,21 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTS
 
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <div className={`${extraTStyle} w-52 h-36 sm:w-72 sm:h-48 flex-shrink-0 flex flex-col px-2 sm:px-9 gap-2 justify-center items-center rounded-xl border relative`} >
-            <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400 ">
+        <CardWrapper extraTStyle={extraTStyle}>
+            <>
+
                 <AddCircle sx={{ width: `${!onLaptopScreen ? "2rem" : "2.5rem"}`, height: `${!onLaptopScreen ? "2rem" : "2.5rem"}` }} />
 
-            </div>
-            <AddCircle   sx={{ width: `${!onLaptopScreen? "2rem": "2.5rem"}`, height: `${!onLaptopScreen? "2rem": "2.5rem"}` }} />
+                <div className="flex flex-col gap-0">
+                    <p className="text-center">create new sample video</p>
+                    <p className="opacity-55 text-sm text-center" >add/assign video details</p>
+                </div>
 
-            <div className="flex flex-col gap-0">
-                <p className="text-center">create new sample video</p>
-                <p className="opacity-55 text-sm text-center" >add/assign video details</p>
-            </div>
-
-            <Button onClick={createNewSample} variant="outlined" >
-                Create
-            </Button>
-
-        </div>
+                <Button onClick={createNewSample} variant="outlined" >
+                    Create
+                </Button>
+            </>
+        </CardWrapper>
     )
 }
 
@@ -59,57 +58,55 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
 
     }) => {
         return (
-            <div className={`${extraTStyle} flex-shrink-0 w-72 h-48 flex flex-col px-10 gap-2 justify-center items-center rounded-xl border relative`} >
-                <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
-                    <Videocam />
-                </div>
+            <CardWrapper extraTStyle={extraTStyle}>
+                <>
+                    <h6 className="w-full py-4 h-1/3 flex items-start justify-start" >{DraftName}</h6>
+                    <div className="flex gap-1 justify-around w-full pb-4  items-center">
+                        <CircularProgressBar
+                            progress={66.6}
+                            size={80}
+                            strokeWidth={5}
+                            gradientStart="rgb(112, 208, 246) "
+                            gradientEnd="rgb(52, 163, 207)"
+                            backgroundColor="rgb(98, 106, 108)"
+                            textColor="rgb(112, 208, 246)"
+                        />
 
-                <h6 className="w-full py-4 h-1/3 flex items-start justify-start" >{DraftName}</h6>
-                <div className="flex gap-1 justify-around w-full pb-4  items-center">
-                    <CircularProgressBar
-                        progress={66.6}
-                        size={80}
-                        strokeWidth={5}
-                        gradientStart="rgb(112, 208, 246) "
-                        gradientEnd="rgb(52, 163, 207)"
-                        backgroundColor="rgb(98, 106, 108)"
-                        textColor="rgb(112, 208, 246)"
-                    />
+                        <div className="w-full h-full justify-between items-start gap-2 flex flex-col ">
+                            <Tooltip title={"Video: pending"} >
+                                <div className="flex gap-0">
+                                    <Movie sx={{ fontSize: LOGO1SIZE, color: "rgb(243, 238, 238)" }} />
+                                    <Pending sx={{ fontSize: LOGO2SIZE, color: "rgb(217, 81, 81)" }} />
+                                </div>
+                            </Tooltip>
 
-                    <div className="w-full h-full justify-between items-start gap-2 flex flex-col ">
-                        <Tooltip title={"Video: pending"} >
-                            <div className="flex gap-0">
-                                <Movie sx={{ fontSize: LOGO1SIZE, color: "rgb(243, 238, 238)" }} />
-                                <Pending sx={{ fontSize: LOGO2SIZE, color: "rgb(217, 81, 81)" }} />
-                            </div>
-                        </Tooltip>
+                            <Tooltip title={"thumbnail: completed"} >
+                                <div className="flex gap-0 ml-4">
+                                    <Panorama sx={{ fontSize: LOGO1SIZE, color: "rgb(112, 208, 246)" }} />
+                                    <Done sx={{ fontSize: LOGO2SIZE, color: "rgb(75, 218, 75)," }} />
+                                </div>
+                            </Tooltip>
 
-                        <Tooltip title={"thumbnail: completed"} >
-                            <div className="flex gap-0 ml-4">
-                                <Panorama sx={{ fontSize: LOGO1SIZE, color: "rgb(112, 208, 246)" }} />
-                                <Done sx={{ fontSize: LOGO2SIZE, color: "rgb(75, 218, 75)," }} />
-                            </div>
-                        </Tooltip>
-
-                        <Tooltip title={"description: completed"} >
-                            <div className="flex gap-0 ml-4">
-                                <Description sx={{ fontSize: LOGO1SIZE, color: "rgb(112, 208, 246)" }} />
-                                <Done sx={{ fontSize: LOGO2SIZE, color: "rgb(70, 217, 70)," }} />
-                            </div>
-                        </Tooltip>
+                            <Tooltip title={"description: completed"} >
+                                <div className="flex gap-0 ml-4">
+                                    <Description sx={{ fontSize: LOGO1SIZE, color: "rgb(112, 208, 246)" }} />
+                                    <Done sx={{ fontSize: LOGO2SIZE, color: "rgb(70, 217, 70)," }} />
+                                </div>
+                            </Tooltip>
 
 
-                        <Tooltip title={"title: completed"} >
-                            <div className="flex gap-0">
-                                <Title sx={{ fontSize: LOGO1SIZE, color: "rgb(112, 208, 246)" }} />
-                                <Done sx={{ fontSize: LOGO2SIZE, color: "rgb(70, 217, 70)," }} />
-                            </div>
-                        </Tooltip>
+                            <Tooltip title={"title: completed"} >
+                                <div className="flex gap-0">
+                                    <Title sx={{ fontSize: LOGO1SIZE, color: "rgb(112, 208, 246)" }} />
+                                    <Done sx={{ fontSize: LOGO2SIZE, color: "rgb(70, 217, 70)," }} />
+                                </div>
+                            </Tooltip>
+                        </div>
+                        <ThreeDots draftName={DraftName} _id={_id} />
+                        <Button variant="outlined" sx={{ height: "2rem" }} >View</Button>
                     </div>
-                    <ThreeDots draftName={DraftName} _id={_id} />
-                    <Button variant="outlined" sx={{ height: "2rem" }} >View</Button>
-                </div>
-            </div>
+                </>
+            </CardWrapper>
         )
     }
 
@@ -117,6 +114,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
 
 export const ThreeDots = ({ _id, draftName }: { _id: string, draftName: string }) => {
     const [showMenu, setShowMenu] = useState<boolean>(false)
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const ref = document.getElementById('create-screen-three-dots-menu');
@@ -136,7 +134,7 @@ export const ThreeDots = ({ _id, draftName }: { _id: string, draftName: string }
 
     return <span
         onClick={() => setShowMenu(prev => !prev)}
-        className="flex flex-col gap-1 cursor-pointer absolute top-5 right-5 hover:bg-secondaryLight p-2 rounded-2xl">
+        className="flex flex-col gap-1 cursor-pointer absolute top-0 right-0 hover:bg-secondaryLight w-fit h-fit p-2 rounded-2xl">
         <Dots />
         <Dots />
         <Dots />

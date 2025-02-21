@@ -1,37 +1,49 @@
-import { AssignmentTurnedIn, PendingActions, Videocam, Workspaces } from "@mui/icons-material";
+import { AssignmentTurnedIn, KeyboardArrowDown, KeyboardArrowUp, PendingActions, Videocam, Workspaces } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 
-// import { TabsWrappedLabel } from "./tabs";
-// import { useState } from "react";
-// import { AssignedCardSection } from "./homeTabSection/AssignedCardSection";
-// import { WorkspaceCardSection } from "./homeTabSection/WorkspaceCardSection";
-// import { DraftVideosCardSection } from "./homeTabSection/draftVideosCardSection";
+import { TabsWrappedLabel } from "./tabs";
+import { useRef, useState } from "react";
+import { AssignedCardSection } from "./homeTabSection/AssignedCardSection";
+import { WorkspaceCardSection } from "./homeTabSection/WorkspaceCardSection";
+import { DraftVideosCardSection } from "./homeTabSection/draftVideosCardSection";
 import { ScreeAreaTxt } from "./screenAreaTxt";
-// import { DaisyCarousel } from "./carousel/daisyCarousel";
-// import {  TabsWrappedLabel } from "./tabs";
-// import { useState } from "react";
 
 
 export const Main = () => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
-    // const [value, setValue] = useState<string>('one');
+    const [value, setValue] = useState<string>('one');
 
-    // let TabSection = <></>
-    // switch (value) {
-    //     case "one":
-    //         TabSection = <DaisyCarousel  />
-    //         break;
-    //     case "two":
-    //         TabSection = <DaisyCarousel />
-    //         break;
-    //     case "three":
-    //         TabSection = <DaisyCarousel />
-    // }
+    let TabSection = <></>
+    switch (value) {
+        case "one":
+            TabSection = <AssignedCardSection />
+            break;
+        case "two":
+            TabSection = <WorkspaceCardSection />
+            break;
+        case "three":
+            TabSection = <DraftVideosCardSection />
+    }
 
-    return (<div className={`h-full relative text-slate-300 flex flex-col  gap-4  ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]"}`}>
+    const scrollDivRef = useRef<HTMLDivElement>(null);
+
+    const handleUpSlide = () => {
+        if (scrollDivRef.current) {
+            scrollDivRef.current.scrollTop -= 200
+        }
+    }
+
+    const handleDownSlide = () => {
+
+        if (scrollDivRef.current) {
+            scrollDivRef.current.scrollTop += 200
+        }
+    }
+
+    return (<div className={`h-full relative text-slate-300 flex flex-col  gap-4  ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
         <ScreeAreaTxt title="Home" border />
-        <div className={` h-[30%] ${onLaptopScreen ? "mt-24" : "mt-44"} relative rounded`}>
-            <div className={`w-[90%] rounded-3xl flex ${onLaptopScreen ? "py-12 px-2" : "flex-col  sm:gap-4 gap-3 pb-10 pt-16 px-1 sm:px-6"} justify-between translate-x-1/2 right-1/2 h-min-10 bg-black absolute bottom-0 border border-secondaryLight `} >
+        <div className={` h-[30%] ${onLaptopScreen ? "mt-28" : "mt-44"} relative rounded`}>
+            <div className={`w-[90%] rounded-3xl flex ${onLaptopScreen ? "py-12 px-2" : "flex-col  sm:gap-4 gap-3 pb-10 pt-12 px-1 sm:px-6"} justify-between translate-x-1/2 right-1/2 h-min-10 bg-black absolute bottom-0 border border-secondaryLight `} >
 
                 <div className={`${onLaptopScreen ? "flex " : "w-full flex-col flex gap-3 sm:gap-4"} `}>
 
@@ -60,15 +72,27 @@ export const Main = () => {
             </div>
         </div>
 
-        {/* <div className="h-ful w-full flex gap-10 justify-center items-start mt-2">
-        <div className={` w-[90%] overflow-x-hidden  flex flex-col justify-center items-center `}>
-            <TabsWrappedLabel value={value} setValue={setValue} />
-            {TabSection}
-        </div>
-        </div> */}
+        <div className="w-full overflow-x-hidden flex justify-center items-center">
+            <div className={` w-[90%] relative overflow-hidden flex flex-col gap-4 justify-start items-start `}>
+                <TabsWrappedLabel value={value} setValue={setValue} />
+                <div 
+                ref={scrollDivRef}
+                className={`w-full h-full max-[400px]:static relative border border-secondaryLight rounded-3xl flex justify-center items-center max-[400px]:h-[200px] max-[400px]:overflow-y-scroll
+                  max-[400px]:items-start scroll-smooth scrollbar-thin dark:scrollbar-track-primary  dark:scrollbar-thumb-accent`}>
+                    {TabSection}
+                    <div onClick={handleUpSlide} className="absolute hidden max-[400px]:block bg-secondaryLight top-20 right-4 sm:right-2 z-20 border border-primary rounded-full p-1 cursor-pointer active:scale-90 ease-linear duration-75 " >
+                        <KeyboardArrowUp fontSize='small' />
+                    </div>
+                    <div onClick={handleDownSlide} className="absolute hidden max-[400px]:block bottom-2 right-4 z-10 cursor-pointer border-primary bg-secondaryLight border rounded-full p-1 active:scale-90 duration-75 ease-linear" >
+                        <KeyboardArrowDown fontSize='small' />
+                    </div>
+                </div>
+            </div>
 
+        </div>
     </div >)
 }
+
 
 
 const ProfileInfo = ({ Svg, text1, text2 }: { Svg: React.ReactNode, text1: String, text2: String }) => {

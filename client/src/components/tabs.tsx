@@ -1,34 +1,34 @@
+import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 
-
-
-export const TabsWrappedLabel: React.FC<{ value: string, setValue: (text: string) => void }> = ({ value, setValue }) => {
-    const handleChange = (_: React.SyntheticEvent, newValue: string) => {
-        setValue(newValue);
-    };
+export const TabsWrappedLabel: React.FC<{ value: string, setValue: (val: string) => void }> = ({ value, setValue }) => {
 
     return (
-        <Box sx={{ width: '100%' }}>
+        <Box className="w-full bg-primary text-accent  rounded">
             <Tabs
                 value={value}
-                textColor="inherit"
-                indicatorColor="primary"
-                sx={{ fontSize: '0.875rem' }}
-                onChange={handleChange}
-                aria-label="wrapped bg-label tabs example"
+                variant="scrollable"
+                scrollButtons
+                allowScrollButtonsMobile
+                aria-label="scrollable force tabs example"
+                className="bg-primary"
+                sx={{
+                    '& .MuiTab-root': {
+                        color: 'white',
+                    },
+                    '& .Mui-selected': {
+                        color: 'theme(colors.accent)',
+                    },
+                }}
             >
-                <Tab
-                    value="one"
-                    sx={{ fontSize: '0.875rem' }}
-                    label="Assigned Tasks"
-                    wrapped
-                />
-                <Tab value="two" label="WorkSpaces" />
-                <Tab value="three" label="Draft Videos" />
+                <Tab onClick={() => setValue('one')} value="one" label="Assigned Tasks" />
+                <Tab onClick={() => setValue('two')} value="two" label="WorkSpaces" />
+                <Tab onClick={() => setValue('three')} value="three" label="Draft Videos" />
             </Tabs>
         </Box>
     );
 }
+
 

@@ -53,7 +53,7 @@ export const Sidebar = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.5 }}
-                    className={`flex flex-col min-w-16 items-center justify-between pb-4 border border-secondaryLight bg-black text-slate-300 rounded-r-3xl h-screen w-[10vw]`}>
+                    className={`flex flex-col  items-center justify-between pb-4 border border-secondaryLight bg-black text-slate-300 rounded-r-3xl h-screen max-[520px]:w-[15vw] w-[10vw]`}>
 
                     <div className="flex flex-col gap-1 pt-9 pb-10 ">
                         <Link to="/">

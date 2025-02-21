@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Sidebar } from "../components/sidebar"
 import { useSelector } from "react-redux"
-import { CircleXIcon, MenuIcon, Send } from "lucide-react";
+import { CircleXIcon, MenuIcon, PlusIcon, Send } from "lucide-react";
 import { Delete } from "@mui/icons-material";
 import { storeStateType } from "../store/store";
 import { AnimatePresence, motion } from "framer-motion";
@@ -11,13 +11,13 @@ import { ScreeAreaTxt } from "../components/screenAreaTxt";
 const BubbleColor = "bg-accent text-black"
 
 export const ChatScreen: React.FC = () => {
-    const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
+    const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
         <div className='w-screen h-screen flex justify-end max-[850px]:text-xs ' >
             <Sidebar />
 
-            <div className={`h-full text-slate-300 ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]"}`}>
-                
+            <div className={`h-full text-slate-300 ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
+
                 <div className="flex h-full justify-start relative items-center ">
                     <div className={`${onLaptopScreen ? "w-[70%]" : "w-full"} h-16 absolute top-20 left-0 z-20 p-2 flex gap-5 justify-start items-center bg-primary border-b border-secondaryLight`} >
 
@@ -38,8 +38,9 @@ export const ChatScreen: React.FC = () => {
                     </div>
 
                     <ScreeAreaTxt title="chat" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
-                    <div className={`${onLaptopScreen ? "w-[70%]" : "w-[98%]"} h-16 absolute left-0 bottom-0 z-50 p-2 flex gap-4 justify-start items-center border-b  border-secondaryLight`}>
+                    <div className={`${onLaptopScreen ? "w-[70%]" : "w-[98%]"} h-fit absolute left-0 bottom-0 z-50 px-2 flex gap-4 justify-between items-center border-b bg-primary py-1 bg-blend-darken border-secondaryLight `}>
 
+                        <PlusIcon color="lightGreen" className="cursor-pointer active:scale-90 ease-linear duration-75" />
                         <input type="text" placeholder="Type here" className="input input-bordered w-[90%]" />
                         <button className="btn btn-square btn-outline bg-primary">
                             <Send className="" />
@@ -210,7 +211,7 @@ const ChatArea: React.FC = () => {
 
     return <div
         ref={chatAreaRef}
-        className={`flex flex-col opacity-95 justify-center px-2 items-center scrollbar-hide overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-primary dark:scrollbar-track-secondaryLight h-full border-r border-secondary rounded ${sideBarState.onLaptopScreen ? "w-[70%]" : "w-full"} gap-2 pt-40 `} >
+        className={`flex flex-col opacity-95 justify-center px-2 items-center scrollbar-hide overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-accent dark:scrollbar-track-transparent h-full border-r border-secondary rounded ${sideBarState.onLaptopScreen ? "w-[70%]" : "w-full"} gap-2 pt-40 `} >
 
         <div className="flex flex-col w-full h-full">
             <div className="flex flex-col gap-2" >

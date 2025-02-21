@@ -28,7 +28,7 @@ export const Modal = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
-                        className='bg-black z-20 w-screen h-screen fixed top-0 left-0 bg-opacity-90'
+                        className='bg-black z-[200] w-screen h-screen fixed top-0 left-0 bg-opacity-90'
                     />
 
 
@@ -37,11 +37,11 @@ export const Modal = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 150 }}
                         transition={{ duration: 0.5 }}
-                        className="fixed z-40 bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2"
+                        className="fixed max-[400px]:text-xs text-sm sm:text-lg z-[300] bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2"
                     >
                         <div className="fixed bottom-1/2 z-20 min-w-72 sm:min-w-[400px] right-1/2 p-10 translate-x-1/2 translate-y-1/2">
                             <div
-                                className="px-10 py-8 flex flex-col gap-8 rounded-3xl bg-black border border-zinc-700"
+                                className="px-5 sm:px-10 py-8 flex flex-col gap-8 rounded-3xl bg-black border border-zinc-700"
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <div className="flex justify-between pt-5 items-center relative">
