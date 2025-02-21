@@ -1,16 +1,28 @@
 import { Button } from "@mui/material"
 import { Link } from "react-router-dom"
 import { WebsiteLogo } from "../websitelogo/websitelogo"
-import { useSelector } from "react-redux"
-import { storeStateType } from "../../store/store"
+import { useDispatch, useSelector } from "react-redux"
+import { storeDispatchType, storeStateType } from "../../store/store"
 import { CircleXIcon, MenuIcon } from "lucide-react"
 import { useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { modalActions } from "../../store/modal"
+import { LoginBox } from "./Auth"
 
 
 export function Header({ color = "text-gray-300" }: { color?: string }) {
     const sidebarState = useSelector((state: storeStateType) => state.sidebar)
     const [showMenu, setShowMenu] = useState<boolean>(false)
+    const dispatch: storeDispatchType = useDispatch()
+    const handleClick = () => {
+
+        dispatch(modalActions.openMoal({
+            content: <LoginBox />,
+            buttons: true,
+            submitText: "Login",
+            title: ""
+        }))
+    }
     return (
         <header className="fixed top-0 left-0 right-0 z-50  border-b border-white/10">
             <div className="flex items-center justify-between px-6 py-4 backdrop-blur-xl bg-black/50">
@@ -36,12 +48,16 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
                 </nav>
 
                 {sidebarState.onLaptopScreen ?
-                    <Button size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
+                    <Button
+                        onClick={handleClick}
+                        size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
                         Login
                     </Button>
                     :
                     <div className="flex gap-2 justify-center items-center">
-                        <Button size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
+                        <Button 
+                        onClick={handleClick}
+                        size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
                             Login
                         </Button>
                         <MenuIcon onClick={() => setShowMenu(true)} size={30} className="cursor-pointer active:scale-90 ease-linear duration-75" />

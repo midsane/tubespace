@@ -5,7 +5,8 @@ interface ModalActionsInterface {
     content: ReactNode | null,
     title: string | null,
     buttons?: boolean,
-    handleSubmit?: () => void
+    handleSubmit?: () => void,
+    submitText?: string
 }
 
 interface ModalStateInterface extends ModalActionsInterface {
@@ -17,6 +18,7 @@ const initialState: ModalStateInterface = {
     content: null,
     title: null,
     buttons: false,
+    submitText: "Ok",
     handleSubmit: () => {}
 }
 
@@ -29,6 +31,7 @@ const modalSlice = createSlice({
             state.content = action.payload.content;
             state.title = action.payload.title;
             state.buttons = action.payload.buttons || false;
+            state.submitText = action.payload.submitText || "Ok";
             if (action.payload.handleSubmit)
                 state.handleSubmit = action.payload.handleSubmit
             else state.handleSubmit = () => {}
@@ -41,6 +44,7 @@ const modalSlice = createSlice({
             state.title = null;
             state.handleSubmit = () => {};
             state.buttons = false;
+            state.submitText = "Ok";
         }
     }
 
