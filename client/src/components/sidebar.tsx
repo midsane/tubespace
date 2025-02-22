@@ -28,7 +28,7 @@ export const Sidebar = () => {
 
 
                     <div className="flex flex-col py-20 gap-4 px-10 max-[1021px]:px-5">
-                        {[["Home", <Home />], ["Create", <AddCircleOutline />], ["Collab", <GroupsIcon />], ["Chat", <Chat />]].map((icon, ind) =>
+                        {[["Home", <Home />], ["Create", <AddCircleOutline />], ["office", <GroupsIcon />], ["Chat", <Chat />]].map((icon, ind) =>
                             <IconParent
                                 showTxt={true}
                                 label={icon[0] as string}
@@ -61,7 +61,7 @@ export const Sidebar = () => {
                         </Link>
                     </div>
                     <div className="flex flex-col gap-1 pb-16 ">
-                        {[["Home", <Home />], ["Create", <AddCircleOutline />], ["Collab", <GroupsIcon />], ["Chat", <Chat />]].map((icon, ind) =>
+                        {[["Home", <Home />], ["Create", <AddCircleOutline />], ["Office", <GroupsIcon />], ["Chat", <Chat />]].map((icon, ind) =>
                             <IconParent
                                 label={icon[0] as string}
                                 key={ind}>

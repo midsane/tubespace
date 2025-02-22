@@ -71,12 +71,12 @@ export const DraftVideosCardSection2: React.FC = () => {
                         className="h-screen w-screen fixed top-0 left-0 z-[100]">
                         <CircleXIcon className="fixed z-50 top-4 right-8 cursor-pointer active:scale-90 ease-linear duration-75" onClick={() => setIsOpen(false)} />
 
-                       
+
 
                         <div ref={scrollDivRef} className="flex flex-col pl-14 overflow-y-scroll scroll-smooth bg-secondary gap-6 h-full py-10 pt-2 rounded-l-3xl  justify-start items-center w-full ">
                             <p>{"--------------------"}</p>
-                            <SplitText       
-                             text="All Draft Videos"
+                            <SplitText
+                                text="All Draft Videos"
                             />
                             <div onClick={handleTopSide} className="absolute bottom-1/2 left-2 translate-y-[-50%] border border-zinc-700 rounded-full p-1 cursor-pointer active:scale-90 ease-linear duration-75 " >
                                 <KeyboardArrowUp />
@@ -107,3 +107,18 @@ export const DraftVideosCardSection2: React.FC = () => {
     </>)
 }
 
+
+export const DraftVideosCardSectionWrap: React.FC = () => {
+    const DraftArr = useSelector((state: storeStateType) => state.draft);
+    return (
+        <div className={`flex flex-col gap-10 p-10 justify-start items-center  overflow-x-hidden overflow-y-scroll rounded-2xl border border-secondaryLight h-[90%] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent  w-[95%] sm:w-[90%] `}>
+            <CreateNewVideoCard
+                extraTStyle="bg-secondary border-white/10 hover:opacity-100 opacity-70 duration-75 ease-linear "
+            />
+            {DraftArr.map(draft => <DraftVideosCard {
+                ...draft}
+                extraTStyle="cursor-pointer hover:opacity-100 opacity-70 bg-secondary border-white/10 duration-75 ease-linear "
+                key={draft._id} />)}
+        </div>
+    )
+}

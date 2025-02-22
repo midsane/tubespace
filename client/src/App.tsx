@@ -3,7 +3,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
 import { HomeScreen } from './screens/homescreen'
-import { CollabScreen } from './screens/collabScreen'
+import {  WorkSpacesScreen } from './screens/workspacesScreen'
 import { ChatScreen } from './screens/chatScreen'
 import { SettingScreen } from './screens/settingScreen'
 import { CreateScreen } from './screens/createScreen'
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
         path: "/home", element: <HomeScreen />
       },
       {
-        path: "/collab", element: <CollabScreen />
+        path: "/office", element: <WorkSpacesScreen />
       },
       {
         path: "/chat", element: <ChatScreen />

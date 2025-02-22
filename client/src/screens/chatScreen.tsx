@@ -8,6 +8,8 @@ import { storeStateType } from "../store/store";
 import { AnimatePresence, motion } from "framer-motion";
 import { ScreeAreaTxt } from "../components/screenAreaTxt";
 
+import { Pattern2 } from "../components/chatBackground/background2";
+
 const BubbleColor = "bg-accent text-black"
 
 export const ChatScreen: React.FC = () => {
@@ -20,8 +22,6 @@ export const ChatScreen: React.FC = () => {
 
                 <div className="flex h-full justify-start relative items-center ">
                     <div className={`${onLaptopScreen ? "w-[70%]" : "w-full"} h-16 absolute top-20 left-0 z-20 p-2 flex gap-5 justify-start items-center bg-primary border-b border-secondaryLight`} >
-
-
                         <div className="w-fit h-fit p-1 ml-2 border rounded-xl mask mask-mask-squircle border-secondaryLight bg-accent " >
                             <img src="https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
                                 className="object-cover h-10 rounded-xl"
@@ -34,7 +34,6 @@ export const ChatScreen: React.FC = () => {
                                 Last online on 12th Feb, 2024.
                             </p>
                         </div>
-
                     </div>
 
                     <ScreeAreaTxt title="chat" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
@@ -211,9 +210,11 @@ const ChatArea: React.FC = () => {
 
     return <div
         ref={chatAreaRef}
-        className={`flex flex-col opacity-95 justify-center px-2 items-center scrollbar-hide overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-accent dark:scrollbar-track-transparent h-full border-r border-secondary rounded ${sideBarState.onLaptopScreen ? "w-[70%]" : "w-full"} gap-2 pt-40 `} >
-
-        <div className="flex flex-col w-full h-full">
+        className={`flex flex-col opacity-95 justify-center px-2 items-center scrollbar-hide overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-accent dark:scrollbar-track-transparent h-full border-r border-secondary rounded ${sideBarState.onLaptopScreen ? "w-[70%]" : "w-full"} gap-2 pt-40 relative `} >
+        <div className="z-30 w-full overflow-hidden h-full absolute top-0 left-0">
+            <Pattern2 />
+        </div>
+        <div className="flex z-40 flex-col absolute top-44 left-0 w-full h-full">
             <div className="flex flex-col gap-2" >
                 {["That's never been done in the history of the Jedi. It's insulting!", "What kind of nonsense is this",
                     "this should not happen again", "is there any way to solve it", "i am done with you",
