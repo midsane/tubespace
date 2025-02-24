@@ -53,7 +53,7 @@ export const TabsWrappedLabel2: React.FC<{ value: string, setValue: (val: string
                 }}
             >
                 <Tab onClick={() => setValue('one')} value="one" label="Assigned Tasks" />
-                <Tab onClick={() => setValue('two')} value="two" label="WorkSpaces" />
+                <Tab onClick={() => setValue('two')} value="two" label="Draft Videos" />
                 <Tab onClick={() => setValue('three')} value="three" label="Collaborators" />
             </Tabs>
         </Box>
