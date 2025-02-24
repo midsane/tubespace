@@ -1,5 +1,5 @@
 import { CreateNewVideoCard, DraftVideosCard } from "../cards/draftVideosCard"
-import React, { useRef, useState } from "react";
+import React, { forwardRef, useRef, useState } from "react";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { storeStateType } from "../../store/store";
@@ -85,11 +85,11 @@ export const DraftVideosCardSection2: React.FC = () => {
                                 <KeyboardArrowDown />
                             </div>
                             <CreateNewVideoCard
-                                extraTStyle="cursor-pointer hover:opacity-100  opacity-70 bg-secondary border-white/10 duration-75 ease-linear "
+                                extraTStyle="cursor-pointer hover:opacity-100 opacity-90 bg-secondary border-white/10 duration-75 ease-linear "
                             />
                             {DraftArr.map(draft => <DraftVideosCard
                                 {...draft}
-                                extraTStyle="cursor-pointer hover:opacity-100 opacity-70 bg-secondary border-white/10 duration-75 ease-linear "
+                                extraTStyle="cursor-pointer hover:opacity-100 opacity-90 bg-secondary border-white/10 duration-75 ease-linear "
                                 key={draft._id} />)}
 
                         </div>
@@ -108,17 +108,17 @@ export const DraftVideosCardSection2: React.FC = () => {
 }
 
 
-export const DraftVideosCardSectionWrap: React.FC = () => {
+export const DraftVideosCardSectionWrap = forwardRef<HTMLDivElement>((_, ref) => {
     const DraftArr = useSelector((state: storeStateType) => state.draft);
     return (
-        <div className={`flex flex-col gap-10 p-10 justify-start items-center  overflow-x-hidden overflow-y-scroll rounded-2xl border border-secondaryLight h-[90%] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent  w-[95%] sm:w-[90%] `}>
+        <div ref={ref} className={`flex flex-col gap-10 p-10 justify-start items-center  overflow-x-hidden overflow-y-scroll rounded-2xl scroll-smooth border border-secondaryLight h-[90%] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent  w-[95%] sm:w-[90%] `}>
             <CreateNewVideoCard
-                extraTStyle="bg-secondary border-white/10 hover:opacity-100 opacity-70 duration-75 ease-linear "
+                extraTStyle="bg-secondary border-white/10 hover:opacity-100 opacity-90 duration-75 ease-linear "
             />
             {DraftArr.map(draft => <DraftVideosCard {
                 ...draft}
-                extraTStyle="cursor-pointer hover:opacity-100 opacity-70 bg-secondary border-white/10 duration-75 ease-linear "
+                extraTStyle="cursor-pointer hover:opacity-100 opacity-90 bg-secondary border-white/10 duration-75 ease-linear "
                 key={draft._id} />)}
         </div>
     )
-}
+})

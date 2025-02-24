@@ -5,9 +5,10 @@ import { ScreenWrapper } from "../components/ScreenWrapper";
 import { ScreeAreaTxt } from "../components/screenAreaTxt";
 import { storeStateType } from "../store/store";
 import { WorkspaceCardSection2 } from "../components/homeTabSection/WorkspaceCardSection";
-import {  TabsWrappedLabel2 } from "../components/tabs";
+import { TabsWrappedLabel2 } from "../components/tabs";
 import { AssignedCardSectionWrap } from "../components/homeTabSection/AssignedCardSection";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
+import { CollaboratorCardSectionWrap } from "../components/homeTabSection/collaboratorCardSection";
 
 
 export const WorkSpacesScreen: React.FC = () => {
@@ -37,10 +38,10 @@ const OfficeArea = () => {
             TabSection = <AssignedCardSectionWrap ref={arrowRef} />
             break;
         case "two":
-            TabSection = <DraftVideosCardSectionWrap />
+            TabSection = <DraftVideosCardSectionWrap ref={arrowRef} />
             break;
         case "three":
-            TabSection = <DraftVideosCardSectionWrap />
+            TabSection = <CollaboratorCardSectionWrap ref={arrowRef} />
             break;
     }
 
@@ -51,7 +52,7 @@ const OfficeArea = () => {
     }
 
     const handleClickDown = () => {
-        if(arrowRef.current){
+        if (arrowRef.current) {
             arrowRef.current.scrollTop = arrowRef.current.scrollHeight;
         }
     }

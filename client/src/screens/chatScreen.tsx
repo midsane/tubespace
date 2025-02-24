@@ -8,8 +8,6 @@ import { storeStateType } from "../store/store";
 import { AnimatePresence, motion } from "framer-motion";
 import { ScreeAreaTxt } from "../components/screenAreaTxt";
 
-import { Pattern2 } from "../components/chatBackground/background2";
-
 const BubbleColor = "bg-accent text-black"
 
 export const ChatScreen: React.FC = () => {
@@ -211,9 +209,7 @@ const ChatArea: React.FC = () => {
     return <div
         ref={chatAreaRef}
         className={`flex flex-col opacity-95 justify-center px-2 items-center scrollbar-hide overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-accent dark:scrollbar-track-transparent h-full border-r border-secondary rounded ${sideBarState.onLaptopScreen ? "w-[70%]" : "w-full"} gap-2 pt-40 relative `} >
-        <div className="z-30 w-full overflow-hidden h-full absolute top-0 left-0">
-            <Pattern2 />
-        </div>
+        
         <div className="flex z-40 flex-col absolute top-44 left-0 w-full h-full">
             <div className="flex flex-col gap-2" >
                 {["That's never been done in the history of the Jedi. It's insulting!", "What kind of nonsense is this",
