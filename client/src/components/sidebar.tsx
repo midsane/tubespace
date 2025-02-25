@@ -18,33 +18,35 @@ export const Sidebar = () => {
                     // animate={{ opacity: 1, x: 0 }}
                     // exit={{ opacity: 0, x: -20 }}
                     // transition={{ duration: 0.5 }}
-                    className={`flex flex-col border max-[1021px]:text-sm border-secondaryLight gap-4 bg-black text-slate-300 rounded-r-3xl h-[100dvh] w-[18vw]`}>
+                    className={`border max-[1021px]:text-sm flex justify-center border-secondaryLight gap-4  text-slate-300 rounded-r-3xl h-[100dvh] w-[18vw]`}>
 
-                    <div className="flex flex-col h-fit gap-4 pl-0 py-10 max-[1021px]:px-5 px-10">
-                        <Link to="/" className="flex items-center pl-2 lg:pl-6 gap-3">
-                            <WebsiteLogo />
-                        </Link>
-                    </div>
+                    <div className="w-fit sm:px-4 lg:px-10 xl:px-12  h-full flex flex-col" >
+                        <div className="flex flex-col h-fit gap-4 pl-0 py-10">
+                            <Link to="/" className="flex items-center gap-3">
+                                <WebsiteLogo />
+                            </Link>
+                        </div>
 
 
-                    <div className="flex flex-col py-20 gap-4  max-[1021px]:px-5">
-                        {[["Home", <Home />], ["Create", <AddCircleOutline />], ["office", <Workspaces />], ["Chat", <Chat />], ['Collaborators', <GroupsIcon />]].map((icon, ind) =>
-                            <IconParent
-                                showTxt={true}
-                                label={icon[0] as string}
-                                key={ind}>
-                                {icon[1]}
-                            </IconParent>)}
-                    </div>
+                        <div className="flex flex-col py-20 gap-4">
+                            {[["Home", <Home />], ["Create", <AddCircleOutline />], ["office", <Workspaces />], ["Chat", <Chat />], ['Collaborators', <GroupsIcon />]].map((icon, ind) =>
+                                <IconParent
+                                    showTxt={true}
+                                    label={icon[0] as string}
+                                    key={ind}>
+                                    {icon[1]}
+                                </IconParent>)}
+                        </div>
 
-                    <div className="flex flex-col gap-2  max-[1021px]:px-5">
-                        {[["Settings", <Settings />], ["Logout", <Logout />]].map((icon, ind) =>
-                            <IconParent
-                                showTxt={true}
-                                label={icon[0] as string}
-                                key={ind}>
-                                {icon[1]}
-                            </IconParent>)}
+                        <div className="flex flex-col gap-2">
+                            {[["Settings", <Settings />], ["Logout", <Logout />]].map((icon, ind) =>
+                                <IconParent
+                                    showTxt={true}
+                                    label={icon[0] as string}
+                                    key={ind}>
+                                    {icon[1]}
+                                </IconParent>)}
+                        </div>
                     </div>
                 </motion.div>
                 :
@@ -88,7 +90,7 @@ const IconParent: React.FC<{ children: ReactNode, label: string, showTxt?: boole
     const onLaptopScreen = useSelector((state: any) => state.sidebar.onLaptopScreen);
     const route = window.location.pathname.toLowerCase();
     const navigate = useNavigate()
-    return <span onClick={() => navigate("/" + label)} className={`flex gap-4 w-full cursor-pointer hover:bg-secondary ${route.slice(1, route.length) === label.toLowerCase() ? "text-opacity-100 text-accent" : "text-opacity-50 text-label"} ${!onLaptopScreen && "justify-center"} ease-linear duration-75  active:scale-95 pl-0 sm:pl-2 lg:pl-6 py-1 rounded`}>
+    return <span onClick={() => navigate("/" + label)} className={`flex gap-4 w-full cursor-pointer hover:bg-secondary ${route.slice(1, route.length) === label.toLowerCase() ? "text-opacity-100 text-accent" : "text-opacity-50 text-label"} ${!onLaptopScreen ? "justify-center w-fit px-0" : "px-2"}  ease-linear duration-75  active:scale-95  py-1 rounded`}>
         <div className="cursor-pointer" >{children}</div>
         {showTxt && <p>{label}</p>}
     </span>

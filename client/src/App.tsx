@@ -2,15 +2,15 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import { Provider } from 'react-redux'
 import { store } from './store/store'
-import { HomeScreen } from './screens/homescreen'
-import {  WorkSpacesScreen } from './screens/workspacesScreen'
-import { ChatScreen } from './screens/chatScreen'
-import { SettingScreen } from './screens/settingScreen'
-import { CreateScreen } from './screens/createScreen'
-import { LandingPage } from './screens/landingpage'
-import { RootLayout } from './screens/rootlayout'
+import { HomeScreen } from './Screens/homescreen'
+import {  WorkSpacesScreen } from './Screens/workspacesScreen'
+import { ChatScreen } from './Screens/chatScreen'
+import { SettingScreen } from './Screens/settingScreen'
+import { CreateScreen } from './Screens/createScreen'
+import { LandingPage } from './Screens/landingpage'
+import { RootLayout } from './Screens/rootlayout'
 import { Modal } from "./components/Modal"
-import { CollaboratorsScreen } from './screens/collaboratorsScreen'
+import { CollaboratorsScreen } from './Screens/collaboratorsScreen'
 
 const router = createBrowserRouter([
   {
