@@ -28,7 +28,7 @@ export const Modal = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
-                        className='bg-black z-[200] w-screen h-screen fixed top-0 left-0 bg-opacity-90'
+                        className='bg-black z-[200] w-screen h-[100dvh] fixed top-0 left-0 bg-opacity-90'
                     />
 
 
@@ -72,15 +72,15 @@ export const Modal = () => {
                                 </div>
                                 <div className="rounded-lg">{modalState.content}</div>
                                 {modalState.buttons &&
-                            <div className="flex w-full justify-center gap-4">
-                                <Button onClick={onClose} variant="outlined" >Cancel</Button>
-                                <Button onClick={modalState.handleSubmit} variant="contained" >{modalState.submitText}</Button>
-                            </div>
-                        }
+                                    <div className="flex w-full justify-center gap-4">
+                                        <Button onClick={onClose} variant="outlined" >Cancel</Button>
+                                        <Button onClick={modalState.handleSubmit} variant="contained" >{modalState.submitText}</Button>
+                                    </div>
+                                }
                             </div>
                         </div>
-                        
-                    
+
+
                     </motion.div>
                 </>
             )}

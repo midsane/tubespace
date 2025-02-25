@@ -71,7 +71,7 @@ const GeneralSettings = () => {
         ))
     }
 
-    return (<div className={`flex flex-col gap-10 p-10 justify-start items-center rounded-2xl border border-secondaryLight h-[90%] w-[95%] sm:w-[90%] `}>
+    return (<div className={`flex flex-col gap-10 p-10 overflow-y-scroll overflow-x-hidden justify-start items-center rounded-2xl border border-secondaryLight h-[90%] w-[95%] sm:w-[90%] scroll-smooth scrollbar-thin dark:scrollbar-track-primary  dark:scrollbar-thumb-accent `}>
         <div className="flex flex-col gap-10 w-fit justify-center items-center" >
             <ProfileImageUploader imgUrl="https://platform.polygon.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/9997313/Devilman_Crybaby_Queeen_Bee_Clip_02.jpg?quality=90&strip=all&crop=7.8125%2C0%2C84.375%2C100&w=1080" />
             <SettingsFields type={settingsFiledsType.username} label="username" />

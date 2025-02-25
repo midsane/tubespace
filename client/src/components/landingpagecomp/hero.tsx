@@ -7,7 +7,7 @@ import { SplitText } from "../textAnimations/splitText"
 
 export function HeroSection() {
     return (
-        <section className="relative min-h-screen pt-32 pb-16 overflow-hidden bg-black">
+        <section className="relative min-h-[100dvh] pt-32 pb-16 overflow-hidden bg-black">
             <InteractiveGrid containerClassName="absolute inset-0" className="opacity-30" points={40} />
 
             <ShineBorder

@@ -3,7 +3,7 @@ import { HeroSection } from "../components/landingpagecomp/hero"
 import { Footer } from "../components/footer"
 export const LandingPage: React.FC = () => {
     return (
-        <main className="min-h-screen bg-black">
+        <main className="min-h-[100dvh] bg-black">
             <Header />
             <HeroSection />
             <Footer />

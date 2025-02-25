@@ -260,7 +260,7 @@ export const WorkspaceCardSection2: React.FC = () => {
                         initial={{ opacity: 0, x: 100 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 100 }}
-                        className="h-screen w-screen fixed top-0 left-0 z-[100]">
+                        className="h-[100dvh] w-screen fixed top-0 left-0 z-[100]">
                         <CircleXIcon className="fixed z-50 top-4 right-8 cursor-pointer active:scale-90 ease-linear duration-75" onClick={() => setIsOpen(false)} />
 
 

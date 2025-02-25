@@ -55,9 +55,9 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
                     </Button>
                     :
                     <div className="flex gap-2 justify-center items-center">
-                        <Button 
-                        onClick={handleClick}
-                        size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
+                        <Button
+                            onClick={handleClick}
+                            size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
                             Login
                         </Button>
                         <MenuIcon onClick={() => setShowMenu(true)} size={30} className="cursor-pointer active:scale-90 ease-linear duration-75" />
@@ -70,7 +70,7 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
                             animate={{ scaleY: 1, opacity: 1, y: 0 }}
                             exit={{ scaleY: 0, opacity: 0, y: -50 }}
                             transition={{ duration: 0.5 }}
-                            className="w-screen flex flex-col justify-center items-center gap-10 h-screen bg-primary bg-opacity-95 fixed top-0 left-0 z-50 origin-top"
+                            className="w-screen flex flex-col justify-center items-center gap-10 h-[100dvh] bg-primary bg-opacity-95 fixed top-0 left-0 z-50 origin-top"
                         >
                             <CircleXIcon
                                 className="cursor-pointer active:scale-90 ease-linear duration-75"
