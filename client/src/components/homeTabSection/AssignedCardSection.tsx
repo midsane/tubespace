@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { AssignedTaskCard, TaskStatus } from "../cards/AssignedTaskCard"
+import { AssignedTaskCard, AssignedTaskCardCol, TaskStatus } from "../cards/AssignedTaskCard"
 import { CardSection, } from "./cardSection";
 
 
@@ -34,6 +34,38 @@ export const AssignedCardSection: React.FC = () => {
     </CardSection>)
 }
 
+
+export const AssignedCardSectionCol: React.FC = () => {
+    return (<CardSection>
+        <>
+            <AssignedTaskCardCol
+                timesRevised={0}
+                deadline="9th Feb 2025"
+                taskTitle="Edit the video"
+                status={TaskStatus.pending}
+                extraTStyle="bg-secondary border-white/10" />
+            <AssignedTaskCardCol
+                timesRevised={0}
+                deadline="9th Feb 2025"
+                taskTitle="Edit the video"
+                status={TaskStatus.pending}
+                extraTStyle="bg-secondary border-white/10" />
+            <AssignedTaskCardCol
+                timesRevised={0}
+                deadline="9th Feb 2025"
+                taskTitle="Edit the video"
+                status={TaskStatus.pending}
+                extraTStyle="bg-secondary border-white/10" />
+            <AssignedTaskCardCol
+                timesRevised={0}
+                deadline="9th Feb 2025"
+                taskTitle="Edit the video"
+                status={TaskStatus.pending}
+                extraTStyle="bg-secondary border-white/10" />
+
+        </>
+    </CardSection>)
+}
 
 export const AssignedCardSectionWrap = forwardRef<HTMLDivElement>((_, ref) => {
 

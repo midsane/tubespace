@@ -1,6 +1,7 @@
 import { Assignment, FactCheck, Pending, WorkspacePremiumSharp } from "@mui/icons-material"
 import { Avatar, Button, Rating, Tooltip } from "@mui/material"
 import { CardWrapper } from "./cardWrapper"
+import { useNavigate } from "react-router-dom"
 
 interface collaboratorsCardInterface {
     extraTStyle: string,
@@ -20,18 +21,19 @@ export const CollaBoratorCard: React.FC<collaboratorsCardInterface> =
         AssignedTasksCnt,
         completedTasksCnt,
         imgUrl,
-
     }) => {
+
+        const navigate = useNavigate()
         return (
             <CardWrapper extraTStyle={extraTStyle}>
                 <>
                     <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
                         <WorkspacePremiumSharp />
                     </div>
-                    <div className="flex w-full justify-center gap-2 items-center h-fit">
+                    <div onClick={() => navigate("/col/lav/home")} className="flex w-full justify-center gap-2 items-center h-fit hover:scale-105 ease-linear duration-75 hover:border rounded hover:bg-primary border-accent">
                         <Avatar sx={{ width: 60, height: 60 }} className="border-2 shadow-lg shadow-primary  border-primary" alt="collaborator1" src={imgUrl} />
-                        <div className="flex flex-col h-fit gap-1">
-                            <h6 className="text-lg sm:text-xl" >{name}</h6>
+                        <div  className="flex flex-col  h-fit gap-1">
+                            <h6  className="text-lg sm:text-xl" >{name}</h6>
                             <div className=" flex flex-col">
                                 <Rating size="small" name="read-only" value={3} readOnly />
                                 <p className="pl-1 opacity-80 text-xs">20 ratings</p>

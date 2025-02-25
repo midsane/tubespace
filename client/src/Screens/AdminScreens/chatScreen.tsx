@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
-import { Sidebar } from "../../components/sidebar"
+import { Sidebar, SidebarCol } from "../../components/sidebar"
 import { useSelector } from "react-redux"
 import { CircleXIcon, MenuIcon, PlusIcon, Send } from "lucide-react";
 import { Delete } from "@mui/icons-material";
@@ -52,6 +52,47 @@ export const ChatScreen: React.FC = () => {
     )
 }
 
+export const ChatScreenCol: React.FC = () => {
+    const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+    return (
+        <div className='w-screen h-[100dvh] flex justify-end max-[850px]:text-xs ' >
+            <SidebarCol />
+
+            <div className={`h-full text-slate-300 ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
+
+                <div className="flex h-full justify-start relative items-center ">
+                    <div className={`${onLaptopScreen ? "w-[70%]" : "w-full"} h-16 absolute top-20 left-0 z-20 p-2 flex gap-5 justify-start items-center bg-primary border-b border-secondaryLight`} >
+                        <div className="w-fit h-fit p-1 ml-2 border rounded-xl mask mask-mask-squircle border-secondaryLight bg-accent " >
+                            <img src="https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
+                                className="object-cover h-10 rounded-xl"
+                            />
+                        </div>
+
+                        <div className="flex flex-col justify-start items-start">
+                            <p className="font-bold" >Satmak</p>
+                            <p className="badge badge-ghost badge-sm">
+                                Last online on 12th Feb, 2024.
+                            </p>
+                        </div>
+                    </div>
+
+                    <ScreeAreaTxt title="chat" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
+                    <div className={`${onLaptopScreen ? "w-[70%]" : "w-[98%]"} h-fit absolute left-0 bottom-0 z-50 px-2 flex gap-4 justify-between items-center border-b bg-primary py-1 bg-blend-darken border-secondaryLight `}>
+
+                        <PlusIcon color="lightGreen" className="cursor-pointer active:scale-90 ease-linear duration-75" />
+                        <input type="text" placeholder="Type here" className="input input-bordered w-[90%]" />
+                        <button className="btn btn-square btn-outline bg-primary">
+                            <Send className="" />
+                        </button>
+                    </div>
+
+                    <ChatArea />
+                    <PersonsForChat />
+                </div>
+            </div>
+        </div>
+    )
+}
 
 
 const PersonsForChat = () => {

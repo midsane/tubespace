@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { ScreenWrapper } from "../../components/ScreenWrapper";
+import { ScreenWrapperCol } from "../../components/ScreenWrapper";
 import { ScreeAreaTxt } from "../../components/screenAreaTxt";
 import { storeDispatchType, storeStateType } from "../../store/store";
 
@@ -16,12 +16,12 @@ import { ProfileImageUploader } from "../../components/profileImageUpdater";
 export const SettingScreenCol: React.FC = () => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <ScreenWrapper>
+        <ScreenWrapperCol>
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Settings" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
                 <SettingsArea />
             </div>
-        </ScreenWrapper>
+        </ScreenWrapperCol>
     )
 }
 
