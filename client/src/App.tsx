@@ -2,15 +2,19 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import { Provider } from 'react-redux'
 import { store } from './store/store'
-import { HomeScreen } from './Screens/homescreen'
-import {  WorkSpacesScreen } from './Screens/workspacesScreen'
-import { ChatScreen } from './Screens/chatScreen'
-import { SettingScreen } from './Screens/settingScreen'
-import { CreateScreen } from './Screens/createScreen'
-import { LandingPage } from './Screens/landingpage'
-import { RootLayout } from './Screens/rootlayout'
+
 import { Modal } from "./components/Modal"
-import { CollaboratorsScreen } from './Screens/collaboratorsScreen'
+
+import { RootLayout } from './Screens/AdminScreens/rootlayout'
+import { LandingPage } from './Screens/AdminScreens/landingpage'
+import { HomeScreen } from './Screens/AdminScreens/homescreen'
+import { WorkSpacesScreen } from './Screens/AdminScreens/workspacesScreen'
+import { ChatScreen } from './Screens/AdminScreens/chatScreen'
+import { CreateScreen } from './Screens/AdminScreens/createScreen'
+import { SettingScreen } from './Screens/AdminScreens/settingScreen'
+import { CollaboratorsScreen } from './Screens/AdminScreens/collaboratorsScreen'
+import { HomeScreenCol } from './Screens/collaboratorScreen/homeScreen'
+import { SettingScreenCol } from './Screens/collaboratorScreen/settingScreen'
 
 const router = createBrowserRouter([
   {
@@ -38,6 +42,15 @@ const router = createBrowserRouter([
       {
         path: "/Collaborators", element: <CollaboratorsScreen />
       }
+      ,
+
+
+      {
+        path: "col/:colId/home", element: <HomeScreenCol />
+      },
+      {
+        path: "col/:colId/Settings", element: <SettingScreenCol />
+      },
 
     ]
   }
