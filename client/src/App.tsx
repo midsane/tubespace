@@ -10,6 +10,7 @@ import { CreateScreen } from './screens/createScreen'
 import { LandingPage } from './screens/landingpage'
 import { RootLayout } from './screens/rootlayout'
 import { Modal } from "./components/Modal"
+import { CollaboratorsScreen } from './screens/collaboratorsScreen'
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,9 @@ const router = createBrowserRouter([
       {
         path: "/settings", element: <SettingScreen />
       },
+      {
+        path: "/Collaborators", element: <CollaboratorsScreen />
+      }
 
     ]
   }
