@@ -46,7 +46,7 @@ const GeneralSettings = () => {
                 content: <div className="flex w-full flex-col h-full gap-10">
                     <div className="flex flex-col gap-2">
                         <Button onClick={deactivateAccount} color="warning" className="w-full" variant="outlined">
-                            <div className="w-full gap-2 justify-start px-1 py-2 flex items-center" >
+                            <div className="w-full gap-2 justify-start px-1 py-1 sm:py-2 flex items-center" >
                                 <Shapes size={20} />
                                 <span>Deactivate Account</span>
                             </div>
@@ -56,7 +56,7 @@ const GeneralSettings = () => {
                     </div>
                     <div className="flex flex-col gap-2">
                         <Button onClick={deleteAccount} color="error" className="w-full" variant="outlined">
-                            <div className="w-full gap-2 justify-start px-1 py-2 flex items-center" >
+                            <div className="w-full gap-2 justify-start px-1 py-1 sm:py-2 flex items-center" >
                                 <Skull size={20} />
                                 <span>Delete Account</span>
                             </div>
@@ -71,8 +71,8 @@ const GeneralSettings = () => {
         ))
     }
 
-    return (<div className={`flex flex-col gap-10 p-10 overflow-y-scroll overflow-x-hidden justify-start items-center rounded-2xl border border-secondaryLight h-[90%] w-[95%] sm:w-[90%] scroll-smooth scrollbar-thin dark:scrollbar-track-primary  dark:scrollbar-thumb-accent `}>
-        <div className="flex flex-col gap-10 w-fit justify-center items-center" >
+    return (<div className={`flex flex-col p-8 gap-8 sm:gap-10 sm:p-10 overflow-y-scroll overflow-x-hidden justify-start items-center rounded-2xl border border-secondaryLight h-[90%] w-[95%] sm:w-[90%] scroll-smooth scrollbar-thin dark:scrollbar-track-primary  dark:scrollbar-thumb-accent `}>
+        <div className="flex flex-col gap-8 sm:gap-10 w-fit justify-center items-center" >
             <ProfileImageUploader imgUrl="https://platform.polygon.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/9997313/Devilman_Crybaby_Queeen_Bee_Clip_02.jpg?quality=90&strip=all&crop=7.8125%2C0%2C84.375%2C100&w=1080" />
             <SettingsFields type={settingsFiledsType.username} label="username" />
             <SettingsFields type={settingsFiledsType.username} label="password" />
@@ -81,7 +81,7 @@ const GeneralSettings = () => {
 
             <SettingsToggle label="Push Notification" type={SettingsToggleType.PushNotification} />
             <Button onClick={handleAccountPreferenceModal} color="warning" className="w-full" variant="outlined">
-                <div className="w-full gap-2 justify-center px-1 py-2 flex items-center" >
+                <div className="w-full gap-2 justify-center px-1 py-1 sm:py-2 flex items-center" >
                     <CircleUser size={20} />
                     <span>Account Preference</span>
                 </div>
@@ -203,7 +203,7 @@ const SettingsArea = () => {
     }
 
 
-    return (<div className={`w-[90%] gap-2 text-xs sm:text-sm  justify-start pt-24 items-center h-full relative flex flex-col  sm:gap-2 ${!onLaptopScreen ? "sm:w-[90%]" : "sm:w-[80%]"} `} >
+    return (<div className={`w-[90%] text-xs sm:text-sm  justify-start pt-24 items-center h-full relative flex flex-col ${!onLaptopScreen ? "sm:w-[90%]" : "sm:w-[80%]"} `} >
         <TabsWrappedLabel3 value={value} setValue={setValue} />
 
         <div className=" h-[90%] flex w-full flex-col justify-center items-center">

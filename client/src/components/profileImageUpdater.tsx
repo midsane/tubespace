@@ -12,7 +12,7 @@ export const ProfileImageUploader: React.FC<{ imgUrl: string }> = ({ imgUrl }) =
         }
     }
     return (
-        <div className="relative w-24 h-24 group">
+        <div className="relative w-[4rem] sm:w-[4.5rem] aspect-square group">
             <input
                 type="file"
                 accept="image/*"
@@ -23,7 +23,7 @@ export const ProfileImageUploader: React.FC<{ imgUrl: string }> = ({ imgUrl }) =
                 <Avatar
                     className="w-20 group-hover:opacity-55 h-20"
                     src={currentImage}
-                    sx={{ width: "4.5rem", height: "4.5rem" }}
+                    sx={{ width: "4rem", height: "4rem" }}
                 />
                 <Edit
                     className="absolute opacity-0 group-hover:opacity-100 transition bg-primary text-accent p-1 rounded-lg"
