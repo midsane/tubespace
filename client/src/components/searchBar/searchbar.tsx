@@ -2,7 +2,7 @@
 import { Search, X } from "lucide-react"
 import React, { useEffect, useRef, useState } from "react"
 
-export const CommandSearch: React.FC<{placeholder: string}> = ({placeholder}) => {
+export const CommandSearch: React.FC<{ placeholder: string }> = ({ placeholder }) => {
     const [isExpanded, setIsExpanded] = useState(false)
     const searchRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -56,8 +56,8 @@ export const CommandSearch: React.FC<{placeholder: string}> = ({placeholder}) =>
                         className="w-full p-2 py-3 border relative border-secondaryLight rounded-l-md focus:outline-none"
                         onFocus={() => setIsExpanded(true)}
                     />
-                    <button className="p-2 opacity-80 hover:opacity-100 bg-secondary text-white rounded-r-md">
-                        <Search className="active:scale-90 ease-linear duration-75" />
+                    <button className="px-2 py-[0.6rem] sm:py-3 opacity-80 hover:opacity-100 bg-secondary border border-secondaryLight text-white rounded-r-md">
+                        <Search size={20} className="active:scale-90 ease-linear duration-75" />
                     </button>
                     <div className="gap-1 hidden sm:flex absolute bottom-1/2 translate-y-1/2 right-14">
                         <kbd style={{ fontSize: "12px" }} className="kbd">
@@ -93,7 +93,7 @@ export const CommandSearch: React.FC<{placeholder: string}> = ({placeholder}) =>
                     </div>
                     <div className="p-4 max-h-[60vh] overflow-y-auto">
                         <div className="text-sm text-label opacity-65  mb-2">No recent searches</div>
-                        
+
                         <div className="py-8 text-center text-lable opacity-65">Start typing to search...</div>
                     </div>
                     <div className="bg-secondary px-4 py-3 text-xs text-label opacity-60 border-t border-secondaryLight">
