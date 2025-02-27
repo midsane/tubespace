@@ -21,7 +21,7 @@ export const ScreeAreaTxt: React.FC<{
             <SplitText
                 text={title}
                 className="text-2xl text-white font-semibold text-center"
-                delay={150}
+                
                 animationFrom={{ opacity: 0, transform: 'translate3d(0,50px,0)' }}
                 animationTo={{ opacity: 1, transform: 'translate3d(0,0,0)' }}
                 threshold={0.2}

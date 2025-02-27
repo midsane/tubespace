@@ -28,7 +28,7 @@ export const Modal = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
-                        className='bg-black z-[200] w-screen h-[100dvh] fixed top-0 left-0 bg-opacity-90'
+                        className='z-[200] backdrop-blur-sm transition-opacity w-screen h-[100dvh] fixed top-0 left-0 bg-opacity-90'
                     />
 
 

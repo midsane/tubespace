@@ -106,8 +106,8 @@ export const AssignedTaskCardCol: React.FC<AssignedCardInterface> =
                             alt="collaborator1-img"
                             src="https://mui.com/static/images/avatar/2.jpg" />
                     </div>
-                    <h1 className="w-full sm:text-lg border-b border-accent lg:text-xl sm:pl-0 pl-6 pt-2">midsane's office</h1>
-                    <h6 className="w-full opacity-65 sm:pl-0 pl-6 pb-2" >{taskTitle}</h6>
+                    <h1 className="w-full sm:text-lg border-b opacity-90 border-secondaryLight  sm:pl-2 pl-6 pt-2">midsane's office</h1>
+                    <h6 className="w-full opacity-75 sm:pl-2 pl-6 pb-2" >{taskTitle}</h6>
 
                     <div className="w-full h-1/3 justify-between flex items-center">
                         {status === TaskStatus.pending && <Button size="small" color="primary" variant="outlined" >Chat</Button>}
