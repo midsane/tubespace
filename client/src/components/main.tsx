@@ -7,7 +7,8 @@ import { AssignedCardSection, AssignedCardSectionCol } from "./homeTabSection/As
 import { WorkspaceCardSection } from "./homeTabSection/WorkspaceCardSection";
 import { DraftVideosCardSection } from "./homeTabSection/draftVideosCardSection";
 import { ScreeAreaTxt } from "./screenAreaTxt";
-import { StarsIcon } from "lucide-react";
+import { MessageCircleIcon, StarsIcon } from "lucide-react";
+import { Button, Chip, Tooltip } from "@mui/material";
 
 
 export const Main = () => {
@@ -154,9 +155,22 @@ export const MainCol = () => {
                     <p className="text-center sm:text-lg text-sm" >username</p>
                 </div>
 
-                <div className="fixed flex justify-center items-center gap-1 top-[-25px] right-[60%] sm:right-[57%] lg:right-[55%]  ">
-                    <p className="text-center sm:text-lg text-sm" >3</p>
-                    <StarsSharp fontSize="small" color="warning" />
+                <div className="fixed flex justify-center items-center gap-2 sm:gap-3 top-[-35px] right-[62%] sm:right-[60%] lg:right-[58%]  ">
+
+
+                    <Chip label="pubic" size="small" color="primary" variant="outlined" />
+                    <div className="flex gap-1 justify-center items-center">
+                        <p className="text-center sm:text-lg text-sm" >3</p>
+                        <StarsSharp fontSize="small" color="warning" />
+                    </div>
+                </div>
+                <div className="fixed flex justify-center items-center gap-2 sm:gap-3 top-[-35px] left-[64%] sm:left-[60%] lg:left-[58%]  ">
+
+                    <Button size="small" variant="outlined">Invite</Button>
+                    <Tooltip title="message">
+
+                        <MessageCircleIcon className="cursor-pointer active:scale-90 ease-linear duration-75" />
+                    </Tooltip>
                 </div>
 
             </div>
