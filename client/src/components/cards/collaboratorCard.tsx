@@ -30,7 +30,7 @@ export const CollaBoratorCard: React.FC<collaboratorsCardInterface> =
                     <div className="absolute top-[-8px] left-[-8px] border-2 rounded-full border-zinc-400">
                         <WorkspacePremiumSharp />
                     </div>
-                    <div onClick={() => navigate("/col/lav/home")} className="flex w-full justify-center gap-2 items-center h-fit hover:scale-105 ease-linear duration-75 hover:border rounded hover:bg-primary border-accent">
+                    <div onClick={() => navigate("/col/lav/home")} className="flex w-full justify-center gap-2 items-center h-fit hover:scale-105 ease-linear duration-75 hover:border rounded border-secondaryLight">
                         <Avatar sx={{ width: 60, height: 60 }} className="border-2 shadow-lg shadow-primary  border-primary" alt="collaborator1" src={imgUrl} />
                         <div  className="flex flex-col  h-fit gap-1">
                             <h6  className="text-lg sm:text-xl" >{name}</h6>

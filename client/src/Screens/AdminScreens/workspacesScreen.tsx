@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { DraftVideosCardSectionWrap } from "../../components/homeTabSection/draftVideosCardSection";
 import React, { useRef, useState } from "react";
-import { ScreenWrapper } from "../../components/ScreenWrapper";
+import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
 import { ScreeAreaTxt } from "../../components/screenAreaTxt";
 import { storeStateType } from "../../store/store";
 import { WorkspaceCardSection2 } from "../../components/homeTabSection/WorkspaceCardSection";
@@ -14,7 +14,7 @@ import { CollaboratorCardSectionWrap } from "../../components/homeTabSection/col
 export const WorkSpacesScreen: React.FC = () => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <ScreenWrapper>
+        <ScreenWrapper links={linkType.one} preRouter="/">
             <div className="flex h-full relative justify-center bg-black items-center ">
 
                 <ScreeAreaTxt border title="Your WorkSpaces" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />

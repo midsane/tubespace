@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { ScreenWrapper } from "../../components/ScreenWrapper";
+import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
 import { ScreeAreaTxt } from "../../components/screenAreaTxt";
 import { storeDispatchType, storeStateType } from "../../store/store";
 
@@ -16,7 +16,7 @@ import { ProfileImageUploader } from "../../components/profileImageUpdater";
 export const SettingScreen: React.FC = () => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <ScreenWrapper>
+        <ScreenWrapper preRouter="/" links={linkType.one} >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Settings" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
                 <SettingsArea />
@@ -40,11 +40,30 @@ const GeneralSettings = () => {
     const deactivateAccount = () => {
     }
 
+    const saveAccountPreferenceChanges = () => {
+        dispatch(modalActions.closeModal())   
+    }
+
     const handleAccountPreferenceModal = () => {
         dispatch(modalActions.openMoal(
             {
-                content: <div className="flex w-full flex-col h-full gap-10">
+                content: <div className="flex w-full flex-col h-full gap-8">
                     <div className="flex flex-col gap-2">
+
+                        <div className="w-full h-fit p-3" >
+                            <div className="form-control">
+                                <label className="label cursor-pointer">
+                                    <span className="label-text">private</span>
+                                    <input type="radio" name="radio-10" className="radio checked:bg-red-500" defaultChecked />
+                                </label>
+                            </div>
+                            <div className="form-control">
+                                <label className="label cursor-pointer">
+                                    <span className="label-text">public</span>
+                                    <input type="radio" name="radio-10" className="radio checked:bg-blue-500" defaultChecked />
+                                </label>
+                            </div>
+                        </div>
                         <Button onClick={deactivateAccount} color="warning" className="w-full" variant="outlined">
                             <div className="w-full gap-2 justify-start px-1 py-1 sm:py-2 flex items-center" >
                                 <Shapes size={20} />
@@ -67,11 +86,14 @@ const GeneralSettings = () => {
 
                 </div>,
                 title: "Account Preference",
+                buttons: true,
+                handleSubmit: saveAccountPreferenceChanges,
+                submitText: "Save Changes"
             }
         ))
     }
 
-    return (<div className={`flex flex-col p-8 gap-8 sm:gap-10 sm:p-10 overflow-y-scroll overflow-x-hidden justify-start items-center rounded-2xl border border-secondaryLight h-[90%] w-[95%] sm:w-[90%] scroll-smooth scrollbar-thin dark:scrollbar-track-primary  dark:scrollbar-thumb-accent `}>
+    return (<div className={`flex flex-col p-4 gap-8 sm:gap-10 sm:p-8 overflow-y-scroll overflow-x-hidden justify-start items-center rounded-2xl border border-secondaryLight w-full scroll-smooth scrollbar-thin dark:scrollbar-track-primary  dark:scrollbar-thumb-accent h-[95%] `}>
         <div className="flex flex-col gap-8 sm:gap-10 w-fit justify-center items-center" >
             <ProfileImageUploader imgUrl="https://platform.polygon.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/9997313/Devilman_Crybaby_Queeen_Bee_Clip_02.jpg?quality=90&strip=all&crop=7.8125%2C0%2C84.375%2C100&w=1080" />
             <SettingsFields type={settingsFiledsType.username} label="username" />
@@ -91,14 +113,12 @@ const GeneralSettings = () => {
     </div>)
 }
 
-
 enum SettingsToggleType {
     Whatsapp,
     Email,
     SMS,
     PushNotification
 }
-
 
 const SettingsToggle: React.FC<{ label: string, type?: SettingsToggleType }> = ({ label }) => {
 
@@ -109,7 +129,6 @@ const SettingsToggle: React.FC<{ label: string, type?: SettingsToggleType }> = (
         </div>
     )
 }
-
 
 const SettingsFields: React.FC<{ type: settingsFiledsType, label: string }> = ({ type, label }) => {
     const [isEditing, setIsEditing] = useState<boolean>(false)
@@ -182,11 +201,10 @@ const SettingsFields: React.FC<{ type: settingsFiledsType, label: string }> = ({
 }
 
 const BillingSettings = () => {
-    return (<div className={`flex flex-col gap-10 p-10 justify-start items-center rounded-2xl border border-secondaryLight h-[90%] w-[95%] sm:w-[90%] `}>
+    return (<div className={`flex flex-col gap-10 p-10 justify-start items-center rounded-2xl border border-secondaryLight h-[95%] w-full `}>
 
     </div>)
 }
-
 
 const SettingsArea = () => {
 
@@ -207,9 +225,6 @@ const SettingsArea = () => {
         <TabsWrappedLabel3 value={value} setValue={setValue} />
 
         <div className=" h-[90%] flex w-full flex-col justify-center items-center">
-            <div className="w-full items-center flex justify-between py-6 px-4 h-fit">
-
-            </div>
             {TabSection}
         </div>
     </div>)

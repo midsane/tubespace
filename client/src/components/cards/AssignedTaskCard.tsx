@@ -41,7 +41,9 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
 
                     <div className="w-full h-1/3 justify-between flex items-center">
                         {status === TaskStatus.pending && <Button size="small" color="primary" variant="outlined" >Chat</Button>}
-                        {status === TaskStatus.completed && <Button size="small" color="secondary" variant="outlined" >View it</Button>}
+                        {status === TaskStatus.completed && <Button 
+                        
+                        size="small" color="secondary" variant="outlined" >View it</Button>}
 
                         <Tooltip title={timesRevised + " revisions"} >
                             <RateReview sx={{ color: "rgb(112, 208, 246)" }} />
@@ -111,7 +113,7 @@ export const AssignedTaskCardCol: React.FC<AssignedCardInterface> =
 
                     <div className="w-full h-1/3 justify-between flex items-center">
                         {status === TaskStatus.pending && <Button size="small" color="primary" variant="outlined" >Chat</Button>}
-                        {status === TaskStatus.completed && <Button size="small" color="secondary" variant="outlined" >View it</Button>}
+                        {status === TaskStatus.completed && <Button  size="small" color="secondary" variant="outlined" >View it</Button>}
 
                         <Tooltip title={timesRevised + " revisions"} >
                             <RateReview sx={{ color: "rgb(112, 208, 246)" }} />

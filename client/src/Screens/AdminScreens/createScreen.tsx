@@ -8,16 +8,15 @@ import { BasicMenu } from "../../components/menus/basicmenu";
 import { storeDispatchType, storeStateType } from "../../store/store";
 import { modalActions } from "../../store/modal";
 import { CreateNewSample } from "../../components/modalCompnents/createNewSample";
-import { ScreenWrapper } from "../../components/ScreenWrapper";
+import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
 import { ScreeAreaTxt } from "../../components/screenAreaTxt";
 
 
 export const CreateScreen: React.FC = () => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <ScreenWrapper>
+        <ScreenWrapper links={linkType.one} preRouter="/"  >
             <div className="flex h-full relative justify-center bg-black items-center ">
-
                 <ScreeAreaTxt title="Create" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
                 <CreateArea />
                 <DraftVideosCardSection2 />

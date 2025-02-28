@@ -9,13 +9,14 @@ import { RootLayout } from './Screens/AdminScreens/rootlayout'
 import { LandingPage } from './Screens/AdminScreens/landingpage'
 import { HomeScreen } from './Screens/AdminScreens/homescreen'
 import { WorkSpacesScreen } from './Screens/AdminScreens/workspacesScreen'
-import { ChatScreen, ChatScreenCol } from './Screens/AdminScreens/chatScreen'
+import { ChatScreen } from './Screens/AdminScreens/chatScreen'
 import { CreateScreen } from './Screens/AdminScreens/createScreen'
 import { SettingScreen } from './Screens/AdminScreens/settingScreen'
 import { CollaboratorsScreen } from './Screens/AdminScreens/collaboratorsScreen'
 import { HomeScreenCol } from './Screens/collaboratorScreen/homeScreen'
 import { SettingScreenCol } from './Screens/collaboratorScreen/settingScreen'
 import { YoutuberScreen } from './Screens/collaboratorScreen/youtubersScreen'
+import { linkType } from './components/ScreenWrapper'
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
         path: "/office", element: <WorkSpacesScreen />
       },
       {
-        path: "/chat", element: <ChatScreen />
+        path: "/chat", element: <ChatScreen linkType={linkType.one} />
       },
       {
         path: "/create", element: <CreateScreen />
@@ -44,8 +45,6 @@ const router = createBrowserRouter([
         path: "/Collaborators", element: <CollaboratorsScreen />
       }
       ,
-
-
       {
         path: "col/:colId/home", element: <HomeScreenCol />
       },
@@ -53,10 +52,10 @@ const router = createBrowserRouter([
         path: "col/:colId/Settings", element: <SettingScreenCol />
       },
       {
-        path: "col/:colId/Youtubers", element: <YoutuberScreen/>
+        path: "col/:colId/Youtubers", element: <YoutuberScreen />
       },
       {
-        path: "col/:colId/chat", element: <ChatScreenCol />
+        path: "col/:colId/chat", element: <ChatScreen linkType={linkType.two} />
       }
 
     ]

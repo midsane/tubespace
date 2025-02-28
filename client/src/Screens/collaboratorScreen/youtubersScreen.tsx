@@ -1,31 +1,26 @@
 import { useSelector } from "react-redux";
-import { ScreenWrapperCol } from "../../components/ScreenWrapper";
+import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
 import { ScreeAreaTxt } from "../../components/screenAreaTxt";
 import { storeStateType } from "../../store/store";
 import { WorkSpaceCard } from "../../components/cards/WorkspaceCard";
 import { CommandSearch } from "../../components/searchBar/searchbar";
 
 
-
-
 export const YoutuberScreen: React.FC = () => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <ScreenWrapperCol>
+        <ScreenWrapper links={linkType.two} preRouter="/col/lav/"  >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Youtubers / WorkSpaces" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
                 <YoutuberArea />
             </div>
-        </ScreenWrapperCol>
+        </ScreenWrapper>
     )
 }
-
-
 
 const YoutuberArea = () => {
 
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
-
     return (<div className={`w-[90%] text-xs sm:text-sm justify-start pt-24 items-center h-full relative flex flex-col ${!onLaptopScreen ? "sm:w-[90%]" : "sm:w-[80%]"} `}>
 
         <CommandSearch placeholder="Search Workspaces..." />

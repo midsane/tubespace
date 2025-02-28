@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { ScreenWrapperCol } from "../../components/ScreenWrapper";
 import { ScreeAreaTxt } from "../../components/screenAreaTxt";
 import { storeDispatchType, storeStateType } from "../../store/store";
 
@@ -11,17 +10,18 @@ import { IOSSwitch } from "../../components/switches/switches";
 import { Button } from "@mui/material";
 import { modalActions } from "../../store/modal";
 import { ProfileImageUploader } from "../../components/profileImageUpdater";
+import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
 
 
 export const SettingScreenCol: React.FC = () => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <ScreenWrapperCol>
+        <ScreenWrapper preRouter="/col/lav/" links={linkType.two} >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Settings" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
                 <SettingsArea />
             </div>
-        </ScreenWrapperCol>
+        </ScreenWrapper>
     )
 }
 

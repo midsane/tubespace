@@ -1,13 +1,14 @@
-import { MainCol } from '../../components/main'
-import { SidebarCol } from '../../components/sidebar'
+import { MainCol } from "../../components/main";
+import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
 
 export function HomeScreenCol() {
 
     return (
-        <div className='w-screen h-[100dvh] flex justify-end max-[850px]:text-xs ' >
-            <SidebarCol />
-            <MainCol />
-        </div>
+        <ScreenWrapper links={linkType.two} preRouter="/col/lav/"  >
+            <div className="flex h-full relative justify-center bg-black items-center ">
+                <MainCol />
+            </div>
+        </ScreenWrapper>
     )
 }
 

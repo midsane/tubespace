@@ -1,13 +1,14 @@
 import { Main } from '../../components/main'
-import { Sidebar } from '../../components/sidebar'
+import { linkType, ScreenWrapper } from '../../components/ScreenWrapper'
 
 export function HomeScreen() {
 
     return (
-        <div className='w-screen h-[100dvh] flex justify-end max-[850px]:text-xs ' >
-            <Sidebar />
-            <Main />
-        </div>
+        <ScreenWrapper links={linkType.one} preRouter="/"  >
+            <div className="flex h-full relative justify-center bg-black items-center ">
+                <Main />
+            </div>
+        </ScreenWrapper>
     )
 }
 

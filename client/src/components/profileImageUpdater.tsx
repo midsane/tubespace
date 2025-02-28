@@ -1,5 +1,5 @@
-import { Avatar } from "@mui/material";
-import { Edit } from "lucide-react";
+import { Avatar, Chip } from "@mui/material";
+import { Edit, FolderLock } from "lucide-react";
 import React, { useState } from "react";
 
 export const ProfileImageUploader: React.FC<{ imgUrl: string }> = ({ imgUrl }) => {
@@ -25,11 +25,21 @@ export const ProfileImageUploader: React.FC<{ imgUrl: string }> = ({ imgUrl }) =
                     src={currentImage}
                     sx={{ width: "4rem", height: "4rem" }}
                 />
+
+                <div className="absolute right-[-60%] bottom-0">
+                    <Chip
+                        icon={<FolderLock size={15} />}
+                        className="z-40 p-1 rounded-lg"
+                        label="private" size="small" variant="filled" color="info" />
+
+                </div>
+
                 <Edit
                     className="absolute opacity-0 group-hover:opacity-100 transition bg-primary text-accent p-1 rounded-lg"
                     size={32}
                 />
             </div>
+
         </div>
     );
 };

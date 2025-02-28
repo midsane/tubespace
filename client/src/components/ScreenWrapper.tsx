@@ -1,35 +1,46 @@
 import { useSelector } from 'react-redux';
-import { Sidebar, SidebarCol } from '../components/sidebar'
+import { Sidebar } from '../components/sidebar'
 import { storeStateType } from '../store/store';
 import React, { ReactNode } from 'react';
+import { Home } from 'lucide-react';
+import { AddCircleOutline, Chat, Workspaces } from '@mui/icons-material';
+import GroupsIcon from '@mui/icons-material/Groups';
 
-export const ScreenWrapper: React.FC<{ children: ReactNode }> = ({ children }) => {
-
-    const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
-
-    return (
-        <div className='w-screen h-[100dvh] flex justify-end max-[850px]:text-xs ' >
-            <Sidebar />
-            <div className={`h-full text-slate-300 ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
-                {children}
-            </div>
-        </div>
-    )
+interface screenWrapperInterface {
+    children: ReactNode,
+    links: linkType,
+    preRouter?: string
 }
 
-export const ScreenWrapperCol: React.FC<{ children: ReactNode }> = ({ children }) => {
-
-    const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
-
-    return (
-        <div className='w-screen h-[100dvh] flex justify-end max-[850px]:text-xs ' >
-            <SidebarCol />
-            <div className={`h-full text-slate-300 ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
-                {children}
-            </div>
-        </div>
-    )
+export enum linkType {
+    "one",
+    "two"
 }
+
+const linksObj = {
+    "one": [["Home", <Home />], ["Create", <AddCircleOutline />], ["office", <Workspaces />], ["Chat", <Chat />], ['Collaborators', <GroupsIcon />]],
+
+    "two": [["Home", <Home />], ["Youtubers", <Workspaces />], ["Chat", <Chat />]],
+}
+
+export const ScreenWrapper: React.FC<screenWrapperInterface> =
+    ({ children, links, preRouter }) => {
+
+        const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+        return (
+            <div className='w-screen h-[100dvh] flex justify-end max-[850px]:text-xs ' >
+                <Sidebar
+                    links={linksObj[links === linkType.one ? "one" : "two"]}
+                    preRouter={preRouter} />
+
+                <div className={`h-full text-slate-300 ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
+                    {children}
+                </div>
+            </div>
+        )
+    }
+
+
 
 
 
