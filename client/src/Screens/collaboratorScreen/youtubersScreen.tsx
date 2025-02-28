@@ -7,11 +7,11 @@ import { CommandSearch } from "../../components/searchBar/searchbar";
 
 
 export const YoutuberScreen: React.FC = () => {
-    const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+ 
     return (
         <ScreenWrapper links={linkType.two} preRouter="/col/lav/"  >
             <div className="flex h-full relative justify-center bg-black items-center ">
-                <ScreeAreaTxt border title="Youtubers / WorkSpaces" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
+                <ScreeAreaTxt border title="Youtubers / WorkSpaces" width={"100%"} paddingBottom="12px" borderRadius="0px" />
                 <YoutuberArea />
             </div>
         </ScreenWrapper>

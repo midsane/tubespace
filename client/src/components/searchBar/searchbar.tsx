@@ -7,6 +7,10 @@ export const CommandSearch: React.FC<{ placeholder: string }> = ({ placeholder }
     const searchRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const searchResult = () => {
+        console.log('searching results')
+    }
+
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -20,6 +24,10 @@ export const CommandSearch: React.FC<{ placeholder: string }> = ({ placeholder }
 
             if (e.key === "Escape" && isExpanded) {
                 setIsExpanded(false)
+            }
+
+            if (e.key === "Enter" && isExpanded && document.activeElement === inputRef.current) {
+                searchResult()
             }
         }
 
@@ -57,7 +65,7 @@ export const CommandSearch: React.FC<{ placeholder: string }> = ({ placeholder }
                         onFocus={() => setIsExpanded(true)}
                     />
                     <button className="px-2 py-[0.6rem] sm:py-3 opacity-80 hover:opacity-100 bg-secondary border border-secondaryLight text-white rounded-r-md">
-                        <Search size={20} className="active:scale-90 ease-linear duration-75" />
+                        <Search onClick={() => setIsExpanded(true)} size={20} className="active:scale-90 ease-linear duration-75" />
                     </button>
                     <div className="gap-1 hidden sm:flex absolute bottom-1/2 translate-y-1/2 right-14">
                         <kbd style={{ fontSize: "12px" }} className="kbd">
@@ -74,12 +82,12 @@ export const CommandSearch: React.FC<{ placeholder: string }> = ({ placeholder }
 
             <div
                 ref={searchRef}
-                className={`fixed left-1/2 top-1/2 shadow-md shadow-secondaryLight -translate-x-1/2 -translate-y-1/2 w-full max-w-sm max-[460px]:max-w-xs sm:max-w-xl lg:max-w-2xl transition-all duration-300 ease-in-out opacity-0 z-0 ${isExpanded ? "z-50 scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
+                className={`fixed left-1/2 top-1/2 shadow-sm shadow-secondaryLight -translate-x-1/2 -translate-y-1/2 w-full max-w-sm max-[460px]:max-w-xs sm:max-w-xl lg:max-w-2xl transition-all duration-300 ease-in-out opacity-0 z-0 ${isExpanded ? "z-50 scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
                     }`}
             >
                 <div className="bg-primary rounded-lg shadow-2xl overflow-hidden">
                     <div className="flex items-center p-4 border-b border-secondaryLight">
-                        <Search className="text-label mr-3" />
+                        <Search onClick={searchResult} className="text-label mr-3" />
                         <input
                             ref={inputRef}
                             type="text"
@@ -96,8 +104,8 @@ export const CommandSearch: React.FC<{ placeholder: string }> = ({ placeholder }
 
                         <div className="py-8 text-center text-lable opacity-65">Start typing to search...</div>
                     </div>
-                    <div className="bg-secondary px-4 py-3 text-xs text-label opacity-60 border-t border-secondaryLight">
-                        <div className="sm:flex hidden justify-between">
+                    <div className="bg-secondary hidden sm:block px-4 py-3 text-xs text-label opacity-60 border-t border-secondaryLight">
+                        <div className="flex justify-between">
                             <div>
                                 <span className="font-medium">Pro tip:</span> Use arrow keys to navigate results
                             </div>

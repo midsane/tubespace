@@ -6,13 +6,13 @@ import { CollaBoratorCard } from "../../components/cards/collaboratorCard";
 import { CommandSearch } from "../../components/searchBar/searchbar";
 
 export const CollaboratorsScreen: React.FC = () => {
-    const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+ 
     return (
         <ScreenWrapper
             links={linkType.one}
         >
             <div className="flex h-full relative justify-center bg-black items-center ">
-                <ScreeAreaTxt border title="Collaborators" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
+                <ScreeAreaTxt border title="Collaborators" width={"100%"} paddingBottom="12px" borderRadius="0px" />
                 <CollaboratorArea />
             </div>
         </ScreenWrapper>

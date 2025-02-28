@@ -17,7 +17,7 @@ export const CreateScreen: React.FC = () => {
     return (
         <ScreenWrapper links={linkType.one} preRouter="/"  >
             <div className="flex h-full relative justify-center bg-black items-center ">
-                <ScreeAreaTxt title="Create" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
+                <ScreeAreaTxt border title="Create" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
                 <CreateArea />
                 <DraftVideosCardSection2 />
             </div>

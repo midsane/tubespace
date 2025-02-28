@@ -43,6 +43,7 @@ export const Sidebar: React.FC<sidebarInterface> = ({
                             <IconParent
                                 showTxt={true}
                                 label={icon[0] as string}
+                                preRoute={preRouter}
                                 key={ind}>
                                 {icon[1]}
                             </IconParent>)}

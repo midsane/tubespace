@@ -5,20 +5,19 @@ import { ScreeAreaTxt } from "../../components/screenAreaTxt";
 import { storeDispatchType, storeStateType } from "../../store/store";
 
 import { TabsWrappedLabel3 } from "../../components/tabs";
-import { CircleUser, Edit, Save, Shapes, Skull, X } from "lucide-react";
-import { motion } from "framer-motion"
+import { CircleUser, Edit, Folder, FolderLock, Save, Shapes, Skull, X } from "lucide-react";
 import { IOSSwitch } from "../../components/switches/switches";
-import { Button } from "@mui/material";
+import { Button, Chip } from "@mui/material";
 import { modalActions } from "../../store/modal";
 import { ProfileImageUploader } from "../../components/profileImageUpdater";
 
 
 export const SettingScreen: React.FC = () => {
-    const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+  
     return (
         <ScreenWrapper preRouter="/" links={linkType.one} >
             <div className="flex h-full relative justify-center bg-black items-center ">
-                <ScreeAreaTxt border title="Settings" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
+                <ScreeAreaTxt border title="Settings" width={"100%"} paddingBottom="12px" borderRadius="0px" />
                 <SettingsArea />
             </div>
         </ScreenWrapper>
@@ -41,7 +40,7 @@ const GeneralSettings = () => {
     }
 
     const saveAccountPreferenceChanges = () => {
-        dispatch(modalActions.closeModal())   
+        dispatch(modalActions.closeModal())
     }
 
     const handleAccountPreferenceModal = () => {
@@ -53,14 +52,15 @@ const GeneralSettings = () => {
                         <div className="w-full h-fit p-3" >
                             <div className="form-control">
                                 <label className="label cursor-pointer">
-                                    <span className="label-text">private</span>
-                                    <input type="radio" name="radio-10" className="radio checked:bg-red-500" defaultChecked />
+                                    <Chip size={"small"} color="primary" label="public" variant="filled" icon={<FolderLock size={18} />} />
+                                    <input type="radio" name="radio-10" className="radio border border-secondaryLight checked:bg-blue-500" defaultChecked />
                                 </label>
                             </div>
                             <div className="form-control">
                                 <label className="label cursor-pointer">
-                                    <span className="label-text">public</span>
-                                    <input type="radio" name="radio-10" className="radio checked:bg-blue-500" defaultChecked />
+                                    <Chip size="small" color="secondary" label="private" variant="filled" icon={<Folder size={18} />} />
+                                    <input type="radio" name="radio-10" className="radio border border-secondaryLight checked:bg-red-500" defaultChecked />
+
                                 </label>
                             </div>
                         </div>
@@ -102,7 +102,7 @@ const GeneralSettings = () => {
             <SettingsToggle label="Email" type={SettingsToggleType.Email} />
 
             <SettingsToggle label="Push Notification" type={SettingsToggleType.PushNotification} />
-            <Button onClick={handleAccountPreferenceModal} color="warning" className="w-full" variant="outlined">
+            <Button onClick={handleAccountPreferenceModal} color="primary" className="w-full" variant="outlined">
                 <div className="w-full gap-2 justify-center px-1 py-1 sm:py-2 flex items-center" >
                     <CircleUser size={20} />
                     <span>Account Preference</span>
@@ -161,30 +161,27 @@ const SettingsFields: React.FC<{ type: settingsFiledsType, label: string }> = ({
     return (<>
         {
             isEditing ?
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                    exit={{ opacity: 0 }}
+                <div
                     className=" flex gap-1 flex-col">
                     <p className="pl-2 opacity-70">{label}</p>
                     <div className="relative flex gap-2">
-                        <input type="text" value={isEditing ? editingTxt : txt} onChange={(e) => setEditingTxt(e.target.value)} placeholder={'username'} className="input max-[500px]:input-sm input-bordered max-[500px]:w-52 w-60" />
+                        <div className="bg-secondary rounded-lg flex max-[500px]:w-52 w-60" >
+                            <input type="text" value={isEditing ? editingTxt : txt} onChange={(e) => setEditingTxt(e.target.value)} placeholder={'username'} className="input max-[500px]:input-sm 
+                            bg-transparent w-[90%] focus:outline-none focus:border-none" />
+
+                            <button onClick={dontSave} className="btn bg-transparent hover:bg-secondaryLight max-[500px]:btn-sm btn-circle ease-linear duration-75">
+                                <X className="text-red-500" size={18} />
+                            </button>
+                        </div>
                         <button onClick={handleSave} className="btn max-[500px]:btn-sm btn-square">
                             <Save className="text-green-500" size={18} />
                         </button>
-                        <button onClick={dontSave} className="btn absolute top-0 right-[-60px] max-[500px]:btn-sm btn-square">
-                            <X className="text-red-500" size={18} />
-                        </button>
+
                     </div>
 
-                </motion.div>
+                </div>
                 :
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                    exit={{ opacity: 0 }}
+                <div
                     className=" flex gap-1 flex-col">
                     <p className="pl-2 opacity-70">{label}</p>
                     <div className=" flex gap-2">
@@ -194,7 +191,7 @@ const SettingsFields: React.FC<{ type: settingsFiledsType, label: string }> = ({
                             <Edit size={18} />
                         </button>
                     </div>
-                </motion.div>
+                </div>
 
         }
     </>)
