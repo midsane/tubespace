@@ -1,22 +1,23 @@
-import cookieParser from "cookie-parser";
-import cors from "cors";
 import express from "express";
-import { HealthCheckRouter } from "./routes/healthRoutes";
-
+import client from "./db/db";
 const app = express();
 
-app.use(
-  cors({
-    origin: process.env.CROSS_ORIGIN,
-    credentials: true,
-  })
-);
+app.use(express.json());
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
-app.use(cookieParser());
-app.use(express.json({ limit: "17kb" }));
-app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-app.use(express.static("public"));
+app.post("/createuser", async (req, res) => {
+  const { email, password, username } = req.body;
+  const userCreated = await client.youtuber.create({
+    data: {
+      email,
+      password,
+      username,
+    },
+  });
 
-app.use("/api/v1/health", HealthCheckRouter);
+  res.json({ message: "User created successfully", user: userCreated });
+});
 
-export { app };
+export default app;

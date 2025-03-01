@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum USER_ROLE {
+  collaborator
+  youtuber
+}
+
+model User {
+  id               Int           @id @default(autoincrement())
+  name             String?
+  email            String        @unique
+  username         String        @unique
+  password         String
+  profilepic       String?
+  createdAt        DateTime      @default(now())
+  role             USER_ROLE
+  Collaborator     Collaborator?
+  Youtuber         Youtuber?
+  sentMessages     Chat[]        @relation(name: "personFrom")
+  receivedMessages Chat[]        @relation(name: "personTo")
+}
+
+model Collaborator {
+  userId              Int           @unique
+  userInfo            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wokspaces           Workspace[]
+  collaboratorId      Int           @id @default(autoincrement())
+  assignedTasks       Tasks[]
+  joinedDraftVideos   DraftVideos[]
+  accountType         ACCOUNTTYPE   @default(public)
+  whatsAppNotifcation Boolean       @default(true)
+  emailNotifcation    Boolean       @default(true)
+  pushNotifcation     Boolean       @default(true)
+  deactivated         Boolean       @default(false)
+  numberOfRatings     Int           @default(0)
+  starsAvg            starsValue    @default(unrated)
+}
+
+model Youtuber {
+  userId                 Int           @unique
+  userInfo               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  youtuberId             Int           @id @default(autoincrement())
+  workspaces             Workspace[]
+  videosUploaded         Int           @default(0)
+  assignedTasksCompleted Int           @default(0)
+  tasksAssigned          Tasks[]
+  draftVideos            DraftVideos[]
+  accountType            ACCOUNTTYPE   @default(public)
+  whatsAppNotifcation    Boolean       @default(true)
+  emailNotifcation       Boolean       @default(true)
+  pushNotifcation        Boolean       @default(true)
+  deactivated            Boolean       @default(false)
+  youtubeConnected       Boolean       @default(false)
+}
+
+enum ACCOUNTTYPE {
+  private
+  public
+}
+
+model Workspace {
+  workspacePic  String?
+  name          String
+  description   String?
+  youtuberId    Int
+  youtuber      Youtuber       @relation(fields: [youtuberId], references: [youtuberId])
+  collaborators Collaborator[]
+  tasks         Tasks[]
+  draftVideos   DraftVideos[]
+  createdAt     DateTime       @default(now())
+  workspaceid   Int            @id @default(autoincrement())
+}
+
+enum TASKSTATUS {
+  pending
+  completed
+}
+
+enum taskType {
+  video
+  thumbnail
+  title
+  description
+}
+
+enum starsValue {
+  unrated
+  one
+  two
+  three
+  four
+  five
+}
+
+model Tasks {
+  taskId                      Int          @id @default(autoincrement())
+  taskType                    taskType
+  description                 String?
+  status                      TASKSTATUS   @default(pending)
+  workspaceId                 Int
+  workspace                   Workspace    @relation(fields: [workspaceId], references: [workspaceid])
+  youtuberId                  Int
+  youtuber                    Youtuber     @relation(fields: [youtuberId], references: [youtuberId])
+  deadline                    DateTime
+  numberOfRevisions           Int          @default(0)
+  collaboratorId              Int
+  collaborator                Collaborator @relation(fields: [collaboratorId], references: [collaboratorId])
+  createdAt                   DateTime     @default(now())
+  draftVideoId                Int
+  draftVideo                  DraftVideos  @relation(fields: [draftVideoId], references: [draftVideoId])
+  permissionToViewTitle       Boolean      @default(false)
+  permissionToViewDescription Boolean      @default(false)
+  permissionToViewThumbnail   Boolean      @default(false)
+  permissionToViewVideo       Boolean      @default(false)
+  starsRecived                starsValue   @default(unrated)
+}
+
+model DraftVideos {
+  draftVideoId        Int            @id @default(autoincrement())
+  DraftTitle          String
+  youtuberId          Int
+  youtuber            Youtuber       @relation(fields: [youtuberId], references: [youtuberId])
+  workspaceId         Int
+  workspace           Workspace      @relation(fields: [workspaceId], references: [workspaceid])
+  createdAt           DateTime       @default(now())
+  ytTitle             String?
+  ytDescription       String?
+  ytThumbnailLink     String?
+  ytVideoLink         String?
+  publised            Boolean        @default(false)
+  publishedAt         DateTime?
+  ytVideoId           String?
+  joinedCollaborators Collaborator[]
+  assignedTasks       Tasks[]
+}
+
+model Chat {
+  chatId     Int      @id @default(autoincrement())
+  from       Int?
+  to         Int?
+  message    String
+  personFrom User?    @relation(name: "personFrom", fields: [from], references: [id], onDelete: SetNull)
+  personTo   User?    @relation(name: "personTo", fields: [to], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now())
+}
+
