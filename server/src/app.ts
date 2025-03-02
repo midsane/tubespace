@@ -1,23 +1,24 @@
 import express from "express";
-import client from "./db/db";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import authRouter from "./routes/auth.routes";
 const app = express();
 
+app.use(cookieParser());
 app.use(express.json());
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+app.use(express.static("public"));
 
-app.post("/createuser", async (req, res) => {
-  const { email, password, username } = req.body;
-  const userCreated = await client.youtuber.create({
-    data: {
-      email,
-      password,
-      username,
-    },
-  });
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  }),
+);
 
-  res.json({ message: "User created successfully", user: userCreated });
+app.use("/api/v1/auth", authRouter);
+
+app.get("/", (_, res) => {
+  res.send("backend is running 😺");
 });
 
 export default app;
