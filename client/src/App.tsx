@@ -3,10 +3,8 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
 
-import { Modal } from "./components/Modal"
-
 import { RootLayout } from './Screens/AdminScreens/rootlayout'
-import { LandingPage } from './Screens/AdminScreens/landingpage'
+import { LandingPage } from './Screens/landingpage'
 import { HomeScreen } from './Screens/AdminScreens/homescreen'
 import { WorkSpacesScreen } from './Screens/AdminScreens/workspacesScreen'
 import { ChatScreen } from './Screens/AdminScreens/chatScreen'
@@ -66,7 +64,6 @@ function App() {
 
   return (
     <Provider store={store}>
-      <Modal />
       <RouterProvider router={router}>
       </RouterProvider>
     </Provider>

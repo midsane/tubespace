@@ -39,7 +39,7 @@ export const Modal = () => {
                         transition={{ duration: 0.5 }}
                         className="fixed max-[400px]:text-xs text-sm sm:text-lg z-[300] bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2"
                     >
-                        <div className="fixed bottom-1/2 z-20 min-w-72 sm:min-w-[400px] right-1/2 p-10 translate-x-1/2 translate-y-1/2">
+                        <div className="fixed bottom-1/2 z-20 min-w-72 sm:min-w-[500px] right-1/2 p-10 translate-x-1/2 translate-y-1/2">
                             <div
                                 className="px-5 sm:px-10 py-8 flex flex-col gap-8 rounded-3xl bg-black border border-zinc-700"
                                 onClick={(e) => e.stopPropagation()}
@@ -85,7 +85,7 @@ export const Modal = () => {
                 </>
             )}
         </AnimatePresence>,
-        document.body
+        document.getElementById('root') as HTMLElement
     );
 };
 

@@ -18,9 +18,9 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
 
         dispatch(modalActions.openMoal({
             content: <LoginBox />,
-            buttons: true,
+            buttons: false,
             submitText: "Login",
-            title: ""
+            title: "",
         }))
     }
     return (

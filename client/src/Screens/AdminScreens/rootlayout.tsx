@@ -3,6 +3,7 @@ import { useEffect } from "react"
 import { storeDispatchType, storeStateType } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { sidebarActions } from "../../store/sidebar.slice";
+import { Modal } from "../../components/Modal";
 
 export const RootLayout: React.FC = () => {
 
@@ -23,6 +24,7 @@ export const RootLayout: React.FC = () => {
     }, [sideBarState]);
     return (
         <main className="min-h-[100dvh] bg-black liter-regular  ">
+            <Modal />
             <Outlet />
         </main>
     )
