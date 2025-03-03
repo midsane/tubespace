@@ -9,12 +9,13 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.static("public"));
 
-app.use(
-    cors({
-        origin: process.env.CORS_ORIGIN,
-        credentials: true,
-    }),
-);
+app.use(cors({
+    origin: 'https://tubespace.vercel.app', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }));
+  
+  app.options('*', cors());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/collaborator", collaboratorRouter);
