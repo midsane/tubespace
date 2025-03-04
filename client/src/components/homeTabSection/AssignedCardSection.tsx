@@ -3,33 +3,20 @@ import { AssignedTaskCard, AssignedTaskCardCol, TaskStatus } from "../cards/Assi
 import { CardSection, } from "./cardSection";
 
 
-export const AssignedCardSection: React.FC = () => {
+export const AssignedCardSection = ({ cardDataArr }: { cardDataArr: any }) => {
     return (<CardSection>
         <>
-            <AssignedTaskCard
-                timesRevised={0}
-                deadline="9th Feb 2025"
-                taskTitle="Edit the video"
-                status={TaskStatus.pending}
-                extraTStyle="bg-secondary border-white/10" />
-            <AssignedTaskCard
-                timesRevised={2}
-                deadline="9th Feb 2025"
-                status={TaskStatus.completed}
-                taskTitle="make an engaging thumbnail"
-                extraTStyle="bg-secondary border-white/10" />
-            <AssignedTaskCard
-                timesRevised={3}
-                deadline="8th Feb 2025"
-                status={TaskStatus.completed}
-                taskTitle="frame catchy title and description"
-                extraTStyle="bg-secondary border-white/10" />
-            <AssignedTaskCard
-                timesRevised={3}
-                deadline="8th Feb 2025"
-                status={TaskStatus.completed}
-                taskTitle="frame catchy title and description"
-                extraTStyle="bg-secondary border-white/10" />
+            {cardDataArr.map((cardData: any, index: number) => (
+                <AssignedTaskCard
+                    key={index}
+                    timesRevised={cardData.timesRevised}
+                    deadline={cardData.deadline}
+                    taskTitle={cardData.taskTitle}
+                    status={cardData.status}
+                    extraTStyle="bg-secondary border-secondaryLight" />
+            ))}
+
+
         </>
     </CardSection>)
 }

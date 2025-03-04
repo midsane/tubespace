@@ -1,24 +1,40 @@
 import { AssignmentTurnedIn, KeyboardArrowDown, KeyboardArrowUp, PendingActions, StarsSharp, Videocam, Workspaces } from "@mui/icons-material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { TabsWrappedLabel, TabsWrappedLabelCol } from "./tabs";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AssignedCardSection, AssignedCardSectionCol } from "./homeTabSection/AssignedCardSection";
 import { WorkspaceCardSection } from "./homeTabSection/WorkspaceCardSection";
 import { DraftVideosCardSection } from "./homeTabSection/draftVideosCardSection";
 import { ScreeAreaTxt } from "./screenAreaTxt";
 import { MessageCircleIcon, StarsIcon } from "lucide-react";
 import { Button, Chip, Tooltip } from "@mui/material";
+import { useFetch } from "../hooks/fetchHooks";
+import { youtuberUserInterface } from "../types/youtuberTypes";
+import { fetchYoutuberData } from "../fetch/fetchForYoutuber";
+import { storeDispatchType, storeStateType } from "../store/store";
+import { youtuberActions } from "../store/youtuberStore/youtuber.slice";
 
 
 export const Main = () => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
+    const { data: YoutuberData, loading } = useFetch<youtuberUserInterface>(fetchYoutuberData)
+    const youtuberDataGlobal = useSelector((state: storeStateType) => state.youtuberInfo)
+    const dispatch: storeDispatchType = useDispatch()
+
+    useEffect(() => {
+        if (YoutuberData)
+            dispatch(youtuberActions.setUserInfo(YoutuberData))
+    }, [YoutuberData])
+
+    console.log(youtuberDataGlobal)
+    console.log('loading:', loading)
 
     let TabSection = <></>
     switch (value) {
         case "one":
-            TabSection = <AssignedCardSection />
+            TabSection = <AssignedCardSection cardDataArr={[]} />
             break;
         case "two":
             TabSection = <WorkspaceCardSection />
@@ -49,26 +65,34 @@ export const Main = () => {
 
                 <div className={`${onLaptopScreen ? "flex " : "w-full flex-col flex gap-3 sm:gap-4"} `}>
 
-                    <ProfileInfo Svg={<Videocam />} text1="videos uploaded" text2="121" />
-                    <ProfileInfo Svg={<AssignmentTurnedIn />} text1="assigned tasks completed" text2="23" />
+                    <ProfileInfo loading={loading} Svg={<Videocam />} text1="videos uploaded" text2={youtuberDataGlobal?.user?.Youtuber?.videosUploaded || 0} />
+                    <ProfileInfo loading={loading} Svg={<AssignmentTurnedIn />} text1="assigned tasks completed" text2={youtuberDataGlobal?.user?.Youtuber?.assignedTasksCompleted || 0} />
 
                 </div>
                 <div className={`${onLaptopScreen ? "flex" : "w-full flex-col flex gap-3 sm:gap-4"} `} >
 
-                    <ProfileInfo Svg={<PendingActions />} text1="assigned tasks pending" text2="2" />
-                    <ProfileInfo Svg={<Workspaces />} text1="your workspaces" text2="2" />
+                    <ProfileInfo loading={loading} Svg={<PendingActions />} text1="assigned tasks pending" text2={0} />
+                    <ProfileInfo loading={loading} Svg={<Workspaces />} text1="your workspaces" text2={0} />
 
                 </div>
 
                 <div className="fixed flex flex-col gap-2 top-[-45px] right-1/2 translate-x-1/2 rounded-3xl max-[400px]:w-14 max-[400px]:h-20 w-16 h-24 sm:w-20 sm:h-28 ">
 
-                    <div className="w-full h-[70%] bg-blue-200 mask mask-squircle" >
-                        <img src="https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                            className="object-cover rounded-3xl"
-                        />
+                    <div className="w-full h-[100%] bg-secondary mask mask-squircle" >
+                        {!loading && youtuberDataGlobal?.user?.profilepic &&
+                            <img src={youtuberDataGlobal?.user?.profilepic}
+                                className="object-cover rounded-3xl"
+                            />}
+                        {!loading && !youtuberDataGlobal?.user?.profilepic &&
+                            <img src={"https://photosking.net/wp-content/uploads/2024/05/no-dp-for-whatsapp_60.webp"}
+                                className="object-cover rounded-3xl"
+                            />}
+                        {loading &&
+                            <div className="w-[210%] h-[210%] bg-secondary skeleton">
+                            </div>}
                     </div>
 
-                    <p className="text-center sm:text-lg text-sm" >username</p>
+                    <p className={`text-center sm:text-lg text-sm  ${loading && "skeleton w-16 max-[400px]:w-14 sm:w-20 h-4 rounded"}`} >{!loading && youtuberDataGlobal?.user?.username}</p>
                 </div>
 
             </div>
@@ -98,6 +122,7 @@ export const Main = () => {
 export const MainCol = () => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
+
 
     let TabSection = <></>
     switch (value) {
@@ -133,14 +158,14 @@ export const MainCol = () => {
 
                 <div className={`${onLaptopScreen ? "flex " : "w-full flex-col flex gap-3 sm:gap-4"} `}>
 
-                    <ProfileInfo Svg={<StarsIcon />} text1="Reviews" text2="25" />
-                    <ProfileInfo Svg={<AssignmentTurnedIn />} text1="Completed Tasks" text2="23" />
+                    <ProfileInfo Svg={<StarsIcon />} text1="Reviews" text2={25} />
+                    <ProfileInfo Svg={<AssignmentTurnedIn />} text1="Completed Tasks" text2={23} />
 
                 </div>
                 <div className={`${onLaptopScreen ? "flex" : "w-full flex-col flex gap-3 sm:gap-4"} `} >
 
-                    <ProfileInfo Svg={<PendingActions />} text1="Pending Tasks" text2="2" />
-                    <ProfileInfo Svg={<Workspaces />} text1="Joined WorkSpaces" text2="2" />
+                    <ProfileInfo Svg={<PendingActions />} text1="Pending Tasks" text2={2} />
+                    <ProfileInfo Svg={<Workspaces />} text1="Joined WorkSpaces" text2={2} />
 
                 </div>
 
@@ -197,16 +222,16 @@ export const MainCol = () => {
     </div >)
 }
 
-const ProfileInfo = ({ Svg, text1, text2 }: { Svg: React.ReactNode, text1: String, text2: String }) => {
+const ProfileInfo = ({ Svg, text1, text2, loading = false }: { Svg: React.ReactNode, text1: string, text2: number, loading?: boolean }) => {
 
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
 
-    return (<div className={`${onLaptopScreen ? " flex-col justify-between gap-2" : " border-b-0 justify-center gap-2 sm:gap-8  "} flex text-sm px-4 items-center  border-secondaryLight`}>
+    return (<div className={`${onLaptopScreen ? " flex-col justify-between gap-2" : " border-b-0 justify-center gap-2 sm:gap-8  "} flex text-sm px-4 items-center border-secondaryLight`}>
 
         <div className="stat-figure text-accent">
             {Svg}
         </div>
         <div className="stat-title text w-full text-left text-sm ">{text1}</div>
-        <div className={`stat-value text-center ${onLaptopScreen ? "text-xl" : "text-sm"}`}>{text2}</div>
+        <div className={`stat-value text-center ${loading && "skeleton w-8 rounded h-8"}  ${onLaptopScreen ? "text-xl" : "text-sm"}`}>{!loading && text2}</div>
     </div>)
 }

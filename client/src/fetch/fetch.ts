@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_BACKEND_URL
+export const BASE_URL = import.meta.env.VITE_BACKEND_URL
 export const registerYoutuber = async (data: any) => {
     const response = await fetch(`${BASE_URL}/api/v1/auth/register-youtuber`, {
         method: "POST",
@@ -51,9 +51,6 @@ export const loginCollaborator = async (data: any) => {
     return resData;
 }
 
-
-
-
 export const checkLoggedIn = async () => {
     const response = await fetch(`${BASE_URL}/api/v1/auth/check-loggedInStatus`, {
         method: "POST",
@@ -65,3 +62,4 @@ export const checkLoggedIn = async () => {
     const resData = await response.json();
     return resData;
 }
+
