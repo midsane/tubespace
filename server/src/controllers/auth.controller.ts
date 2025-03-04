@@ -88,8 +88,6 @@ const loginYoutuber = asyncHandler(async (req, res) => {
         throw new Error("user does not exist | invalid email");
     }
 
-    console.log(user);
-
     try {
         await comparePassword(password, user.password);
     } catch (error) {
@@ -104,8 +102,7 @@ const loginYoutuber = asyncHandler(async (req, res) => {
     const { password: psw, ...userDataToSend } = user;
 
     await jwtSign({ userDataToSend, jwtSecret, res });
-    console.log("added token to cookie");
-    console.log(res.getHeaders());
+   
 
     res.status(200).json({ data: userDataToSend, message: "Youtuber logged in successfully" });
 });
