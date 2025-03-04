@@ -103,15 +103,24 @@ const loginYoutuber = asyncHandler(async (req, res) => {
 
     const { password: psw, ...userDataToSend } = user;
 
-    jwt.sign(userDataToSend, jwtSecret, { expiresIn: "10d" }, (err, token) => {
-        if (err) {
-            res.status(500).json({ data: {}, message: "error generating token" });
-        }
-        res.cookie("token", "Bearer " + token, { httpOnly: true });
-    });
+    await jwtSign({ userDataToSend, jwtSecret, res });
+    console.log("added token to cookie");
+    console.log(res.getHeaders());
 
     res.status(200).json({ data: userDataToSend, message: "Youtuber logged in successfully" });
 });
+
+const jwtSign = async ({ userDataToSend, jwtSecret, res }) => {
+    return new Promise((resolve, _) => {
+        jwt.sign(userDataToSend, jwtSecret, { expiresIn: "10d" }, (err, token) => {
+            if (err) {
+                return res.status(500).json({ data: {}, message: "error generating token" });
+            }
+            res.cookie("token", "Bearer " + token, { httpOnly: true });
+            resolve("done");
+        });
+    });
+};
 
 const registerCollaborator = asyncHandler(async (req, res) => {
     const { email, password, username } = req.body;
@@ -157,7 +166,9 @@ const registerCollaborator = asyncHandler(async (req, res) => {
         if (err) {
             res.status(500).json({ data: {}, message: "error generating token" });
         }
-        res.cookie("token", "Bearer " + token, { httpOnly: true });
+        res.cookie("token", "Bearer " + token, {
+            httpOnly: true,
+        });
     });
 
     const collaborator = await client.collaborator.create({
