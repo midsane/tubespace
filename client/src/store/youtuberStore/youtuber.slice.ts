@@ -1,43 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-enum userRole {
-    YOUTUBER = "youtuber",
-    COLLABORATOR = "collaborator"
-}
-
-interface userInterface {
-    id: number,
-    name: string | null,
-    email: string,
-    username: string,
-    profilepic: null,
-    createdAt: Date,
-    role: userRole
-}
-
-enum ACCOUNT_TYPE {
-    PUBLIC = "public",
-    PRIVATE = "private"
-}
-
-interface youtuberInterface {
-    userId: number,
-    youtuberId: number,
-    videosUploaded: number,
-    assignedTasksCompleted: number,
-    accountType: ACCOUNT_TYPE,
-    whatsAppNotifcation: boolean,
-    emailNotifcation: boolean,
-    pushNotifcation: boolean,
-    deactivated: boolean,
-    youtubeConnected: boolean
-}
-
-interface youtuberCompleteUserInterface {
-    user: userInterface,
-    youtuber: youtuberInterface
-}
-
+import { ACCOUNT_TYPE, userRole, youtuberCompleteUserInterface } from "../../types/youtuberTypes";
 
 const initialState: youtuberCompleteUserInterface = {
     user: {

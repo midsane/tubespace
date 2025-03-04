@@ -5,6 +5,7 @@ export const registerYoutuber = async (data: any) => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(data),
     });
     const resData = await response.json();
@@ -17,6 +18,7 @@ export const registerCollaborator = async (data: any) => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(data),
     });
     const resData = await response.json();
@@ -29,6 +31,7 @@ export const loginYoutuber = async (data: any) => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(data),
     });
     const resData = await response.json();
@@ -41,6 +44,7 @@ export const loginCollaborator = async (data: any) => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(data),
     });
     const resData = await response.json();
@@ -48,3 +52,16 @@ export const loginCollaborator = async (data: any) => {
 }
 
 
+
+
+export const checkLoggedIn = async () => {
+    const response = await fetch(`${BASE_URL}/api/v1/auth/check-loggedInStatus`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resData = await response.json();
+    return resData;
+}

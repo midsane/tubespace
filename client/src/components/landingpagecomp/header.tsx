@@ -4,16 +4,42 @@ import { WebsiteLogo } from "../websitelogo/websitelogo"
 import { useDispatch, useSelector } from "react-redux"
 import { storeDispatchType, storeStateType } from "../../store/store"
 import { CircleXIcon, MenuIcon } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { modalActions } from "../../store/modal"
 import { LoginBox } from "./Auth"
+import { IOSSwitch } from "../switches/switches"
+import { DarkMode } from "@mui/icons-material"
+import { checkLoggedIn } from "../../fetch/fetch"
+import { ProfilePic } from "../ui/profilePic/profilePic"
+import { userInterface } from "../../types/youtuberTypes"
 
 
 export function Header({ color = "text-gray-300" }: { color?: string }) {
     const sidebarState = useSelector((state: storeStateType) => state.sidebar)
     const [showMenu, setShowMenu] = useState<boolean>(false)
+    const [loggedIn, setLoggedIn] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(true)
+    const [user, setUser] = useState<null | userInterface>(null)
     const dispatch: storeDispatchType = useDispatch()
+
+    useEffect(() => {
+        const checkStatus = async () => {
+            const status = await checkLoggedIn()
+            if (status?.data?.success) {
+                // await new Promise(res => setTimeout(() => {
+                //     res("done");
+                // }, 3000))
+                setLoggedIn(true)
+                setUser(status.data.user)
+
+                setLoading(false)
+            }
+        }
+
+        checkStatus()
+    }, [])
+
     const handleClick = () => {
 
         dispatch(modalActions.openMoal({
@@ -47,19 +73,35 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
                     </Link>
                 </nav>
 
+
                 {sidebarState.onLaptopScreen ?
-                    <Button
-                        onClick={handleClick}
-                        size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
-                        Login
-                    </Button>
-                    :
-                    <div className="flex gap-2 justify-center items-center">
-                        <Button
+                    <div className="flex gap-8 items-center">
+                        <IOSSwitch color="error" size="medium" icon={<DarkMode />} />
+                        {loggedIn && <ProfilePic imageSrc={user?.profilepic ?? undefined} userName={user?.username} />
+                        }
+                        {!loggedIn && !loading && <Button
                             onClick={handleClick}
                             size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
                             Login
-                        </Button>
+                        </Button>}
+                        {!loggedIn && loading && <ProfilePic loading />}
+                    </div>
+                    :
+                    <div className="flex gap-2 justify-center items-center">
+
+                        <div className="flex gap-3 items-center">
+                            <IOSSwitch color="error" size="medium" icon={<DarkMode />} />
+
+                            {!loggedIn && loading && <ProfilePic loading />}
+                            {!loggedIn && !loading && <Button
+                                onClick={handleClick}
+                                size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
+                                Login
+                            </Button>}
+
+                            {loggedIn && <ProfilePic imageSrc={user?.profilepic ?? undefined} userName={user?.username} />}
+
+                        </div>
                         <MenuIcon onClick={() => setShowMenu(true)} size={30} className="cursor-pointer active:scale-90 ease-linear duration-75" />
                     </div>
                 }
@@ -98,4 +140,5 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
         </header>
     )
 }
+
 

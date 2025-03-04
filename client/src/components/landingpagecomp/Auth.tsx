@@ -193,6 +193,8 @@ export const SignUpBox = () => {
             <input value={username} onChange={(e) => setUsername(e.target.value)} type="text" className="grow" placeholder="Username" />
         </label>
 
+       <div className="flex flex-col gap-2">
+       <p className="text-label opacity-60" >Password must be between 3 to 10</p>
         <label className="input input-bordered flex items-center gap-2">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -204,8 +206,10 @@ export const SignUpBox = () => {
                     d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
                     clipRule="evenodd" />
             </svg>
+           
             <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="grow" placeholder="password" />
         </label>
+       </div>
 
 
         <Button disabled={loading} onClick={register} variant="outlined">
