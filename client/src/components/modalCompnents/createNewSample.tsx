@@ -1,26 +1,26 @@
 import { useRef } from "react"
-import { storeDispatchType } from "../../store/store"
-import { useDispatch } from "react-redux"
-import { draftSampleActions } from "../../store/Draftvideo.slice"
-import { modalActions } from "../../store/modal"
+// import { storeDispatchType } from "../../store/store"
+// import { useDispatch } from "react-redux"
+// import { draftSampleActions } from "../../store/Draftvideo.slice"
+// import { modalActions } from "../../store/modal"
 import { Button } from "@mui/material"
-import { v4 as uuidv4 } from "uuid"
+// import { v4 as uuidv4 } from "uuid"
 
 export const CreateNewSample = () => {
-    const dispatch: storeDispatchType = useDispatch()
+    // const dispatch: storeDispatchType = useDispatch()
 
     const newDraftTitleTxt = useRef<HTMLInputElement>(null)
 
     const handleCreateSampleForFirstTime = () => {
-        dispatch(draftSampleActions.addDrafts({
-            DraftName: newDraftTitleTxt.current!.value,
-            title: "",
-            description: "",
-            _id: uuidv4(),
-            thumbnail: null,
-            video: null
-        }))
-        dispatch(modalActions.closeModal())
+        // dispatch(draftSampleActions.addDrafts({
+        //     DraftName: newDraftTitleTxt.current!.value,
+        //     title: "",
+        //     description: "",
+        //     _id: uuidv4(),
+        //     thumbnail: null,
+        //     video: null
+        // }))
+        // dispatch(modalActions.closeModal())
     }
 
     return (

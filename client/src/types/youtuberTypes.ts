@@ -8,22 +8,70 @@ export enum ACCOUNT_TYPE {
     PRIVATE = "private"
 }
 
-interface workspaceInterface {
-    workspaceId: number,
+export interface workspaceInterface {
+    workspacePic: string | null,
+    name: string,
+    description: string | null,
+    youtuberId: number,
+    youtuber: youtuberInterface | null,
+    collaborators: collaboratorInterface[] | null,
+    tasks: taskInterface[] | null,
+    draftVideos: DraftVideosInterface[] | null,
+    createdAt: Date,
+    workspaceid: number
+}
+
+export enum TASKSTATUS {
+    pending,
+    completed
 }
 
 
-interface taskInterface {
+enum starsValue {
+    unrated,
+    one,
+    two,
+    three,
+    four,
+    five,
+}
+
+export enum taskType {
+    video,
+    thumbnail,
+    title,
+    description
+}
+
+export interface taskInterface {
     taskId: number,
-    
+    taskType: taskType,
+    description: string | null,
+    status: TASKSTATUS,
+    workspaceId: number,
+    workspace: workspaceInterface | null,
+    youtuberId: number,
+    youtuber: youtuberInterface | null,
+    deadline: Date,
+    numberOfRevisions: number,
+    collaboratorId: number,
+    collaborator: collaboratorInterface | null,
+    createdAt: Date,
+    draftVideoId: number,
+    draftVideo: DraftVideosInterface | null,
+    permissionToViewTitle: boolean,
+    permissionToViewDescription: boolean,
+    permissionToViewThumbnail: boolean,
+    permissionToViewideo: boolean,
+    starsRecived: starsValue
 }
 
 
-interface DraftVideos {
+export interface DraftVideosInterface {
     draftVideoId: number,
     DraftTitle: string,
     youtuberId: number,
-    youtuber : youtuberInterface | null,
+    youtuber: youtuberInterface | null,
     workspaceId: number,
     workspace: workspaceInterface | null,
     createdAt: Date,
@@ -37,7 +85,7 @@ interface DraftVideos {
     joinedCollaborators: collaboratorInterface[] | null,
     assignedTasks: taskInterface[] | null
 }
-   
+
 
 export interface youtuberInterface {
     userId: number,
@@ -50,7 +98,7 @@ export interface youtuberInterface {
     pushNotifcation: boolean,
     deactivated: boolean,
     youtubeConnected: boolean,
-    draftVideos: DraftVideos[] | null,
+    draftVideos: DraftVideosInterface[] | null,
     tasksAssigned: taskInterface[] | null,
     workspaces: workspaceInterface[] | null,
 }
@@ -58,6 +106,7 @@ export interface youtuberInterface {
 
 export interface collaboratorInterface {
     userId: number,
+    user: userInterface | null,
     accountType: ACCOUNT_TYPE,
     whatsAppNotifcation: boolean,
     emailNotifcation: boolean,
@@ -74,7 +123,7 @@ export interface userInterface {
     createdAt: Date,
     role: userRole,
     collaborator?: youtuberInterface,
-    Youtuber?: youtuberInterface 
+    Youtuber?: youtuberInterface
 }
 
 

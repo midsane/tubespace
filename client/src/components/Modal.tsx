@@ -16,6 +16,7 @@ export const Modal = () => {
         dispatch(modalActions.closeModal())
     }
 
+
     if (!modalState.isOpen) return null
 
     return createPortal(

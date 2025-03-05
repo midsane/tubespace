@@ -26,15 +26,15 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
     useEffect(() => {
         const checkStatus = async () => {
             const status = await checkLoggedIn()
+
             if (status?.data?.success) {
-                // await new Promise(res => setTimeout(() => {
-                //     res("done");
-                // }, 3000))
+
                 setLoggedIn(true)
                 setUser(status.data.user)
 
-                setLoading(false)
             }
+            setLoading(false)
+
         }
 
         checkStatus()

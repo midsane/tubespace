@@ -1,62 +1,57 @@
-import { AddCircle, Description, Done, Movie, Panorama, Pending, Title } from "@mui/icons-material"
-import { Button, Tooltip } from "@mui/material"
-import { CircularProgressBar } from "../ui/circularprogressbar"
-import { useEffect, useState } from "react"
-import { storeDispatchType, storeStateType } from "../../store/store"
-import { useDispatch, useSelector } from "react-redux"
+import { Description, Done, Movie, Panorama, Pending, Title, } from "@mui/icons-material"
+import { Button, Tooltip, } from "@mui/material"
 
-import { modalActions } from "../../store/modal"
+import { useEffect, useState } from "react"
+import { storeDispatchType } from "../../store/store"
+import { useDispatch } from "react-redux"
+
 import { ThreeDotsMenu } from "../menus/basicmenu"
+
+import { CardWrapper, CreateNewCard } from "./cardWrapper"
+import { DraftVideosInterface } from "../../types/youtuberTypes"
+import { CircularProgressBar } from "../ui/circularprogressbar"
+import { modalActions } from "../../store/modal"
 import { CreateNewSample } from "../modalCompnents/createNewSample"
-import { CardWrapper } from "./cardWrapper"
+
 
 
 const LOGO1SIZE = 18
 const LOGO2SIZE = 10
 
-export interface collaboratorsCardInterface {
-    extraTStyle: string,
-    DraftName: string,
-    _id: string
-}
+type extendedDraftVideoType = DraftVideosInterface & { extraTStyle: string }
 
-export const CreateNewVideoCard: React.FC<{ extraTStyle: string, }> = ({ extraTStyle }) => {
+
+export const CreateNewVideoCard: React.FC<{ extraTStyle: string }> = ({ extraTStyle }) => {
 
     const dispatch: storeDispatchType = useDispatch()
-    const createNewSample = () => {
+    const createNewSampleFnc = () => {
         dispatch(modalActions.openMoal({
             title: "Create new Sample",
             content: <CreateNewSample />
         }))
     }
 
-    const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <CardWrapper extraTStyle={extraTStyle}>
-            <>
-
-                <AddCircle sx={{ width: `${!onLaptopScreen ? "2rem" : "2.5rem"}`, height: `${!onLaptopScreen ? "2rem" : "2.5rem"}` }} />
-
-                <div className="flex flex-col gap-0">
-                    <p className="text-center">create new sample video</p>
-                    <p className="opacity-55 text-sm text-center" >add/assign video details</p>
-                </div>
-
-                <Button onClick={createNewSample} variant="outlined" >
-                    Create
-                </Button>
-            </>
-        </CardWrapper>
+        <CreateNewCard
+            extraTStyle={extraTStyle}
+            text1="create new sample video"
+            text2="add/assign video details"
+            enableText2={true}
+            createFnc={createNewSampleFnc}
+        />
     )
 }
 
-export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
+
+
+export const DraftVideosCard: React.FC<extendedDraftVideoType> =
     ({
         extraTStyle,
-        DraftName,
-        _id
-
+        DraftTitle: DraftName,
+        draftVideoId: _id,
+        // ...rest
     }) => {
+
         return (
             <CardWrapper extraTStyle={extraTStyle}>
                 <>
@@ -112,7 +107,7 @@ export const DraftVideosCard: React.FC<collaboratorsCardInterface> =
 
 
 
-export const ThreeDots = ({ _id, draftName }: { _id: string, draftName: string }) => {
+export const ThreeDots = ({ _id, draftName }: { _id: number, draftName: string }) => {
     const [showMenu, setShowMenu] = useState<boolean>(false)
 
     useEffect(() => {

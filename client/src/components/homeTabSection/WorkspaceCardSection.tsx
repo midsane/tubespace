@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { WorkSpaceCard } from "../cards/WorkspaceCard"
+import { CreateNewWorkSpaceCard, WorkSpaceCard } from "../cards/WorkspaceCard"
 import { CardSection } from "./cardSection";
 import { useSelector } from "react-redux";
 import { storeStateType } from "../../store/store";
@@ -7,149 +7,47 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleXIcon, MenuIcon } from "lucide-react";
 import { SplitText } from "../textAnimations/splitText";
+import { taskInterface, TASKSTATUS } from "../../types/youtuberTypes";
+
+const calculatePendingTasks = (task: taskInterface[]) => {
+    let cnt = 0;
+    task.forEach((t) => {
+        if (t.status === TASKSTATUS.pending) {
+            cnt++;
+        }
+    })
+    return cnt;
+}
+
+const calculateCompletedTasks = (task: taskInterface[]) => {
+    let cnt = 0;
+    task.forEach((t) => {
+        if (t.status === TASKSTATUS.completed) {
+            cnt++;
+        }
+    })
+    return cnt;
+}
 
 export const WorkspaceCardSection: React.FC = () => {
+    const cardDataArr = useSelector((state: storeStateType) => state.youtuberInfo?.user?.Youtuber?.workspaces)
+
+
     return (<CardSection>
         <>
-
-            <WorkSpaceCard
-                name="midsane office"
-                pendingTasksCnt={5}
-                AssignedTasksCnt={2}
-                completedTasksCnt={3}
-                collaborators={[
-                    {
-                        id: "1di",
-                        name: "adi",
-                        imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                    },
-                    {
-                        id: "2di",
-                        name: "abhi",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    },
-                    {
-                        id: "3di",
-                        name: "lav",
-                        imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                    },
-                    {
-                        id: "4di",
-                        name: "lav",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    },
-                    {
-                        id: "4di",
-                        name: "lav",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    }
-                ]}
-                extraTStyle="bg-secondary border-white/10"
+            <CreateNewWorkSpaceCard
+                extraTStyle="bg-secondary border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
             />
-
-
-            <WorkSpaceCard
-                name="midsane office"
-                pendingTasksCnt={5}
-                AssignedTasksCnt={2}
-                completedTasksCnt={3}
-                collaborators={[
-                    {
-                        id: "1di",
-                        name: "adi",
-                        imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                    },
-                    {
-                        id: "2di",
-                        name: "abhi",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    },
-                    {
-                        id: "3di",
-                        name: "lav",
-                        imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                    },
-                    {
-                        id: "4di",
-                        name: "lav",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    },
-                    {
-                        id: "4di",
-                        name: "lav",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    }
-                ]}
-                extraTStyle="bg-secondary border-white/10"
-            />
-            <WorkSpaceCard
-                name="midsane office"
-                pendingTasksCnt={5}
-                AssignedTasksCnt={2}
-                completedTasksCnt={3}
-                collaborators={[
-                    {
-                        id: "1di",
-                        name: "adi",
-                        imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                    },
-                    {
-                        id: "2di",
-                        name: "abhi",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    },
-                    {
-                        id: "3di",
-                        name: "lav",
-                        imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                    },
-                    {
-                        id: "4di",
-                        name: "lav",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    },
-                    {
-                        id: "4di",
-                        name: "lav",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    }
-                ]}
-                extraTStyle="bg-secondary border-white/10"
-            />
-            <WorkSpaceCard
-                name="midsane office"
-                pendingTasksCnt={5}
-                AssignedTasksCnt={2}
-                completedTasksCnt={3}
-                collaborators={[
-                    {
-                        id: "1di",
-                        name: "adi",
-                        imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                    },
-                    {
-                        id: "2di",
-                        name: "abhi",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    },
-                    {
-                        id: "3di",
-                        name: "lav",
-                        imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                    },
-                    {
-                        id: "4di",
-                        name: "lav",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    },
-                    {
-                        id: "4di",
-                        name: "lav",
-                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                    }
-                ]}
-                extraTStyle="bg-secondary border-white/10"
-            />
+            {cardDataArr && cardDataArr.map((cardData, index: number) => (
+                <WorkSpaceCard
+                    name="midsane office"
+                    pendingTasksCnt={calculatePendingTasks(cardData.tasks ?? [])}
+                    AssignedTasksCnt={cardData.tasks?.length ?? 0}
+                    completedTasksCnt={calculateCompletedTasks(cardData.tasks ?? [])}
+                    key={index}
+                    collaborators={cardData.collaborators ?? []}
+                    extraTStyle="bg-secondary border-secondaryLight" />
+            ))}
         </>
     </CardSection>)
 }
@@ -160,6 +58,7 @@ export const WorkspaceCardSection2: React.FC = () => {
     const scrollDivRef = useRef<HTMLDivElement>(null);
     const sideBarState = useSelector((state: storeStateType) => state.sidebar)
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const cardDataArr = useSelector((state: storeStateType) => state.youtuberInfo?.user?.Youtuber?.workspaces)
 
     const handleTopSide = () => {
         if (scrollDivRef.current) {
@@ -184,74 +83,22 @@ export const WorkspaceCardSection2: React.FC = () => {
                         <KeyboardArrowDown />
                     </div>
 
-                    <WorkSpaceCard
-                        name="midsane office"
-                        pendingTasksCnt={5}
-                        AssignedTasksCnt={2}
-                        completedTasksCnt={3}
-                        collaborators={[
-                            {
-                                id: "1di",
-                                name: "adi",
-                                imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                            },
-                            {
-                                id: "2di",
-                                name: "abhi",
-                                imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                            },
-                            {
-                                id: "3di",
-                                name: "lav",
-                                imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                            },
-                            {
-                                id: "4di",
-                                name: "lav",
-                                imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                            },
-                            {
-                                id: "4di",
-                                name: "lav",
-                                imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                            }
-                        ]}
-                        extraTStyle="bg-secondary border-white/10"
+                    <CreateNewWorkSpaceCard
+                        extraTStyle="bg-secondary border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
                     />
-                    <WorkSpaceCard
-                        name="midsane office"
-                        pendingTasksCnt={5}
-                        AssignedTasksCnt={2}
-                        completedTasksCnt={3}
-                        collaborators={[
-                            {
-                                id: "1di",
-                                name: "adi",
-                                imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                            },
-                            {
-                                id: "2di",
-                                name: "abhi",
-                                imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                            },
-                            {
-                                id: "3di",
-                                name: "lav",
-                                imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                            },
-                            {
-                                id: "4di",
-                                name: "lav",
-                                imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                            },
-                            {
-                                id: "4di",
-                                name: "lav",
-                                imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                            }
-                        ]}
-                        extraTStyle="bg-secondary border-white/10"
-                    />
+
+                    {cardDataArr && cardDataArr.map((cardData, index: number) => (
+                        <WorkSpaceCard
+                            name="midsane office"
+                            pendingTasksCnt={calculatePendingTasks(cardData.tasks ?? [])}
+                            AssignedTasksCnt={cardData.tasks?.length ?? 0}
+                            completedTasksCnt={calculateCompletedTasks(cardData.tasks ?? [])}
+                            key={index}
+                            collaborators={cardData.collaborators ?? []}
+                            extraTStyle="bg-secondary border-secondaryLight" />
+                    ))}
+
+
                 </div>
             </div> :
             <>
@@ -276,40 +123,22 @@ export const WorkspaceCardSection2: React.FC = () => {
                             <div onClick={handleBottomSide} className="absolute top-1/2 left-2 translate-y-1/2 cursor-pointer border-zinc-700 border rounded-full p-1 active:scale-90 duration-75 ease-linear" >
                                 <KeyboardArrowDown />
                             </div>
-                            <WorkSpaceCard
-                                name="midsane office"
-                                pendingTasksCnt={5}
-                                AssignedTasksCnt={2}
-                                completedTasksCnt={3}
-                                collaborators={[
-                                    {
-                                        id: "1di",
-                                        name: "adi",
-                                        imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                                    },
-                                    {
-                                        id: "2di",
-                                        name: "abhi",
-                                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                                    },
-                                    {
-                                        id: "3di",
-                                        name: "lav",
-                                        imgUrl: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
-                                    },
-                                    {
-                                        id: "4di",
-                                        name: "lav",
-                                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                                    },
-                                    {
-                                        id: "4di",
-                                        name: "lav",
-                                        imgUrl: "https://mui.com/static/images/avatar/2.jpg"
-                                    }
-                                ]}
-                                extraTStyle="bg-secondary border-white/10"
+
+                            <CreateNewWorkSpaceCard
+                                extraTStyle="bg-secondary border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
                             />
+
+                            {cardDataArr && cardDataArr.map((cardData, index: number) => (
+                                <WorkSpaceCard
+                                    name="midsane office"
+                                    pendingTasksCnt={calculatePendingTasks(cardData.tasks ?? [])}
+                                    AssignedTasksCnt={cardData.tasks?.length ?? 0}
+                                    completedTasksCnt={calculateCompletedTasks(cardData.tasks ?? [])}
+                                    key={index}
+                                    collaborators={cardData.collaborators ?? []}
+                                    extraTStyle="bg-secondary border-secondaryLight" />
+                            ))}
+
                         </div>
 
                     </motion.div>}

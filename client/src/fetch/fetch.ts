@@ -1,3 +1,5 @@
+import { redirect } from "react-router-dom";
+
 export const BASE_URL = import.meta.env.VITE_BACKEND_URL
 export const registerYoutuber = async (data: any) => {
     const response = await fetch(`${BASE_URL}/api/v1/auth/register-youtuber`, {
@@ -60,6 +62,37 @@ export const checkLoggedIn = async () => {
         },
     });
     const resData = await response.json();
+
     return resData;
 }
 
+
+
+export const checkAuthentication = async () => {
+    const response = await fetch(`${BASE_URL}/api/v1/auth/check-loggedInStatus`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resData = await response.json();
+    if (resData && resData.success) return null
+    else {
+
+        throw redirect("/unauthorized")
+    }
+}
+
+
+export const logoutUser = async () => {
+    const response = await fetch(`${BASE_URL}/api/v1/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const resData = await response.json();
+    return resData;
+}

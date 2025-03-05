@@ -4,7 +4,6 @@ import { FC, ReactNode, useRef } from "react"
 import { Link } from "react-router-dom"
 import { storeDispatchType, storeStateType } from "../../store/store"
 import { useDispatch, useSelector } from "react-redux"
-import { draftSampleActions } from "../../store/Draftvideo.slice"
 import { modalActions } from "../../store/modal"
 
 export const BasicMenu = () => {
@@ -20,7 +19,7 @@ export const BasicMenu = () => {
   </ul>)
 }
 
-export const ThreeDotsMenu: FC<{ _id: string, draftName: string }> = ({ _id, draftName }) => {
+export const ThreeDotsMenu: FC<{ _id: number, draftName: string }> = ({ _id, draftName }) => {
 
   return (<ul className="menu border-2 shadow-sm shadow-secondary border-primary bg-base-200 rounded-box w-36">
     {
@@ -34,8 +33,9 @@ export const ThreeDotsMenu: FC<{ _id: string, draftName: string }> = ({ _id, dra
   </ul>)
 }
 
-const ThreeDotTab: FC<{ txt: string, svg: ReactNode, draftName: string, _id: string }> = ({ txt, svg, _id, draftName }) => {
+const ThreeDotTab: FC<{ txt: string, svg: ReactNode, draftName: string, _id: number }> = ({ txt, svg, _id, draftName }) => {
 
+  console.log(_id)
   const dispatch: storeDispatchType = useDispatch()
   const renameRef = useRef<string>(draftName);
   const handleClick = () => {
@@ -47,8 +47,8 @@ const ThreeDotTab: FC<{ txt: string, svg: ReactNode, draftName: string, _id: str
             content: <></>,
             buttons: true,
             handleSubmit: () => {
-              dispatch(draftSampleActions.removeDraft({ _id }))
-              dispatch(modalActions.closeModal())
+              // dispatch(draftSampleActions.removeDraft({ _id }))
+              // dispatch(modalActions.closeModal())
             },
             title: "Are you sure you want to delete!"
           }
@@ -60,8 +60,8 @@ const ThreeDotTab: FC<{ txt: string, svg: ReactNode, draftName: string, _id: str
           content: <input onChange={(e) => { renameRef.current = e.target.value }} defaultValue={draftName} className="px-2 py-1 w-full rounded" placeholder="type new name" />,
           buttons: true,
           handleSubmit: () => {
-            dispatch(draftSampleActions.updateDrafts({ id: _id, updatedDraft: { DraftName: renameRef.current } }))
-            dispatch(modalActions.closeModal())
+            // dispatch(draftSampleActions.updateDrafts({ id: _id, updatedDraft: { DraftName: renameRef.current } }))
+            // dispatch(modalActions.closeModal())
           },
           title: "Are you sure you want to rename"
         }))

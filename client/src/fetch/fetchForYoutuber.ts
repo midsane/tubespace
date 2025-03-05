@@ -9,5 +9,5 @@ export const fetchYoutuberData = async () => {
         },
     });
     const resData = await response.json();
-    return resData?.data;
+    return resData
 }

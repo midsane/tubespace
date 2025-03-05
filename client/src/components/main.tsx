@@ -1,6 +1,6 @@
 import { AssignmentTurnedIn, KeyboardArrowDown, KeyboardArrowUp, PendingActions, StarsSharp, Videocam, Workspaces } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-
+import { toast } from "react-hot-toast"
 import { TabsWrappedLabel, TabsWrappedLabelCol } from "./tabs";
 import { useEffect, useRef, useState } from "react";
 import { AssignedCardSection, AssignedCardSectionCol } from "./homeTabSection/AssignedCardSection";
@@ -16,25 +16,35 @@ import { storeDispatchType, storeStateType } from "../store/store";
 import { youtuberActions } from "../store/youtuberStore/youtuber.slice";
 
 
+
 export const Main = () => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
-    const { data: YoutuberData, loading } = useFetch<youtuberUserInterface>(fetchYoutuberData)
+    const { data: YoutuberData, loading, error } = useFetch<youtuberUserInterface>(fetchYoutuberData)
     const youtuberDataGlobal = useSelector((state: storeStateType) => state.youtuberInfo)
     const dispatch: storeDispatchType = useDispatch()
+
 
     useEffect(() => {
         if (YoutuberData)
             dispatch(youtuberActions.setUserInfo(YoutuberData))
     }, [YoutuberData])
 
-    console.log(youtuberDataGlobal)
-    console.log('loading:', loading)
+    if (error) {
+        toast.error(
+            error || "UnAuthorized to visit this page",
+            {
+                duration: 3000,
+            }
+        );
+
+    }
+
 
     let TabSection = <></>
     switch (value) {
         case "one":
-            TabSection = <AssignedCardSection cardDataArr={[]} />
+            TabSection = <AssignedCardSection  />
             break;
         case "two":
             TabSection = <WorkspaceCardSection />

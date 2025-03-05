@@ -1,23 +1,42 @@
 import { Assignment, FactCheck, Pending, WorkspacePremiumSharp } from "@mui/icons-material"
 import { Avatar, AvatarGroup, Button, Tooltip } from "@mui/material"
-import { CardWrapper } from "./cardWrapper"
+import { CardWrapper, CreateNewCard } from "./cardWrapper"
+import { collaboratorInterface } from "../../types/youtuberTypes"
+import { SproutIcon } from "lucide-react"
 
-
-interface collaboratorsInterface {
-    id: string,
-    name: string,
-    imgUrl: string,
-
-}
 
 export interface collaboratorsCardInterface {
     extraTStyle: string,
     name: string,
-    collaborators: collaboratorsInterface[],
+    collaborators: collaboratorInterface[],
     pendingTasksCnt: number,
     AssignedTasksCnt: number,
     completedTasksCnt: number
 }
+
+
+export const CreateNewWorkSpaceCard: React.FC<{ extraTStyle: string }> = ({ extraTStyle }) => {
+
+    // const dispatch: storeDispatchType = useDispatch()
+    // const createNewSampleFnc = () => {
+    //     dispatch(modalActions.openMoal({
+    //         title: "Create new Sample",
+    //         content: <CreateNewSample />
+    //     }))
+    // }
+
+    return (
+        <CreateNewCard
+            extraTStyle={extraTStyle}
+            text1="create new workspace"
+            enableText2={false}
+            createFnc={() => { }}
+            SvgIcon={<SproutIcon />}
+        />
+    )
+}
+
+
 
 export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
     ({
@@ -36,7 +55,7 @@ export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
                         <WorkspacePremiumSharp />
                     </div>
                     <AvatarGroup max={4}>
-                        {collaborators.map(c => <Avatar key={c.id} alt="collaborator1" src={c.imgUrl} />)}
+                        {collaborators.map(c => <Avatar key={c.userId} alt="collaborator1" src={c.user?.profilepic || "https://photosking.net/wp-content/uploads/2024/05/no-dp-for-whatsapp_60.webp"} />)}
 
                     </AvatarGroup>
                     <h6 className="w-full py-4 h-1/3 flex items-start justify-start" >{name}</h6>

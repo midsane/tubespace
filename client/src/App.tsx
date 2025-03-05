@@ -15,47 +15,71 @@ import { HomeScreenCol } from './Screens/collaboratorScreen/homeScreen'
 import { SettingScreenCol } from './Screens/collaboratorScreen/settingScreen'
 import { YoutuberScreen } from './Screens/collaboratorScreen/youtubersScreen'
 import { linkType } from './components/ScreenWrapper'
+import { checkAuthentication } from './fetch/fetch'
+import { UnAuthorzedPage } from './components/MidErrorPages/unauthorized'
+import { ErrorPage } from './components/MidErrorPages/errorPage'
+import { NotFoundPage } from './components/MidErrorPages/notFound'
+import { LogoutPage } from './Screens/logoutPage'
+
 
 const router = createBrowserRouter([
   {
     path: "/",
+    errorElement: <ErrorPage />,
     element: <RootLayout />,
     children: [
       {
         index: true, element: <LandingPage />
       },
       {
-        path: "/home", element: <HomeScreen />
+        path: "/logout", element: <LogoutPage />
       },
       {
-        path: "/office", element: <WorkSpacesScreen />
+        path: "*",
+        element: <NotFoundPage />
       },
       {
-        path: "/chat", element: <ChatScreen linkType={linkType.one} />
+        path: "unauthorized", element: <UnAuthorzedPage />
       },
       {
-        path: "/create", element: <CreateScreen />
-      },
-      {
-        path: "/settings", element: <SettingScreen />
-      },
-      {
-        path: "/Collaborators", element: <CollaboratorsScreen />
-      }
-      ,
-      {
-        path: "col/:colId/home", element: <HomeScreenCol />
-      },
-      {
-        path: "col/:colId/Settings", element: <SettingScreenCol />
-      },
-      {
-        path: "col/:colId/Youtubers", element: <YoutuberScreen />
-      },
-      {
-        path: "col/:colId/chat", element: <ChatScreen linkType={linkType.two} />
-      }
+        path: "",
+        loader: checkAuthentication,
+        children: [
 
+          {
+            path: "/home", element: <HomeScreen />, 
+          },
+          {
+            path: "/office", element: <WorkSpacesScreen />
+          },
+          {
+            path: "/chat", element: <ChatScreen linkType={linkType.one} />
+          },
+          {
+            path: "/create", element: <CreateScreen />
+          },
+          {
+            path: "/settings", element: <SettingScreen />
+          },
+          {
+            path: "/Collaborators", element: <CollaboratorsScreen />
+          }
+          ,
+          {
+            path: "col/:colId/home", element: <HomeScreenCol />
+          },
+          {
+            path: "col/:colId/Settings", element: <SettingScreenCol />
+          },
+          {
+            path: "col/:colId/Youtubers", element: <YoutuberScreen />
+          },
+          {
+            path: "col/:colId/chat", element: <ChatScreen linkType={linkType.two} />
+          },
+
+        ]
+      },
     ]
   }
 ])
@@ -71,5 +95,7 @@ function App() {
 }
 
 export default App
+
+
 
 

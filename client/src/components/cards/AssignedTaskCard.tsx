@@ -2,19 +2,40 @@ import { RateReview, Schedule } from "@mui/icons-material"
 import { Avatar, Button, Chip, Tooltip } from "@mui/material"
 import { useSelector } from "react-redux";
 import { storeStateType } from "../../store/store";
-import { CardWrapper } from "./cardWrapper";
+import { CardWrapper, CreateNewCard } from "./cardWrapper";
+import { TASKSTATUS } from "../../types/youtuberTypes";
+import { CloudIcon } from "lucide-react";
 
-export enum TaskStatus {
-    "pending",
-    "completed"
+
+const formatDeadline = (deadline: Date) => {
+    const date = new Date(deadline);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`
 }
 
 interface AssignedCardInterface {
     extraTStyle: string,
     taskTitle: string,
-    status: TaskStatus,
+    status: TASKSTATUS,
     timesRevised: number,
-    deadline: string
+    deadline: Date
+}
+
+
+export const NoAssignedTasks: React.FC<{ extraTStyle: string }> = ({ extraTStyle }) => {
+
+    return (
+        <CreateNewCard
+            extraTStyle={extraTStyle}
+            text1="No tasks assigned"
+            enableText2={false}
+            noButtons
+            createFnc={() => { }}
+            SvgIcon={<CloudIcon/>}
+        />
+    )
 }
 
 export const AssignedTaskCard: React.FC<AssignedCardInterface> =
@@ -40,17 +61,17 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
                     <h6 className="w-full sm:pl-0 pl-6 py-2 h-1/4" >{taskTitle}</h6>
 
                     <div className="w-full h-1/3 justify-between flex items-center">
-                        {status === TaskStatus.pending && <Button size="small" color="primary" variant="outlined" >Chat</Button>}
-                        {status === TaskStatus.completed && <Button 
-                        
-                        size="small" color="secondary" variant="outlined" >View it</Button>}
+                        {status === TASKSTATUS.pending && <Button size="small" color="primary" variant="outlined" >Chat</Button>}
+                        {status === TASKSTATUS.completed && <Button
+
+                            size="small" color="secondary" variant="outlined" >View it</Button>}
 
                         <Tooltip title={timesRevised + " revisions"} >
                             <RateReview sx={{ color: "rgb(112, 208, 246)" }} />
                         </Tooltip>
                     </div>
 
-                    {status === TaskStatus.completed ?
+                    {status === TASKSTATUS.completed ?
 
                         <div className="w-full h-1/4 flex flex-col justify-between items-center">
                             <Seperator
@@ -61,7 +82,7 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
                                     <Schedule fontSize="small" sx={{ opacity: "0.5" }} />
                                 </Tooltip>
 
-                                <p className="opacity-55 flex justify-end h-full text-xs sm:text-smitems-center">{deadline}</p>
+                                <p className="opacity-55 flex justify-end h-full text-xs sm:text-smitems-center">{formatDeadline(deadline)}</p>
                                 <Chip size="small" label="completed" color="success" variant="outlined" />
                             </div>
 
@@ -76,7 +97,7 @@ export const AssignedTaskCard: React.FC<AssignedCardInterface> =
                                     <Schedule fontSize="small" sx={{ opacity: "0.5" }} />
                                 </Tooltip>
 
-                                <p className="opacity-55 text-xs sm:text-sm flex justify-end h-full items-center">{deadline}</p>
+                                <p className="opacity-55 text-xs sm:text-sm flex justify-end h-full items-center">{formatDeadline(deadline)}</p>
                                 <Chip label="pending" size="small" color="primary" variant="outlined" />
 
                             </div>
@@ -112,15 +133,15 @@ export const AssignedTaskCardCol: React.FC<AssignedCardInterface> =
                     <h6 className="w-full opacity-75 sm:pl-2 pl-6 pb-2" >{taskTitle}</h6>
 
                     <div className="w-full h-1/3 justify-between flex items-center">
-                        {status === TaskStatus.pending && <Button size="small" color="primary" variant="outlined" >Chat</Button>}
-                        {status === TaskStatus.completed && <Button  size="small" color="secondary" variant="outlined" >View it</Button>}
+                        {status === TASKSTATUS.pending && <Button size="small" color="primary" variant="outlined" >Chat</Button>}
+                        {status === TASKSTATUS.completed && <Button size="small" color="secondary" variant="outlined" >View it</Button>}
 
                         <Tooltip title={timesRevised + " revisions"} >
                             <RateReview sx={{ color: "rgb(112, 208, 246)" }} />
                         </Tooltip>
                     </div>
 
-                    {status === TaskStatus.completed ?
+                    {status === TASKSTATUS.completed ?
 
                         <div className="w-full h-1/4 flex flex-col justify-between items-center">
                             <Seperator
@@ -131,7 +152,7 @@ export const AssignedTaskCardCol: React.FC<AssignedCardInterface> =
                                     <Schedule fontSize="small" sx={{ opacity: "0.5" }} />
                                 </Tooltip>
 
-                                <p className="opacity-55 flex justify-end h-full text-xs sm:text-smitems-center">{deadline}</p>
+                                <p className="opacity-55 flex justify-end h-full text-xs sm:text-smitems-center">{formatDeadline(deadline)}</p>
                                 <Chip size="small" label="completed" color="success" variant="outlined" />
                             </div>
 
@@ -146,7 +167,7 @@ export const AssignedTaskCardCol: React.FC<AssignedCardInterface> =
                                     <Schedule fontSize="small" sx={{ opacity: "0.5" }} />
                                 </Tooltip>
 
-                                <p className="opacity-55 text-xs sm:text-sm flex justify-end h-full items-center">{deadline}</p>
+                                <p className="opacity-55 text-xs sm:text-sm flex justify-end h-full items-center">{formatDeadline(deadline)}</p>
                                 <Chip label="pending" size="small" color="primary" variant="outlined" />
 
                             </div>
