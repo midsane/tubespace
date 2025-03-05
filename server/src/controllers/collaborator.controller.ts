@@ -1,5 +1,6 @@
 import client from "../db/db";
 import { RequestType } from "../types/types";
+import { ApiResponse } from "../utils/apiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
 
 const fetchHome = asyncHandler(async (req: RequestType, res) => {
@@ -23,7 +24,7 @@ const fetchHome = asyncHandler(async (req: RequestType, res) => {
         },
     });
 
-    res.status(200).json({ data: { user: updatedUser }, message: "Collaborator data home page data fetched successfully!" });
+    res.status(200).json(new ApiResponse(false, { user: updatedUser }, "Collaborator data home page data fetched successfully!"));
 });
 
 export { fetchHome };

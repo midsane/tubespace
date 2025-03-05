@@ -3,15 +3,16 @@ import { asyncHandler } from "../utils/asyncHandler";
 import jwt from "jsonwebtoken";
 import userSchema from "../validators/user.validation";
 import hashPassword, { comparePassword } from "../utils/auth.utils";
+import { ApiResponse } from "../utils/apiResponse";
 
 const jwtSecret = process.env.JWT_SECRET;
 
 const registerYoutuber = asyncHandler(async (req, res) => {
     const { email, password, username } = req.body;
-    const { error, value } = userSchema.validate({ username, email, password });
+    const { error } = userSchema.validate({ username, email, password });
 
     if (error) {
-        res.status(400).json({ data: {}, message: error.message });
+        return res.status(400).json(new ApiResponse(false, {}, error.message));
     }
 
     const existingEmail = await client.user.findFirst({
@@ -20,7 +21,7 @@ const registerYoutuber = asyncHandler(async (req, res) => {
         },
     });
 
-    if (existingEmail) res.status(401).json({ data: {}, message: "email already exists 😟" });
+    if (existingEmail) return res.status(401).json(new ApiResponse(false, {}, "email already exists 😟"));
 
     const existingUsername = await client.user.findFirst({
         where: {
@@ -28,7 +29,7 @@ const registerYoutuber = asyncHandler(async (req, res) => {
         },
     });
 
-    if (existingUsername) res.status(401).json({ data: {}, message: "username already exists 😟" });
+    if (existingUsername) return res.status(401).json(new ApiResponse(false, {}, "username already exists 😟"));
 
     const hashedPassword = await hashPassword(password);
 
@@ -42,13 +43,12 @@ const registerYoutuber = asyncHandler(async (req, res) => {
     });
 
     if (!jwtSecret) {
-        res.status(500).json({ data: {}, message: "JWT secret is not defined" });
-        return;
+        return res.status(500).json(new ApiResponse(false, {}, "JWT secret is not defined"));
     }
 
     jwt.sign(user, jwtSecret, { expiresIn: "10d" }, (err, token) => {
         if (err) {
-            res.status(500).json({ data: {}, message: "error generating token" });
+            return res.status(500).json(new ApiResponse(false, {}, "error generating token"));
         }
         res.cookie("token", "Bearer " + token, { httpOnly: true });
     });
@@ -61,18 +61,15 @@ const registerYoutuber = asyncHandler(async (req, res) => {
 
     const { password: psw, ...userDataToSend } = user;
 
-    res.status(201).json({
-        data: { user: userDataToSend, youtuber },
-        message: "Youtuber registered successfully 🐺🗿",
-    });
+    res.status(201).json(new ApiResponse(true, { user: userDataToSend, youtuber }, "Youtuber registered successfully 🐺🗿"));
 });
 
 const loginYoutuber = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    const { error, value } = userSchema.validate({ username: "midsane", email, password });
+    const { error } = userSchema.validate({ username: "midsane", email, password });
 
     if (error) {
-        res.status(400).json({ data: {}, message: error.message });
+        return res.status(400).json(new ApiResponse(false, {}, error.message));
     }
     const user = await client.user.findUnique({
         where: {
@@ -84,34 +81,34 @@ const loginYoutuber = asyncHandler(async (req, res) => {
     });
 
     if (!user) {
-        res.status(400);
-        throw new Error("user does not exist | invalid email");
+        return res.status(400).json(new ApiResponse(false, {}, "user does not exist | invalid email"));
     }
 
     try {
         await comparePassword(password, user.password);
     } catch (error) {
-        res.status(403).json({ data: {}, message: "invalid password!" });
+        return res.status(403).json(new ApiResponse(false, {}, "invalid password!"));
     }
 
     if (!jwtSecret) {
-        res.status(500).json({ data: {}, message: "JWT secret is not defined" });
-        return;
+        return res.status(500).json(new ApiResponse(false, {}, "JWT secret is not defined"));
     }
 
     const { password: psw, ...userDataToSend } = user;
 
     await jwtSign({ userDataToSend, jwtSecret, res });
-   
 
-    res.status(200).json({ data: userDataToSend, message: "Youtuber logged in successfully" });
+
+    res.status(200).json(new ApiResponse(true, {
+        user: userDataToSend,
+    }, "Youtuber logged in successfully"));
 });
 
 const jwtSign = async ({ userDataToSend, jwtSecret, res }) => {
     return new Promise((resolve, _) => {
         jwt.sign(userDataToSend, jwtSecret, { expiresIn: "10d" }, (err, token) => {
             if (err) {
-                return res.status(500).json({ data: {}, message: "error generating token" });
+                return res.status(500).json(new ApiResponse(false, {}, "error generating token"));
             }
             res.cookie("token", "Bearer " + token, { httpOnly: true });
             resolve("done");
@@ -124,7 +121,7 @@ const registerCollaborator = asyncHandler(async (req, res) => {
     const { error } = userSchema.validate({ username, email, password });
 
     if (error) {
-        res.status(400).json({ data: {}, message: error.message });
+        return res.status(400).json(new ApiResponse(false, {}, error.message));
     }
 
     const existingEmail = await client.user.findFirst({
@@ -133,7 +130,7 @@ const registerCollaborator = asyncHandler(async (req, res) => {
         },
     });
 
-    if (existingEmail) res.status(401).json({ data: {}, message: "email already exists 😟" });
+    if (existingEmail) return res.status(401).json(new ApiResponse(false, {}, "email already exists 😟"));
 
     const existingUsername = await client.user.findFirst({
         where: {
@@ -141,7 +138,7 @@ const registerCollaborator = asyncHandler(async (req, res) => {
         },
     });
 
-    if (existingUsername) res.status(401).json({ data: {}, message: "username already exists 😟" });
+    if (existingUsername) return res.status(401).json(new ApiResponse(false, {}, "username already exists 😟"));
 
     const hashedPassword = await hashPassword(password);
 
@@ -155,13 +152,13 @@ const registerCollaborator = asyncHandler(async (req, res) => {
     });
 
     if (!jwtSecret) {
-        res.status(500).json({ data: {}, message: "JWT secret is not defined" });
+        return res.status(500).json(new ApiResponse(false, {}, "JWT secret is not defined"));
         return;
     }
 
     jwt.sign(user, jwtSecret, { expiresIn: "10d" }, (err, token) => {
         if (err) {
-            res.status(500).json({ data: {}, message: "error generating token" });
+            return res.status(500).json(new ApiResponse(false, {}, "error generating token"));
         }
         res.cookie("token", "Bearer " + token, {
             httpOnly: true,
@@ -176,18 +173,15 @@ const registerCollaborator = asyncHandler(async (req, res) => {
 
     const { password: psw, ...userDataToSend } = user;
 
-    res.status(201).json({
-        data: { user: userDataToSend, collaborator },
-        message: "Collaborator registered successfully 🐺🗿",
-    });
+    res.status(201).json(new ApiResponse(true, { user: userDataToSend, collaborator }, "Collaborator registered successfully 🐺🗿"));
 });
 
 const loginCollaborator = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    const { error, value } = userSchema.validate({ username: "midsane", email, password });
+    const { error } = userSchema.validate({ username: "midsane", email, password });
 
     if (error) {
-        res.status(400).json({ data: {}, message: error.message });
+        return res.status(400).json(new ApiResponse(false, {}, error.message));
     }
     const user = await client.user.findUnique({
         where: {
@@ -199,31 +193,34 @@ const loginCollaborator = asyncHandler(async (req, res) => {
     });
 
     if (!user) {
-        res.status(400);
-        throw new Error("user does not exist | invalid email");
+        return res.status(400).json(new ApiResponse(false, {}, "user does not exist | invalid email"));
     }
 
     try {
         await comparePassword(password, user.password);
     } catch (error) {
-        res.status(403).json({ data: {}, message: "invalid password!" });
+        return res.status(403).json(new ApiResponse(false, {}, "invalid password!"));
     }
 
     if (!jwtSecret) {
-        res.status(500).json({ data: {}, message: "JWT secret is not defined" });
-        return;
+        return res.status(500).json(new ApiResponse(false, {}, "JWT secret is not defined"));
     }
 
     const { password: psw, ...userDataToSend } = user;
 
     jwt.sign(userDataToSend, jwtSecret, { expiresIn: "10d" }, (err, token) => {
         if (err) {
-            res.status(500).json({ data: {}, message: "error generating token" });
+            return res.status(500).json(new ApiResponse(false, {}, "error generating token"));
         }
         res.cookie("token", "Bearer " + token, { httpOnly: true });
     });
 
-    res.status(200).json({ data: userDataToSend, message: "Collaborator logged in successfully" });
+    res.status(200).json(new ApiResponse(true, { user: userDataToSend }, "Collaborator logged in successfully"));
 });
 
-export { registerYoutuber, loginYoutuber, registerCollaborator, loginCollaborator };
+const logoutUser = asyncHandler(async (_, res) => {
+    res.clearCookie("token");
+    res.status(200).json(new ApiResponse(true, {}, "User logged out successfully"));
+})
+
+export { registerYoutuber, loginYoutuber, registerCollaborator, loginCollaborator, logoutUser };
