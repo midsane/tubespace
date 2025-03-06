@@ -1,6 +1,7 @@
 import { BASE_URL } from "./fetch";
 
 export const fetchYoutuberData = async () => {
+    
     const response = await fetch(`${BASE_URL}/api/v1/youtuber/fetch-home`, {
         method: "POST",
         credentials: "include",
@@ -9,5 +10,6 @@ export const fetchYoutuberData = async () => {
         },
     });
     const resData = await response.json();
+    console.log(resData)
     return resData
 }

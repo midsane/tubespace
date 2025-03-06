@@ -10,7 +10,7 @@ import { SplitText } from "../textAnimations/splitText";
 
 
 export const DraftVideosCardSection: React.FC = () => {
-    const DraftArr = useSelector((state: storeStateType) => state.youtuberInfo.user?.Youtuber?.draftVideos);
+    const DraftArr = useSelector((state: storeStateType) => state.youtuberDraft);
     return (<CardSection>
         <>
             <CreateNewVideoCard
@@ -26,7 +26,7 @@ export const DraftVideosCardSection: React.FC = () => {
 
 export const DraftVideosCardSection2: React.FC = () => {
     const scrollDivRef = useRef<HTMLDivElement>(null);
-    const DraftArr = useSelector((state: storeStateType) => state.youtuberInfo.user?.Youtuber?.draftVideos);
+    const DraftArr = useSelector((state: storeStateType) => state.youtuberDraft);
     const sideBarState = useSelector((state: storeStateType) => state.sidebar);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -135,7 +135,7 @@ export const DraftVideosCardSection2: React.FC = () => {
 
 
 export const DraftVideosCardSectionWrap = forwardRef<HTMLDivElement>((_, ref) => {
-    const DraftArr = useSelector((state: storeStateType) => state.youtuberInfo.user?.Youtuber?.draftVideos);
+    const DraftArr = useSelector((state: storeStateType) => state.youtuberDraft);
     return (
         <div ref={ref} className={`flex flex-col gap-10 p-10 justify-start items-center  overflow-x-hidden overflow-y-scroll rounded-2xl scroll-smooth border border-secondaryLight h-[90%] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent  w-[95%] sm:w-[90%] `}>
             <CreateNewVideoCard

@@ -21,9 +21,8 @@ const getTaskTitle = (tType: taskType) => {
 }
 
 export const AssignedCardSection = () => {
-    const cardDataArr = useSelector((state: storeStateType) => state.youtuberInfo?.user?.Youtuber?.tasksAssigned)
-
-
+    const cardDataArr = useSelector((state: storeStateType) => state.youtuberAssignedTask)
+  
     return (<CardSection>
         <>
             {cardDataArr && cardDataArr.length === 0 && <NoAssignedTasks
@@ -46,9 +45,12 @@ export const AssignedCardSection = () => {
 
 
 export const AssignedCardSectionCol: React.FC = () => {
-    const cardDataArr = useSelector((state: storeStateType) => state.youtuberInfo?.user?.Youtuber?.draftVideos)
+    const cardDataArr = useSelector((state: storeStateType) => state.youtuberAssignedTask)
     return (<CardSection>
         <>
+            {cardDataArr && cardDataArr.length === 0 && <NoAssignedTasks
+                extraTStyle=" border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
+            />}
             {cardDataArr && cardDataArr.map((cardData: any, index: number) => (
                 <AssignedTaskCard
                     key={index}
@@ -64,10 +66,14 @@ export const AssignedCardSectionCol: React.FC = () => {
 
 export const AssignedCardSectionWrap = forwardRef<HTMLDivElement>((_, ref) => {
 
-    const cardDataArr = useSelector((state: storeStateType) => state.youtuberInfo?.user?.Youtuber?.draftVideos)
+    const cardDataArr = useSelector((state: storeStateType) => state.youtuberAssignedTask)
 
     return (
         <div ref={ref} className={`flex flex-col gap-10 p-10 justify-start items-center  overflow-x-hidden overflow-y-scroll scroll-smooth rounded-2xl border border-secondaryLight h-[90%] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent w-[95%] sm:w-[90%] `}>
+            {cardDataArr && cardDataArr.length === 0 && <NoAssignedTasks
+                extraTStyle=" border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
+            />}
+
             {cardDataArr && cardDataArr.map((cardData: any, index: number) => (
                 <AssignedTaskCard
                     key={index}

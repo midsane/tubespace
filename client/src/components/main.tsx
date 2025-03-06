@@ -14,6 +14,10 @@ import { youtuberUserInterface } from "../types/youtuberTypes";
 import { fetchYoutuberData } from "../fetch/fetchForYoutuber";
 import { storeDispatchType, storeStateType } from "../store/store";
 import { youtuberActions } from "../store/youtuberStore/youtuber.slice";
+import { useNavigate } from "react-router-dom";
+import { youtberAssignedTaskActions } from "../store/youtuberStore/youtuberAssignedTask.slice";
+import { youtuberWorkspacesAction } from "../store/youtuberStore/youtuberWorspaces.slice";
+import { youtuberDraftActions } from "../store/youtuberStore/youtuberDraftVideos.slice";
 
 
 
@@ -23,12 +27,44 @@ export const Main = () => {
     const { data: YoutuberData, loading, error } = useFetch<youtuberUserInterface>(fetchYoutuberData)
     const youtuberDataGlobal = useSelector((state: storeStateType) => state.youtuberInfo)
     const dispatch: storeDispatchType = useDispatch()
+    const navigate = useNavigate();
 
+    console.log("Raw Fetch Response:", YoutuberData);
 
     useEffect(() => {
-        if (YoutuberData)
-            dispatch(youtuberActions.setUserInfo(YoutuberData))
+        if (YoutuberData && YoutuberData.user?.Youtuber) {
+            console.log("YoutuberData", YoutuberData)
+            const youtuberDataToUpdate: youtuberUserInterface = {
+                user: {
+                    ...YoutuberData.user,
+                    Youtuber: {
+                        ...YoutuberData.user?.Youtuber,
+                        draftVideos: null,
+                        tasksAssigned: null,
+                        workspaces: null
+                    }
+                }
+            }
+
+            const tasksAssignedToUpdate = YoutuberData.user?.Youtuber?.tasksAssigned
+
+            const workspacesToUpdate = YoutuberData.user?.Youtuber?.workspaces
+
+            const draftsToUpdate = YoutuberData.user?.Youtuber?.draftVideos
+
+            dispatch(youtuberActions.setUserInfo(youtuberDataToUpdate))
+
+            dispatch(youtuberWorkspacesAction.setWorkspaces(workspacesToUpdate || []))
+
+            dispatch(youtberAssignedTaskActions.setTasks(tasksAssignedToUpdate || []))
+
+            dispatch(youtuberDraftActions.setDraft(draftsToUpdate || []))
+
+        }
+
     }, [YoutuberData])
+
+    console.log("error", error)
 
     if (error) {
         toast.error(
@@ -40,11 +76,14 @@ export const Main = () => {
 
     }
 
+    if (error === "No token provided") {
+        navigate("/");
+    }
 
     let TabSection = <></>
     switch (value) {
         case "one":
-            TabSection = <AssignedCardSection  />
+            TabSection = <AssignedCardSection />
             break;
         case "two":
             TabSection = <WorkspaceCardSection />

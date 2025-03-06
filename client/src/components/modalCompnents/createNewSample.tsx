@@ -1,10 +1,9 @@
 import { useRef } from "react"
 // import { storeDispatchType } from "../../store/store"
 // import { useDispatch } from "react-redux"
-// import { draftSampleActions } from "../../store/Draftvideo.slice"
-// import { modalActions } from "../../store/modal"
+// import { youtuberDraftActions } from "../../store/youtuberStore/youtuberDraftVideos.slice"
 import { Button } from "@mui/material"
-// import { v4 as uuidv4 } from "uuid"
+
 
 export const CreateNewSample = () => {
     // const dispatch: storeDispatchType = useDispatch()
@@ -12,6 +11,8 @@ export const CreateNewSample = () => {
     const newDraftTitleTxt = useRef<HTMLInputElement>(null)
 
     const handleCreateSampleForFirstTime = () => {
+
+    
         // dispatch(draftSampleActions.addDrafts({
         //     DraftName: newDraftTitleTxt.current!.value,
         //     title: "",

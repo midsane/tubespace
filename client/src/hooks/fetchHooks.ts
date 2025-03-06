@@ -9,7 +9,6 @@ export const useFetch = <T>(fnc: () => Promise<any>) => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
-            await new Promise((resolve) => setTimeout(resolve, 10))
             fnc().then((res: { data: T, success: boolean, message: string }) => {
              
                 if (res.success)

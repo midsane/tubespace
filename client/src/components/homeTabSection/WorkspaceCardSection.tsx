@@ -30,7 +30,7 @@ const calculateCompletedTasks = (task: taskInterface[]) => {
 }
 
 export const WorkspaceCardSection: React.FC = () => {
-    const cardDataArr = useSelector((state: storeStateType) => state.youtuberInfo?.user?.Youtuber?.workspaces)
+    const cardDataArr = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
 
 
     return (<CardSection>
@@ -58,7 +58,8 @@ export const WorkspaceCardSection2: React.FC = () => {
     const scrollDivRef = useRef<HTMLDivElement>(null);
     const sideBarState = useSelector((state: storeStateType) => state.sidebar)
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const cardDataArr = useSelector((state: storeStateType) => state.youtuberInfo?.user?.Youtuber?.workspaces)
+
+    const cardDataArr = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
 
     const handleTopSide = () => {
         if (scrollDivRef.current) {
