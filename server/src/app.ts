@@ -13,8 +13,6 @@ app.use(express.static("public"));
 app.use(
     cors({
         origin: [process.env.clientURL || "", process.env.clientURL2 || ""],
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
     }),
 );

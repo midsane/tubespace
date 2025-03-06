@@ -16,7 +16,7 @@ const addDraft = asyncHandler(async (req: RequestType, res) => {
     const newDraft = await client.draftVideos.create({
         data: {
             DraftTitle,
-            youtuberId: user.id,
+            youtuberId: user.Youtuber.youtuberId,
             workspaceId,
         },
     });

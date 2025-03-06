@@ -7,6 +7,7 @@ import { asyncHandler } from "../../utils/asyncHandler";
 const fetchHome = asyncHandler(async (req: RequestType, res) => {
     const user = req.user;
 
+    console.log("fetching youtuber home data!");
     const updatedUser = await client.user.findUnique({
         where: {
             id: user.id,
@@ -33,7 +34,7 @@ const fetchHome = asyncHandler(async (req: RequestType, res) => {
     );
 });
 
-const verifyRole = async (req: RequestType, res, next: NextFunction) => {
+const verifyRole = (req: RequestType, res, next: NextFunction) => {
     const user = req.user;
     if (user?.role !== "youtuber") {
         return res.status(403).json({ message: "You are not allowed to access this resource" });

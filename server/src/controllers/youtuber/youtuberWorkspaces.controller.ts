@@ -10,7 +10,7 @@ const createWorkspace = asyncHandler(async (req: RequestType, res) => {
     const newWorkspace = await client.workspace.create({
         data: {
             name,
-            youtuberId: user.id,
+            youtuberId: user.Youtuber.youtuberId,
         },
     });
 
