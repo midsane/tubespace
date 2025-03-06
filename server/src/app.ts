@@ -12,12 +12,13 @@ app.use(express.static("public"));
 
 app.use(
     cors({
-        origin: process.env.clientURL,
+        origin: [process.env.clientURL || "", process.env.clientURL2 || ""],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
-    }),
+    })
 );
 
-app.options("*", cors());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/collaborator", collaboratorRouter);
