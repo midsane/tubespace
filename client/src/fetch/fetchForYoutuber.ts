@@ -27,6 +27,7 @@ export const fetchYoutuberData = async () => {
 
 
 export const addDraft = async (data: DraftVideosInterface) => {
+    console.log(data)
     const response = await fetch(`${BASE_URL}/api/v1/youtuber/fetch-home`, {
         method: "POST",
         credentials: "include",
