@@ -3,9 +3,9 @@ export class ApiResponse extends Response {
     data: any;
     message: string;
     constructor(success: boolean, data: any, message: string) {
-        super()
+        super();
         this.success = success;
         this.data = data;
-        this.message = message
+        this.message = message;
     }
 }

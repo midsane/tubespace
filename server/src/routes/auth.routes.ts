@@ -19,21 +19,25 @@ router.route("/login-collaborator").post(loginCollaborator);
 router.use(verifyJWT);
 
 router.route("/check-loggedInStatus").post((req: RequestType, res) => {
-    res.status(200).json(new ApiResponse(
-        true,
-        {
-            success: true,
-            message: "User is logged in",
-            user: {
-                id: req.user.id,
-                name: req.user.name,
-                email: req.user.email,
-                username: req.user.username,
-                profilepic: req.user.profilepic,
-                createdAt: req.user.createdAt,
-                role: req.user.role,
+    res.status(200).json(
+        new ApiResponse(
+            true,
+            {
+                success: true,
+                message: "User is logged in",
+                user: {
+                    id: req.user.id,
+                    name: req.user.name,
+                    email: req.user.email,
+                    username: req.user.username,
+                    profilepic: req.user.profilepic,
+                    createdAt: req.user.createdAt,
+                    role: req.user.role,
+                },
             },
-        }, "User is logged in"));
+            "User is logged in",
+        ),
+    );
 });
 
 router.route("/logout").post(logoutUser);

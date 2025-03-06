@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRouter from "./routes/auth.routes";
 import collaboratorRouter from "./routes/collaborator.routes";
-import youtuberRouter from "./routes/youtuber.routes"
+import youtuberRouter from "./routes/youtuber.routes";
 const app = express();
 
 app.use(cookieParser());
@@ -16,9 +16,8 @@ app.use(
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
-    })
+    }),
 );
-
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/collaborator", collaboratorRouter);

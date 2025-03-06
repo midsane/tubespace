@@ -21,7 +21,8 @@ const registerYoutuber = asyncHandler(async (req, res) => {
         },
     });
 
-    if (existingEmail) return res.status(401).json(new ApiResponse(false, {}, "email already exists 😟"));
+    if (existingEmail)
+        return res.status(401).json(new ApiResponse(false, {}, "email already exists 😟"));
 
     const existingUsername = await client.user.findFirst({
         where: {
@@ -29,7 +30,8 @@ const registerYoutuber = asyncHandler(async (req, res) => {
         },
     });
 
-    if (existingUsername) return res.status(401).json(new ApiResponse(false, {}, "username already exists 😟"));
+    if (existingUsername)
+        return res.status(401).json(new ApiResponse(false, {}, "username already exists 😟"));
 
     const hashedPassword = await hashPassword(password);
 
@@ -61,13 +63,20 @@ const registerYoutuber = asyncHandler(async (req, res) => {
 
     const { password: psw, ...userDataToSend } = user;
 
-    res.status(201).json(new ApiResponse(true, { user: userDataToSend, youtuber }, "Youtuber registered successfully 🐺🗿"));
+    res.status(201).json(
+        new ApiResponse(
+            true,
+            { user: userDataToSend, youtuber },
+            "Youtuber registered successfully 🐺🗿",
+        ),
+    );
 });
 
 const loginYoutuber = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const { error } = userSchema.validate({ username: "midsane", email, password });
 
+    console.log("here");
     if (error) {
         return res.status(400).json(new ApiResponse(false, {}, error.message));
     }
@@ -81,7 +90,9 @@ const loginYoutuber = asyncHandler(async (req, res) => {
     });
 
     if (!user) {
-        return res.status(400).json(new ApiResponse(false, {}, "user does not exist | invalid email"));
+        return res
+            .status(400)
+            .json(new ApiResponse(false, {}, "user does not exist | invalid email"));
     }
 
     try {
@@ -98,10 +109,17 @@ const loginYoutuber = asyncHandler(async (req, res) => {
 
     await jwtSign({ userDataToSend, jwtSecret, res });
 
+    console.log("here-again");
 
-    res.status(200).json(new ApiResponse(true, {
-        user: userDataToSend,
-    }, "Youtuber logged in successfully"));
+    res.status(200).json(
+        new ApiResponse(
+            true,
+            {
+                user: userDataToSend,
+            },
+            "Youtuber logged in successfully",
+        ),
+    );
 });
 
 const jwtSign = async ({ userDataToSend, jwtSecret, res }) => {
@@ -130,7 +148,8 @@ const registerCollaborator = asyncHandler(async (req, res) => {
         },
     });
 
-    if (existingEmail) return res.status(401).json(new ApiResponse(false, {}, "email already exists 😟"));
+    if (existingEmail)
+        return res.status(401).json(new ApiResponse(false, {}, "email already exists 😟"));
 
     const existingUsername = await client.user.findFirst({
         where: {
@@ -138,7 +157,8 @@ const registerCollaborator = asyncHandler(async (req, res) => {
         },
     });
 
-    if (existingUsername) return res.status(401).json(new ApiResponse(false, {}, "username already exists 😟"));
+    if (existingUsername)
+        return res.status(401).json(new ApiResponse(false, {}, "username already exists 😟"));
 
     const hashedPassword = await hashPassword(password);
 
@@ -173,7 +193,13 @@ const registerCollaborator = asyncHandler(async (req, res) => {
 
     const { password: psw, ...userDataToSend } = user;
 
-    res.status(201).json(new ApiResponse(true, { user: userDataToSend, collaborator }, "Collaborator registered successfully 🐺🗿"));
+    res.status(201).json(
+        new ApiResponse(
+            true,
+            { user: userDataToSend, collaborator },
+            "Collaborator registered successfully 🐺🗿",
+        ),
+    );
 });
 
 const loginCollaborator = asyncHandler(async (req, res) => {
@@ -193,7 +219,9 @@ const loginCollaborator = asyncHandler(async (req, res) => {
     });
 
     if (!user) {
-        return res.status(400).json(new ApiResponse(false, {}, "user does not exist | invalid email"));
+        return res
+            .status(400)
+            .json(new ApiResponse(false, {}, "user does not exist | invalid email"));
     }
 
     try {
@@ -215,12 +243,14 @@ const loginCollaborator = asyncHandler(async (req, res) => {
         res.cookie("token", "Bearer " + token, { httpOnly: true });
     });
 
-    res.status(200).json(new ApiResponse(true, { user: userDataToSend }, "Collaborator logged in successfully"));
+    res.status(200).json(
+        new ApiResponse(true, { user: userDataToSend }, "Collaborator logged in successfully"),
+    );
 });
 
 const logoutUser = asyncHandler(async (_, res) => {
     res.clearCookie("token");
     res.status(200).json(new ApiResponse(true, {}, "User logged out successfully"));
-})
+});
 
 export { registerYoutuber, loginYoutuber, registerCollaborator, loginCollaborator, logoutUser };
