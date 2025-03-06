@@ -49,11 +49,11 @@ const CreateArea = () => {
 }
 
 const CreateDraftBtn = () => {
-    const dispatch: storeDispatchType = useDispatch()
+    // const dispatch: storeDispatchType = useDispatch()
     const createNewSample = () => {
-        dispatch(modalActions.openMoal({
-            title: "Create new Sample", content: <CreateNewSample />
-        }))
+        // dispatch(modalActions.openMoal({
+        //     title: "Create new Sample", content: <CreateNewSample />
+        // }))
     }
 
     return (<span className="w-fit h-fit p-2 rounded-lg border-3 active:scale-90 ease-linear duration-75 cursor-pointer border border-secondary"  >

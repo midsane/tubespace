@@ -12,6 +12,8 @@ import { DraftVideosInterface } from "../../types/youtuberTypes"
 import { CircularProgressBar } from "../ui/circularprogressbar"
 import { modalActions } from "../../store/modal"
 import { CreateNewSample } from "../modalCompnents/createNewSample"
+import toast from "react-hot-toast"
+import { addDraft } from "../../fetch/fetchForYoutuber"
 
 
 
@@ -24,10 +26,23 @@ type extendedDraftVideoType = DraftVideosInterface & { extraTStyle: string }
 export const CreateNewVideoCard: React.FC<{ extraTStyle: string }> = ({ extraTStyle }) => {
 
     const dispatch: storeDispatchType = useDispatch()
+
+    const createDrafts = async (draftName: string, workspaceId: number) => {
+        if (draftName?.trim() === "") {
+            toast.error("input cannot be empty!");
+            return;
+        }
+        const resData = await addDraft(draftName, workspaceId)
+        if (resData.success)
+            toast.success(resData.message)
+        else toast.error(resData.message)
+        dispatch(modalActions.closeModal())
+    }
+
     const createNewSampleFnc = () => {
         dispatch(modalActions.openMoal({
             title: "Create new Sample",
-            content: <CreateNewSample />
+            content: <CreateNewSample type={2} fn={createDrafts} />
         }))
     }
 

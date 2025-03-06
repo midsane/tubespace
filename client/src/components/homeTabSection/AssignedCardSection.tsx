@@ -4,6 +4,7 @@ import { CardSection, } from "./cardSection";
 import { useSelector } from "react-redux";
 import { storeStateType } from "../../store/store";
 import { taskType } from "../../types/youtuberTypes";
+import { CardWrapper } from "../cards/cardWrapper";
 
 const getTaskTitle = (tType: taskType) => {
     switch (tType) {
@@ -22,9 +23,10 @@ const getTaskTitle = (tType: taskType) => {
 
 export const AssignedCardSection = () => {
     const cardDataArr = useSelector((state: storeStateType) => state.youtuberAssignedTask)
-  
+
     return (<CardSection>
         <>
+            {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
             {cardDataArr && cardDataArr.length === 0 && <NoAssignedTasks
                 extraTStyle=" border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
             />}
@@ -37,8 +39,6 @@ export const AssignedCardSection = () => {
                     status={cardData.status}
                     extraTStyle="bg-secondary border-secondaryLight" />
             ))}
-
-
         </>
     </CardSection>)
 }
@@ -48,6 +48,7 @@ export const AssignedCardSectionCol: React.FC = () => {
     const cardDataArr = useSelector((state: storeStateType) => state.youtuberAssignedTask)
     return (<CardSection>
         <>
+            {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
             {cardDataArr && cardDataArr.length === 0 && <NoAssignedTasks
                 extraTStyle=" border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
             />}
@@ -73,6 +74,8 @@ export const AssignedCardSectionWrap = forwardRef<HTMLDivElement>((_, ref) => {
             {cardDataArr && cardDataArr.length === 0 && <NoAssignedTasks
                 extraTStyle=" border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
             />}
+
+            {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
 
             {cardDataArr && cardDataArr.map((cardData: any, index: number) => (
                 <AssignedTaskCard

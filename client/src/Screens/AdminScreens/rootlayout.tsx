@@ -28,7 +28,17 @@ export const RootLayout: React.FC = () => {
     return (
         <main className="min-h-[100dvh] bg-black liter-regular  ">
             <Modal />
-            <Toaster />
+            <Toaster
+                toastOptions={{
+                    style: {
+                        border: '1px solid #27272a',
+                        padding: '16px',
+                        color: 'white',
+                        background: "black"
+                    },
+                }}
+            />
+
             <Outlet />
         </main>
     )

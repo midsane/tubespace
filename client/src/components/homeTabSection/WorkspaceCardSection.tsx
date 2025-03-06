@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CircleXIcon, MenuIcon } from "lucide-react";
 import { SplitText } from "../textAnimations/splitText";
 import { taskInterface, TASKSTATUS } from "../../types/youtuberTypes";
+import { CardWrapper } from "../cards/cardWrapper";
 
 const calculatePendingTasks = (task: taskInterface[]) => {
     let cnt = 0;
@@ -38,9 +39,11 @@ export const WorkspaceCardSection: React.FC = () => {
             <CreateNewWorkSpaceCard
                 extraTStyle="bg-secondary border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
             />
+
+            {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
             {cardDataArr && cardDataArr.map((cardData, index: number) => (
                 <WorkSpaceCard
-                    name="midsane office"
+                    name={cardData.name}
                     pendingTasksCnt={calculatePendingTasks(cardData.tasks ?? [])}
                     AssignedTasksCnt={cardData.tasks?.length ?? 0}
                     completedTasksCnt={calculateCompletedTasks(cardData.tasks ?? [])}
@@ -88,6 +91,8 @@ export const WorkspaceCardSection2: React.FC = () => {
                         extraTStyle="bg-secondary border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
                     />
 
+                    {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
+
                     {cardDataArr && cardDataArr.map((cardData, index: number) => (
                         <WorkSpaceCard
                             name="midsane office"
@@ -128,6 +133,8 @@ export const WorkspaceCardSection2: React.FC = () => {
                             <CreateNewWorkSpaceCard
                                 extraTStyle="bg-secondary border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
                             />
+
+                            {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
 
                             {cardDataArr && cardDataArr.map((cardData, index: number) => (
                                 <WorkSpaceCard

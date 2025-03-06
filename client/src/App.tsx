@@ -45,7 +45,7 @@ const router = createBrowserRouter([
         path: "/home", element: <HomeScreen />,
       },
       {
-        path: "/office", element: <WorkSpacesScreen />
+        path: "/:workspaceId/office", element: <WorkSpacesScreen />
       },
       {
         path: "/chat", element: <ChatScreen linkType={linkType.one} />
