@@ -52,17 +52,26 @@ export const loginCollaborator = async (data: any) => {
 }
 
 export const checkLoggedIn = async () => {
-  
-    const response = await fetch(`${BASE_URL}/api/v1/auth/check-loggedInStatus`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-    const resData = await response.json();
 
-    return resData;
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/check-loggedInStatus`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const resData = await response.json();
+
+        return resData;
+    } catch (error: any) {
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while checking logged in status"
+        }
+
+    }
 }
 
 

@@ -1,4 +1,13 @@
-import { AssignmentTurnedIn, KeyboardArrowDown, KeyboardArrowUp, PendingActions, StarsSharp, Videocam, Workspaces } from "@mui/icons-material";
+import {
+    AssignmentTurnedIn,
+    KeyboardArrowDown,
+    KeyboardArrowUp,
+    PendingActions,
+    StarsSharp,
+    Videocam,
+    Workspaces
+} from "@mui/icons-material";
+
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast"
 import { TabsWrappedLabel, TabsWrappedLabelCol } from "./tabs";
@@ -59,7 +68,6 @@ export const Main = () => {
             dispatch(youtberAssignedTaskActions.setTasks(tasksAssignedToUpdate || []))
 
             dispatch(youtuberDraftActions.setDraft(draftsToUpdate || []))
-
         }
 
     }, [YoutuberData])

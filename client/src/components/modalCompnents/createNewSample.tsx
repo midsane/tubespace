@@ -12,7 +12,7 @@ export const CreateNewSample = () => {
 
     const handleCreateSampleForFirstTime = () => {
 
-    
+        
         // dispatch(draftSampleActions.addDrafts({
         //     DraftName: newDraftTitleTxt.current!.value,
         //     title: "",
