@@ -7,6 +7,69 @@ import { ApiResponse } from "../utils/apiResponse";
 
 const jwtSecret = process.env.JWT_SECRET;
 
+type Unit =
+    | "Years"
+    | "Year"
+    | "Yrs"
+    | "Yr"
+    | "Y"
+    | "Weeks"
+    | "Week"
+    | "W"
+    | "Days"
+    | "Day"
+    | "D"
+    | "Hours"
+    | "Hour"
+    | "Hrs"
+    | "Hr"
+    | "H"
+    | "Minutes"
+    | "Minute"
+    | "Mins"
+    | "Min"
+    | "M"
+    | "Seconds"
+    | "Second"
+    | "Secs"
+    | "Sec"
+    | "s"
+    | "Milliseconds"
+    | "Millisecond"
+    | "Msecs"
+    | "Msec"
+    | "Ms";
+
+type UnitAnyCase = Unit | Uppercase<Unit> | Lowercase<Unit>;
+
+type StringValue = `${number}` | `${number}${UnitAnyCase}` | `${number} ${UnitAnyCase}`;
+
+const jwtSign = async ({
+    userDataToSend,
+    jwtSecret,
+    res,
+    expiresIn = "10d",
+}: {
+    userDataToSend: any;
+    jwtSecret: string;
+    res: any;
+    expiresIn?: StringValue;
+}) => {
+    return new Promise((resolve, _) => {
+        jwt.sign(userDataToSend, jwtSecret, { expiresIn: expiresIn }, (err, token) => {
+            if (err) {
+                return res.status(500).json(new ApiResponse(false, {}, "error generating token"));
+            }
+            res.cookie("token", "Bearer " + token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "none",
+            });
+            resolve("done");
+        });
+    });
+};
+
 const registerYoutuber = asyncHandler(async (req, res) => {
     const { email, password, username } = req.body;
     const { error } = userSchema.validate({ username, email, password });
@@ -48,12 +111,7 @@ const registerYoutuber = asyncHandler(async (req, res) => {
         return res.status(500).json(new ApiResponse(false, {}, "JWT secret is not defined"));
     }
 
-    jwt.sign(user, jwtSecret, { expiresIn: "10d" }, (err, token) => {
-        if (err) {
-            return res.status(500).json(new ApiResponse(false, {}, "error generating token"));
-        }
-        res.cookie("token", "Bearer " + token, { httpOnly: true });
-    });
+    await jwtSign({ userDataToSend: user, jwtSecret, res });
 
     const youtuber = await client.youtuber.create({
         data: {
@@ -122,18 +180,6 @@ const loginYoutuber = asyncHandler(async (req, res) => {
     );
 });
 
-const jwtSign = async ({ userDataToSend, jwtSecret, res }) => {
-    return new Promise((resolve, _) => {
-        jwt.sign(userDataToSend, jwtSecret, { expiresIn: "10d" }, (err, token) => {
-            if (err) {
-                return res.status(500).json(new ApiResponse(false, {}, "error generating token"));
-            }
-            res.cookie("token", "Bearer " + token, { httpOnly: true });
-            resolve("done");
-        });
-    });
-};
-
 const registerCollaborator = asyncHandler(async (req, res) => {
     const { email, password, username } = req.body;
     const { error } = userSchema.validate({ username, email, password });
@@ -173,17 +219,9 @@ const registerCollaborator = asyncHandler(async (req, res) => {
 
     if (!jwtSecret) {
         return res.status(500).json(new ApiResponse(false, {}, "JWT secret is not defined"));
-        return;
     }
 
-    jwt.sign(user, jwtSecret, { expiresIn: "10d" }, (err, token) => {
-        if (err) {
-            return res.status(500).json(new ApiResponse(false, {}, "error generating token"));
-        }
-        res.cookie("token", "Bearer " + token, {
-            httpOnly: true,
-        });
-    });
+    await jwtSign({ userDataToSend: user, jwtSecret, res });
 
     const collaborator = await client.collaborator.create({
         data: {
@@ -236,12 +274,7 @@ const loginCollaborator = asyncHandler(async (req, res) => {
 
     const { password: psw, ...userDataToSend } = user;
 
-    jwt.sign(userDataToSend, jwtSecret, { expiresIn: "10d" }, (err, token) => {
-        if (err) {
-            return res.status(500).json(new ApiResponse(false, {}, "error generating token"));
-        }
-        res.cookie("token", "Bearer " + token, { httpOnly: true });
-    });
+    await jwtSign({ userDataToSend, jwtSecret, res });
 
     res.status(200).json(
         new ApiResponse(true, { user: userDataToSend }, "Collaborator logged in successfully"),
