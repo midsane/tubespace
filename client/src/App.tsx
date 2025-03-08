@@ -57,7 +57,7 @@ const router = createBrowserRouter([
             path: "create", element: <CreateScreen />
           },
           {
-            path: "settings", element: <SettingScreen />
+            path: "settings", element: <SettingScreen type={1} />
           },
           {
             path: "Collaborators", element: <CollaboratorsScreen />

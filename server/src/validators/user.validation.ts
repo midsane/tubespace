@@ -9,7 +9,8 @@ const userSchema = Joi.object({
         "any.required": "Username is required.",
     }),
     password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required().messages({
-        "string.pattern.base": "invalid password | The password can contain uppercase letters (A-Z), lowercase letters (a-z), and numbers (0-9), No special characters (@, #, $, etc.) are allowed | the password must have at least 3 characters and at most 30 characters. ",
+        "string.pattern.base":
+            "invalid password | The password can contain uppercase letters (A-Z), lowercase letters (a-z), and numbers (0-9), No special characters (@, #, $, etc.) are allowed | the password must have at least 3 characters and at most 30 characters. ",
         "any.required": "Password is required.",
     }),
 

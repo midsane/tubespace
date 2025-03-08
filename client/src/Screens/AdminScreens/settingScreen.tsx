@@ -5,20 +5,21 @@ import { ScreeAreaTxt } from "../../components/screenAreaTxt";
 import { storeDispatchType, storeStateType } from "../../store/store";
 
 import { TabsWrappedLabel3 } from "../../components/tabs";
-import { CircleUser, Edit, Folder, FolderLock, Save, Shapes, Skull, X } from "lucide-react";
+import { CircleUser, Edit, Folder, FolderLock, Save, SaveIcon, Shapes, Skull, X } from "lucide-react";
 import { IOSSwitch } from "../../components/switches/switches";
 import { Button, Chip } from "@mui/material";
 import { modalActions } from "../../store/modal";
 import { ProfileImageUploader } from "../../components/profileImageUpdater";
+import { YouTube } from "@mui/icons-material";
 
 
-export const SettingScreen: React.FC = () => {
+export const SettingScreen = ({type=1}: {type: number}) => {
   
     return (
-        <ScreenWrapper preRouter={"/y/"} links={linkType.one} >
+        <ScreenWrapper preRouter={type === 1? "/y/": "/c/"} links={type===1? linkType.one : linkType.two} >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Settings" width={"100%"} paddingBottom="12px" borderRadius="0px" />
-                <SettingsArea />
+                <SettingsArea type={type} />
             </div>
         </ScreenWrapper>
     )
@@ -29,7 +30,7 @@ enum settingsFiledsType {
     password,
 }
 
-const GeneralSettings = () => {
+const GeneralSettings = ({type} : {type: number}) => {
     const dispatch: storeDispatchType = useDispatch()
 
     const deleteAccount = () => {
@@ -53,13 +54,13 @@ const GeneralSettings = () => {
                             <div className="form-control">
                                 <label className="label cursor-pointer">
                                     <Chip size={"small"} color="primary" label="public" variant="filled" icon={<FolderLock size={18} />} />
-                                    <input type="radio" name="radio-10" className="radio border border-secondaryLight checked:bg-blue-500" defaultChecked />
+                                    <input type="radio" name="radio-10" className="radio border border-label checked:bg-blue-500" defaultChecked />
                                 </label>
                             </div>
                             <div className="form-control">
                                 <label className="label cursor-pointer">
                                     <Chip size="small" color="secondary" label="private" variant="filled" icon={<Folder size={18} />} />
-                                    <input type="radio" name="radio-10" className="radio border border-secondaryLight checked:bg-red-500" defaultChecked />
+                                    <input type="radio" name="radio-10" className="radio border border-label checked:bg-red-500" defaultChecked />
 
                                 </label>
                             </div>
@@ -106,6 +107,20 @@ const GeneralSettings = () => {
                 <div className="w-full gap-2 justify-center px-1 py-1 sm:py-2 flex items-center" >
                     <CircleUser size={20} />
                     <span>Account Preference</span>
+                </div>
+            </Button>
+            {type === 1 &&
+                 <Button color="warning" className="w-full" variant="contained">
+                 <div className="w-full gap-2 justify-center px-1 py-1 sm:py-2 flex items-center" >
+                     <YouTube />
+                     <span>Link your Youtube Account</span>
+                 </div>
+             </Button>
+            }
+            <Button color="primary" className="w-full" variant="contained">
+                <div className="w-full gap-2 justify-center px-1 py-1 sm:py-2 flex items-center" >
+                    <SaveIcon size={20} />
+                    <span>Save all Changes</span>
                 </div>
             </Button>
         </div>
@@ -203,14 +218,14 @@ const BillingSettings = () => {
     </div>)
 }
 
-const SettingsArea = () => {
+const SettingsArea = ({type} : {type: number}) => {
 
     const [value, setValue] = useState<string>('one');
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     let TabSection = <></>
     switch (value) {
         case "one":
-            TabSection = <GeneralSettings />
+            TabSection = <GeneralSettings type={type} />
             break;
         case "two":
             TabSection = <BillingSettings />

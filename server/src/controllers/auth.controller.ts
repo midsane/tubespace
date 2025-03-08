@@ -56,7 +56,11 @@ const registerYoutuber = asyncHandler(async (req, res) => {
 
     const { password: psw, ...userDataToSend } = user;
 
-    await jwtSign({ userDataToSend: { ...userDataToSend, Youtuber: youtuber.youtuberId }, jwtSecret, res });
+    await jwtSign({
+        userDataToSend: { ...userDataToSend, Youtuber: youtuber.youtuberId },
+        jwtSecret,
+        res,
+    });
 
     res.status(201).json(
         new ApiResponse(
@@ -70,7 +74,6 @@ const registerYoutuber = asyncHandler(async (req, res) => {
 const loginYoutuber = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const { error } = userSchema.validate({ username: "midsane", email, password });
-
 
     if (error) {
         return res.status(400).json(new ApiResponse(false, {}, error.message));
@@ -106,7 +109,6 @@ const loginYoutuber = asyncHandler(async (req, res) => {
     const { password: psw, ...userDataToSend } = user;
 
     await jwtSign({ userDataToSend, jwtSecret, res });
-
 
     res.status(200).json(
         new ApiResponse(
@@ -167,7 +169,11 @@ const registerCollaborator = asyncHandler(async (req, res) => {
     });
 
     const { password: psw, ...userDataToSend } = user;
-    await jwtSign({ userDataToSend: { ...userDataToSend, Collaborator: collaborator.collaboratorId }, jwtSecret, res });
+    await jwtSign({
+        userDataToSend: { ...userDataToSend, Collaborator: collaborator.collaboratorId },
+        jwtSecret,
+        res,
+    });
 
     res.status(201).json(
         new ApiResponse(

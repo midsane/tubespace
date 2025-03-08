@@ -7,7 +7,7 @@ const createWorkspace = asyncHandler(async (req: RequestType, res) => {
     const user = req.user;
     const { name } = req.body;
 
-    console.log(user)
+    console.log(user);
 
     const newWorkspace = await client.workspace.create({
         data: {
