@@ -14,7 +14,7 @@ import { CollaboratorCardSectionWrap } from "../../components/homeTabSection/col
 export const WorkSpacesScreen: React.FC = () => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <ScreenWrapper links={linkType.one} preRouter="/">
+        <ScreenWrapper links={linkType.one} preRouter={"/y/"}>
             <div className="flex h-full relative justify-center bg-black items-center ">
 
                 <ScreeAreaTxt border title="Your WorkSpaces" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
@@ -63,7 +63,7 @@ const OfficeArea = () => {
 
         <div className=" h-[90%] flex w-full flex-col justify-center items-center">
             <div className="w-full items-center flex justify-between py-6 px-4 h-fit">
-                <h1 className="sm:pl-10 text-lg sm:text-xl">midsane's office</h1>
+                <h1 className="sm:pl-10 text-lg sm:text-xl">midsane's Workspaces</h1>
                 <div className="flex gap-2">
                     <ArrowUpIcon onClick={handleClickUp} size={35} className="border p-2 cursor-pointer active:scale-90 ease-linear duration-75 border-secondaryLight rounded-full" />
                     <ArrowDownIcon onClick={handleClickDown} size={35} className="border p-2 cursor-pointer active:scale-90 ease-linear duration-75 border-secondaryLight rounded-full" />

@@ -95,7 +95,7 @@ export const WorkspaceCardSection2: React.FC = () => {
 
                     {cardDataArr && cardDataArr.map((cardData, index: number) => (
                         <WorkSpaceCard
-                            name="midsane office"
+                            name="midsane Workspaces"
                             pendingTasksCnt={calculatePendingTasks(cardData.tasks ?? [])}
                             AssignedTasksCnt={cardData.tasks?.length ?? 0}
                             completedTasksCnt={calculateCompletedTasks(cardData.tasks ?? [])}
@@ -138,7 +138,7 @@ export const WorkspaceCardSection2: React.FC = () => {
 
                             {cardDataArr && cardDataArr.map((cardData, index: number) => (
                                 <WorkSpaceCard
-                                    name="midsane office"
+                                    name="midsane Workspaces"
                                     pendingTasksCnt={calculatePendingTasks(cardData.tasks ?? [])}
                                     AssignedTasksCnt={cardData.tasks?.length ?? 0}
                                     completedTasksCnt={calculateCompletedTasks(cardData.tasks ?? [])}

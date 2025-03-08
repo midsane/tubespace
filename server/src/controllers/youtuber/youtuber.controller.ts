@@ -7,7 +7,6 @@ import { asyncHandler } from "../../utils/asyncHandler";
 const fetchHome = asyncHandler(async (req: RequestType, res) => {
     const user = req.user;
 
-    console.log("fetching youtuber home data!");
     const updatedUser = await client.user.findUnique({
         where: {
             id: user.id,

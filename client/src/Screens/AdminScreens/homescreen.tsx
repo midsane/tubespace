@@ -7,7 +7,7 @@ export function HomeScreen() {
     console.log(location);
 
     return (
-        <ScreenWrapper links={linkType.one} preRouter="/"  >
+        <ScreenWrapper links={linkType.one} preRouter={"/y/"}  >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <Main />
             </div>

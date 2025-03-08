@@ -42,22 +42,28 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/home", element: <HomeScreen />,
-      },
-      {
-        path: "/:workspaceId/office", element: <WorkSpacesScreen />
-      },
-      {
-        path: "/chat", element: <ChatScreen linkType={linkType.one} />
-      },
-      {
-        path: "/create", element: <CreateScreen />
-      },
-      {
-        path: "/settings", element: <SettingScreen />
-      },
-      {
-        path: "/Collaborators", element: <CollaboratorsScreen />
+        path: "y/:username/",
+        children: [
+          {
+            path: "home", element: <HomeScreen />,
+          },
+          {
+            path: "Workspaces", element: <WorkSpacesScreen />
+          },
+          {
+            path: "chat", element: <ChatScreen linkType={linkType.one} />
+          },
+          {
+            path: "create", element: <CreateScreen />
+          },
+          {
+            path: "settings", element: <SettingScreen />
+          },
+          {
+            path: "Collaborators", element: <CollaboratorsScreen />
+          }
+        ]
+
       }
       ,
       {

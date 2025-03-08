@@ -15,7 +15,7 @@ import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
 export const SettingScreenCol: React.FC = () => {
 
     return (
-        <ScreenWrapper preRouter="/col/lav/" links={linkType.two} >
+        <ScreenWrapper preRouter={"/c/"} links={linkType.two} >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Settings" width={"100%"} paddingBottom="12px" borderRadius="0px" />
                 <SettingsArea />

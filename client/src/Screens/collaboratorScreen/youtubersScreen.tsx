@@ -8,7 +8,7 @@ import { CommandSearch } from "../../components/searchBar/searchbar";
 export const YoutuberScreen: React.FC = () => {
  
     return (
-        <ScreenWrapper links={linkType.two} preRouter="/col/lav/"  >
+        <ScreenWrapper links={linkType.two} preRouter={"/c/"}  >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Youtubers / WorkSpaces" width={"100%"} paddingBottom="12px" borderRadius="0px" />
                 <YoutuberArea />

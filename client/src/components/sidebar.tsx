@@ -4,6 +4,7 @@ import { Settings } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { WebsiteLogo } from "./websitelogo/websitelogo";
 import React, { ReactNode } from "react";
+import { storeStateType } from "../store/store";
 
 interface sidebarInterface {
     links: (string | JSX.Element)[][],
@@ -62,6 +63,7 @@ export const Sidebar: React.FC<sidebarInterface> = ({
                 <div className="flex flex-col gap-3 pb-16 w-full ">
                     {links?.map((icon, ind) =>
                         <IconParent
+                            preRoute={preRouter}
                             label={icon[0] as string}
                             key={ind}>
                             {icon[1]}
@@ -72,6 +74,7 @@ export const Sidebar: React.FC<sidebarInterface> = ({
                         ["Settings", <Settings />], ["Logout", <Logout />]
                     ].map((icon, ind) =>
                         <IconParent
+                            preRoute={preRouter}
                             label={icon[0] as string}
                             key={ind}>
                             {icon[1]}
@@ -99,8 +102,11 @@ const IconParent: React.FC<IconParentInterface> =
         preRoute = "/"
 
     }) => {
-
-        const onLaptopScreen = useSelector((state: any) => state.sidebar.onLaptopScreen);
+        if(label.toLowerCase() === "logout"){
+            preRoute = "/"
+        }
+     
+        const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar.onLaptopScreen);
         const route = window.location.pathname.toLowerCase();
         const navigate = useNavigate()
         return <span onClick={() => navigate(preRoute + label)} className={`flex gap-4 w-full cursor-pointer hover:bg-secondary ${route.slice(1, route.length) === label.toLowerCase() ? "text-opacity-100 text-accent" : "text-opacity-50 text-label"} ${!onLaptopScreen ? "justify-center w-fit px-0" : "px-2"}  ease-linear duration-75  active:scale-95  py-1 rounded`}>

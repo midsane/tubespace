@@ -10,6 +10,7 @@ export const CollaboratorsScreen: React.FC = () => {
     return (
         <ScreenWrapper
             links={linkType.one}
+            preRouter={"/y/"}
         >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Collaborators" width={"100%"} paddingBottom="12px" borderRadius="0px" />

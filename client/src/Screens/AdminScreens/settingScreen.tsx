@@ -15,7 +15,7 @@ import { ProfileImageUploader } from "../../components/profileImageUpdater";
 export const SettingScreen: React.FC = () => {
   
     return (
-        <ScreenWrapper preRouter="/" links={linkType.one} >
+        <ScreenWrapper preRouter={"/y/"} links={linkType.one} >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Settings" width={"100%"} paddingBottom="12px" borderRadius="0px" />
                 <SettingsArea />

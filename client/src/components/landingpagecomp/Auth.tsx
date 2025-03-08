@@ -8,6 +8,7 @@ import { WebsiteLogo } from "../websitelogo/websitelogo"
 
 import { useNavigate } from "react-router-dom"
 import AuthLoader from "../loader/auth.loader"
+import toast from "react-hot-toast"
 
 
 export const LoginBox = () => {
@@ -22,18 +23,45 @@ export const LoginBox = () => {
 
 
     const login = async () => {
-        setLoading(true)
         const data = { email, password, role }
+
+        if (!data.email || !data.password) {
+            toast.error("Please fill all fields")
+
+            return
+        }
+        setLoading(true)
+
         if (data.role === "youtuber") {
-            await loginYoutuber(data)
+            const resData = await loginYoutuber(data)
+            setLoading(false)
+
+            if (resData.success) {
+                dispatch(modalActions.closeModal())
+                toast.success(resData.message)
+
+                navigate("/y/" + resData.data.user.username+"/home")
+            }
+            else {
+                toast.error(resData.message)
+            }
+
         }
         else if (data.role === "collaborator") {
-            await loginCollaborator(data)
+            const resData = await loginCollaborator(data)
+            setLoading(false)
+
+            if (resData.success) {
+                dispatch(modalActions.closeModal())
+                toast.success(resData.message)
+                navigate("/c/" + resData.data.user.username+"/home")
+            }
+            else {
+                toast.error(resData.message)
+            }
         }
-        console.log("logged in")
-        setLoading(false)
-        dispatch(modalActions.closeModal())
-        navigate("/home")
+
+
     }
 
     const handleClick = () => {
@@ -134,15 +162,44 @@ export const SignUpBox = () => {
     }
 
     const register = async () => {
-        setLoading(true)
         const data = { email, password, role, username }
-        if (data.role === "youtuber") {
-            await registerYoutuber(data)
+        if (!data.email || !data.password || !data.username) {
+            toast.error("Please fill all fields")
+            return
         }
-        else if (data.role === "collaborator") await registerCollaborator(data)
-        setLoading(false)
-        dispatch(modalActions.closeModal())
-        navigate("/home")
+        setLoading(true)
+
+        if (data.role === "youtuber") {
+            const resData = await await registerYoutuber(data)
+            setLoading(false)
+
+            if (resData.success) {
+                dispatch(modalActions.closeModal())
+                toast.success(resData.message)
+
+                navigate("/y/" + resData.data.user.username+"/home")
+            }
+            else {
+                toast.error(resData.message)
+            }
+        }
+        else if (data.role === "collaborator") {
+
+            const resData = await registerCollaborator(data)
+            setLoading(false)
+
+            if (resData.success) {
+                dispatch(modalActions.closeModal())
+                toast.success(resData.message)
+
+                navigate("/y/" + resData.data.user.username+"/home")
+            }
+            else {
+                toast.error(resData.message)
+            }
+        }
+
+
     }
 
     return (<div className="flex flex-col gap-4 p-2">
@@ -180,7 +237,7 @@ export const SignUpBox = () => {
             </svg>
             <input value={email} onChange={(e) => setEmail(e.target.value)} type="text" className="grow" placeholder="Email" />
         </label>
-
+        <p className="text-label text-xs sm:text-sm opacity-60" >Username must be 3-15 characters long and should only contain alphanumeric characters</p>
         <label className="input input-bordered flex items-center gap-2">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -193,23 +250,23 @@ export const SignUpBox = () => {
             <input value={username} onChange={(e) => setUsername(e.target.value)} type="text" className="grow" placeholder="Username" />
         </label>
 
-       <div className="flex flex-col gap-2">
-       <p className="text-label opacity-60" >Password must be between 3 to 10</p>
-        <label className="input input-bordered flex items-center gap-2">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70">
-                <path
-                    fillRule="evenodd"
-                    d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                    clipRule="evenodd" />
-            </svg>
-           
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="grow" placeholder="password" />
-        </label>
-       </div>
+        <div className="flex flex-col gap-2">
+            <p className="text-label text-xs sm:text-sm opacity-60" >Password must be 3-30 characters long and should only contain alphanumeric characters</p>
+            <label className="input input-bordered flex items-center gap-2">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="h-4 w-4 opacity-70">
+                    <path
+                        fillRule="evenodd"
+                        d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                        clipRule="evenodd" />
+                </svg>
+
+                <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="grow" placeholder="password" />
+            </label>
+        </div>
 
 
         <Button disabled={loading} onClick={register} variant="outlined">

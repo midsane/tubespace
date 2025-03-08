@@ -15,7 +15,7 @@ import { ScreeAreaTxt } from "../../components/screenAreaTxt";
 export const CreateScreen: React.FC = () => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <ScreenWrapper links={linkType.one} preRouter="/"  >
+        <ScreenWrapper links={linkType.one} preRouter={"/y/"}  >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Create" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
                 <CreateArea />

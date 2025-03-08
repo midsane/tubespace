@@ -13,7 +13,7 @@ const BubbleColor = "bg-accent text-black"
 export const ChatScreen = ({ linkType : lType}: { linkType: linkType }) => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
-        <ScreenWrapper links={lType} preRouter={lType === linkType.one ? "/" : "/col/lav/"}>
+        <ScreenWrapper links={lType} preRouter={lType === linkType.one ? "/y/" : "/c/"}>
             <div className={`h-full text-slate-300 ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
 
                 <div className="flex h-full justify-start relative items-center ">

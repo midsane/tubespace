@@ -91,7 +91,7 @@ export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
 
 
                     <div className="w-full  flex justify-between gap-4 ">
-                        <Link to={`../${name}/office`}><Button size="small" color="primary" variant="outlined" >View</Button></Link>
+                        <Link to={`../${name}/Workspaces`}><Button size="small" color="primary" variant="outlined" >View</Button></Link>
 
                         <div className="w-full h-full  justify-end gap-1 flex items-end">
 
