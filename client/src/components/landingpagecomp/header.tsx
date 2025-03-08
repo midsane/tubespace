@@ -118,18 +118,18 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
                                 className="cursor-pointer active:scale-90 ease-linear duration-75"
                                 size={30}
                                 onClick={() => setShowMenu(false)} />
-                            <nav className="flex flex-col items-center gap-7">
+                            <nav className="flex flex-col items-center italic font-extrabold text-xl  gap-7">
 
-                                <Link to="/home" className={`text-sm  ${color} hover:text-white transition-colors`}>
+                                <Link to="/home" className={`ease-linear duration-75 text-sm  ${color} hover:scale-110 hover:text-accent transition-colors`}>
                                     Home
                                 </Link>
-                                <Link to="#" className={`text-sm ${color} hover:text-white transition-colors`}>
+                                <Link to="#" className={`ease-linear duration-75 text-sm ${color} hover:scale-110 hover:text-accent transition-colors`}>
                                     About us
                                 </Link>
-                                <Link to="#" className={`text-sm ${color} hover:text-white transition-colors`}>
+                                <Link to="#" className={`ease-linear duration-75 text-sm ${color} hover:scale-110 hover:text-accent transition-colors`}>
                                     Pricing
                                 </Link>
-                                <Link to="#" className={`text-sm ${color} hover:text-white transition-colors`}>
+                                <Link to="#" className={`ease-linear duration-75 text-sm ${color} hover:scale-110 hover:text-accent transition-colors`}>
                                     Contact
                                 </Link>
                             </nav>

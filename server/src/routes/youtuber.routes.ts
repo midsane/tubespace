@@ -4,6 +4,7 @@ import { fetchHome, verifyRole } from "../controllers/youtuber/youtuber.controll
 import {
     addDraft,
     deleteDraft,
+    fetchAllworkspaces,
     updateDraft,
 } from "../controllers/youtuber/youtuberDraft.controller";
 import {
@@ -20,6 +21,8 @@ router.route("/fetch-home").post(fetchHome);
 router.route("/add-draft").post(addDraft);
 router.route("/update-draft").put(updateDraft);
 router.route("/delete-draft").delete(deleteDraft);
+router.route("/fetch-all-workspaces").get(fetchAllworkspaces);
+
 
 router.route("/create-workspace").post(createWorkspace);
 router.route("/update-workspace").put(updateWorkspace);

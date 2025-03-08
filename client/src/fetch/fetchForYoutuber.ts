@@ -81,3 +81,21 @@ export const createWorkspaceFetch = async (workspaceName: string) => {
     }
 }
 
+export const fetchRelevantWorkspaces = async(searchQuery: string) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/fetch-all-workspaces?searchQuery=${searchQuery}`, {
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const resData = await response.json();
+        return resData
+    } catch (error: any) {      
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while fetching workspaces"
+        }
+    }
+}

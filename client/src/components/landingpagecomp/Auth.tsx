@@ -212,7 +212,7 @@ export const SignUpBox = () => {
                 <input type="radio" name="radio-8" onClick={() => {
                     setRole("youtuber")
                     setRoleSymbol("🐺")
-                }} checked={role === "youtuber"} className="radio radio-info" />
+                }} checked={role === "youtuber"} className="radio radio-info radio-sm" />
             </span>
 
             <span className="flex justify-between">
@@ -220,7 +220,7 @@ export const SignUpBox = () => {
                 <input type="radio" name="radio-8" onClick={() => {
                     setRole("collaborator")
                     setRoleSymbol("🗿")
-                }} checked={role === "collaborator"} className="radio radio-warning" />
+                }} checked={role === "collaborator"} className="radio radio-warning radio-sm" />
             </span>
         </div>
 
@@ -237,7 +237,7 @@ export const SignUpBox = () => {
             </svg>
             <input value={email} onChange={(e) => setEmail(e.target.value)} type="text" className="grow" placeholder="Email" />
         </label>
-        <p className="text-label text-xs sm:text-sm opacity-60" >Username must be 3-15 characters long and should only contain alphanumeric characters</p>
+        <p className="text-label text-xs sm:text-sm opacity-60" >Username must be 3-15 characters long</p>
         <label className="input input-bordered flex items-center gap-2">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -251,7 +251,8 @@ export const SignUpBox = () => {
         </label>
 
         <div className="flex flex-col gap-2">
-            <p className="text-label text-xs sm:text-sm opacity-60" >Password must be 3-30 characters long and should only contain alphanumeric characters</p>
+            <p className="text-label text-xs sm:text-sm opacity-60" >Password must be 3-30 characters long.
+                Both username & password should only contain alphanumeric characters</p>
             <label className="input input-bordered flex items-center gap-2">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

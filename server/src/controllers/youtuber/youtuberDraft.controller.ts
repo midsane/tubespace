@@ -75,4 +75,37 @@ const deleteDraft = asyncHandler(async (req: RequestType, res) => {
     res.status(200).json(new ApiResponse(true, deletedDraft, "Draft video deleted successfully!"));
 });
 
-export { addDraft, updateDraft, deleteDraft };
+
+
+const fetchAllworkspaces = asyncHandler(async (req: RequestType, res) => {
+    const user = req.user;
+    let { searchQuery } = req.query;
+    
+    if(!searchQuery) searchQuery = "";
+    
+    if (typeof searchQuery !== "string") {
+        res.status(400).json(new ApiResponse(false, null, "invalid search query"));
+    }
+
+    const workspaces = await client.workspace.findMany({
+        where: {
+            youtuberId: user.Youtuber.youtuberId,
+            name: {
+                contains: searchQuery as string ,
+                mode: "insensitive", 
+            }
+        },
+    });
+
+    if(!workspaces){
+        res.status(400).json(new ApiResponse(false, null, "could not fetch workspaces successfully"));
+    }
+    res.status(200).json(new ApiResponse(true, workspaces, "workspaces fetched successfully"));
+})
+
+export {
+    addDraft,
+    updateDraft,
+    deleteDraft,
+    fetchAllworkspaces
+};
