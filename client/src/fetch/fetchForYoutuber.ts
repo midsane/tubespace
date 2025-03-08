@@ -1,4 +1,3 @@
-import { DraftVideosInterface } from "../types/youtuberTypes";
 import { BASE_URL } from "./fetch";
 
 interface responseData {

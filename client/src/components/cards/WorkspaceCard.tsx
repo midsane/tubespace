@@ -1,4 +1,4 @@
-import { Assignment, FactCheck, Pending, WorkspacePremiumSharp } from "@mui/icons-material"
+import { Assignment, FactCheck, Pending } from "@mui/icons-material"
 import { Avatar, AvatarGroup, Button, Tooltip } from "@mui/material"
 import { CardWrapper, CreateNewCard } from "./cardWrapper"
 import { collaboratorInterface } from "../../types/youtuberTypes"
