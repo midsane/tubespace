@@ -1,13 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { PlusCircle, Save } from "lucide-react";
 import { Assignment, CancelOutlined } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { DraftVideosCardSection2 } from "../../components/homeTabSection/draftVideosCardSection";
 import React, { useEffect, useState } from "react";
 import { BasicMenu } from "../../components/menus/basicmenu";
-import { storeDispatchType, storeStateType } from "../../store/store";
-import { modalActions } from "../../store/modal";
-import { CreateNewSample } from "../../components/modalCompnents/createNewSample";
+import {  storeStateType } from "../../store/store";
+// import { modalActions } from "../../store/modal";
+// import { CreateNewSample } from "../../components/modalCompnents/createNewSample";
 import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
 import { ScreeAreaTxt } from "../../components/screenAreaTxt";
 
@@ -49,11 +49,11 @@ const CreateArea = () => {
 }
 
 const CreateDraftBtn = () => {
-    const dispatch: storeDispatchType = useDispatch()
+    // const dispatch: storeDispatchType = useDispatch()
     const createNewSample = () => {
-        dispatch(modalActions.openMoal({
-            title: "Create new Sample", content: <CreateNewSample />
-        }))
+        // dispatch(modalActions.openMoal({
+        //     title: "Create new Sample", content: <CreateNewSample />
+        // }))
     }
 
     return (<span className="w-fit h-fit p-2 rounded-lg border-3 active:scale-90 ease-linear duration-75 cursor-pointer border border-secondary"  >

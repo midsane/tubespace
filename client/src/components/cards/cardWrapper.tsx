@@ -2,10 +2,10 @@ import { useSelector } from "react-redux";
 import { storeStateType } from "../../store/store";
 import { ReactNode } from "react";
 import { AddCircle } from "@mui/icons-material";
-import { Button} from "@mui/material";
+import { Button } from "@mui/material";
 
 
-export const CardWrapper: React.FC<{ children: ReactNode, extraTStyle: string }> = ({ children, extraTStyle }) => {
+export const CardWrapper: React.FC<{ children: ReactNode , extraTStyle: string }> = ({ children, extraTStyle }) => {
 
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     return (
@@ -48,9 +48,9 @@ export const CreateNewCard: React.FC<{
                         <p className="text-center">{text1}</p>
                         {enableText2 && <p className="opacity-55 text-sm text-center" >{text2}</p>}
                     </div>
-                    {!noButtons && <Button onClick={createFnc} 
-                    sx={{ fontSize: !onLaptopScreen ? "13px" : "15px", padding: !onLaptopScreen ? "2px 10px" : "" }}
-                    variant="contained" color="primary" >Create</Button>}
+                    {!noButtons && <Button onClick={createFnc}
+                        sx={{ fontSize: !onLaptopScreen ? "13px" : "15px", padding: !onLaptopScreen ? "2px 10px" : "" }}
+                        variant="contained" color="primary" >Create</Button>}
                 </>
             </CardWrapper>
         )
