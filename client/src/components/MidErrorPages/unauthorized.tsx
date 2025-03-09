@@ -1,11 +1,11 @@
 import { Button } from "@mui/material"
-import { SplitText } from "../textAnimations/splitText"
 import { Squares } from "./squaresEffect"
 import { Link } from "react-router-dom"
 import { storeDispatchType, storeStateType } from "../../store/store"
 import { useDispatch, useSelector } from "react-redux"
 import { modalActions } from "../../store/modal"
 import { LoginBox } from "../landingpagecomp/Auth"
+import SplitText from "../textAnimations/SplitText/SplitText"
 
 export const UnAuthorzedPage = () => {
 
@@ -28,8 +28,8 @@ export const UnAuthorzedPage = () => {
             <SplitText text="UnAuthorized Request" />
             <p className="text-sm sm:text-lg opacity-85" >Login/Register to access this page!</p>
             <div className="flex gap-4 justify-center" >
-                <Button  sx={{ fontSize: !onLaptopScreen ? "13px" : "15px", padding: !onLaptopScreen ? "4px 12px" : "" }}  variant="contained" color="secondary"><Link to="/">Home page</Link></Button>
-                <Button sx={{ fontSize: !onLaptopScreen ? "13px" : "15px", padding: !onLaptopScreen ? "4px 12px" : "" }}   onClick={handleLogin} variant="contained">Login</Button>
+                <Button sx={{ fontSize: !onLaptopScreen ? "13px" : "15px", padding: !onLaptopScreen ? "4px 12px" : "" }} variant="contained" color="secondary"><Link to="/">Home page</Link></Button>
+                <Button sx={{ fontSize: !onLaptopScreen ? "13px" : "15px", padding: !onLaptopScreen ? "4px 12px" : "" }} onClick={handleLogin} variant="contained">Login</Button>
             </div>
         </div>
     </div>

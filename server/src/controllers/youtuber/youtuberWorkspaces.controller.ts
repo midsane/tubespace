@@ -61,17 +61,18 @@ const deleteWorkspace = asyncHandler(async (req: RequestType, res) => {
         },
     });
 
+
     if (!workspace) {
         res.status(400).json(new ApiResponse(false, null, "Workspace does not exist!"));
     }
 
-    const deletedDrafts = await client.draftVideos.deleteMany({
-        where: {
-            workspaceId: workspaceid,
-        },
-    });
-
-    if (!deletedDrafts) {
+    const [_, updatedDrafts] = await client.$transaction([
+        client.draftVideos.deleteMany({
+            where: { workspaceId: workspaceid },
+        }),
+        client.draftVideos.findMany(),
+    ]);
+    if (!updatedDrafts) {
         res.status(400).json(
             new ApiResponse(false, null, "all Drafts of this workspace could not be deleted!"),
         );
@@ -88,8 +89,43 @@ const deleteWorkspace = asyncHandler(async (req: RequestType, res) => {
     }
 
     res.status(200).json(
-        new ApiResponse(true, deletedWorkspace, "Workspace deleted successfully!"),
+        new ApiResponse(true, {
+            deletedWorkspace,
+            updatedDrafts
+        }, "Workspace deleted successfully!"),
     );
 });
 
-export { createWorkspace, updateWorkspace, deleteWorkspace };
+const fetchAllworkspaces = asyncHandler(async (req: RequestType, res) => {
+    const user = req.user;
+    let { searchQuery } = req.query;
+
+    if (!searchQuery || searchQuery === "undefined"
+    ) searchQuery = "";
+
+    if (typeof searchQuery !== "string") {
+        res.status(400).json(new ApiResponse(false, null, "invalid search query"));
+    }
+
+    const workspaces = await client.workspace.findMany({
+        where: {
+            youtuberId: user.Youtuber.youtuberId,
+            name: {
+                contains: searchQuery as string,
+                mode: "insensitive",
+            }
+        },
+    });
+
+    if (!workspaces) {
+        res.status(400).json(new ApiResponse(false, null, "could not fetch workspaces successfully"));
+    }
+    res.status(200).json(new ApiResponse(true, workspaces, "workspaces fetched successfully"));
+})
+
+export {
+    createWorkspace,
+    updateWorkspace,
+    deleteWorkspace,
+    fetchAllworkspaces
+};

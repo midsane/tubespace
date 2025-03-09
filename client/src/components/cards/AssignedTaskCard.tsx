@@ -2,7 +2,7 @@ import { RateReview, Schedule } from "@mui/icons-material"
 import { Avatar, Button, Chip, Tooltip } from "@mui/material"
 import { useSelector } from "react-redux";
 import { storeStateType } from "../../store/store";
-import { CardWrapper, CreateNewCard } from "./cardWrapper";
+import { CardWrapper } from "./cardWrapper";
 import { TASKSTATUS } from "../../types/youtuberTypes";
 import { CloudIcon } from "lucide-react";
 
@@ -24,18 +24,13 @@ interface AssignedCardInterface {
 }
 
 
-export const NoAssignedTasks: React.FC<{ extraTStyle: string }> = ({ extraTStyle }) => {
+export const NoAssignedTasks = () => {
+    const onlaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+    return (<div className=" w-full h-36 sm:h-48 flex-shrink-0 flex flex-col px-4 sm:px-9 gap-2 justify-center items-center" >
+        <CloudIcon size={onlaptopScreen ? 50: 30} />
+        <p className="text-center">No tasks assigned</p>
+    </div>)
 
-    return (
-        <CreateNewCard
-            extraTStyle={extraTStyle}
-            text1="No tasks assigned"
-            enableText2={false}
-            noButtons
-            createFnc={() => { }}
-            SvgIcon={<CloudIcon />}
-        />
-    )
 }
 
 export const AssignedTaskCard: React.FC<AssignedCardInterface> =

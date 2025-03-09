@@ -3,7 +3,8 @@ import { Button } from "@mui/material"
 import { Play } from "lucide-react"
 import { ShineBorder } from "../ui/shineboard"
 import { InteractiveGrid } from "../ui/interactivegrid"
-import { SplitText } from "../textAnimations/splitText"
+import SplitText from "../textAnimations/SplitText/SplitText"
+
 
 export function HeroSection() {
     return (

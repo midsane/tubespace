@@ -9,6 +9,7 @@ import { TabsWrappedLabel2 } from "../../components/tabs";
 import { AssignedCardSectionWrap } from "../../components/homeTabSection/AssignedCardSection";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { CollaboratorCardSectionWrap } from "../../components/homeTabSection/collaboratorCardSection";
+import { useParams } from "react-router-dom";
 
 
 export const WorkSpacesScreen: React.FC = () => {
@@ -28,20 +29,20 @@ export const WorkSpacesScreen: React.FC = () => {
 
 
 const OfficeArea = () => {
-
+    const { workspaceName } = useParams()
     const [value, setValue] = useState<string>('one');
     const arrowRef = useRef<HTMLDivElement>(null)
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     let TabSection = <></>
     switch (value) {
         case "one":
-            TabSection = <AssignedCardSectionWrap ref={arrowRef} />
+            TabSection = <AssignedCardSectionWrap workspaceId={2} workspaceName={workspaceName}  ref={arrowRef} />
             break;
         case "two":
-            TabSection = <DraftVideosCardSectionWrap ref={arrowRef} />
+            TabSection = <DraftVideosCardSectionWrap workspaceId={2} workspaceName={workspaceName} ref={arrowRef} />
             break;
         case "three":
-            TabSection = <CollaboratorCardSectionWrap ref={arrowRef} />
+            TabSection = <CollaboratorCardSectionWrap workspaceId={2} workspaceName={workspaceName} ref={arrowRef} />
             break;
     }
 
@@ -63,7 +64,7 @@ const OfficeArea = () => {
 
         <div className=" h-[90%] flex w-full flex-col justify-center items-center">
             <div className="w-full items-center flex justify-between py-6 px-4 h-fit">
-                <h1 className="sm:pl-10 text-lg sm:text-xl">midsane's Workspaces</h1>
+                <h1 className="sm:pl-10 text-lg sm:text-xl">{workspaceName}</h1>
                 <div className="flex gap-2">
                     <ArrowUpIcon onClick={handleClickUp} size={35} className="border p-2 cursor-pointer active:scale-90 ease-linear duration-75 border-secondaryLight rounded-full" />
                     <ArrowDownIcon onClick={handleClickDown} size={35} className="border p-2 cursor-pointer active:scale-90 ease-linear duration-75 border-secondaryLight rounded-full" />

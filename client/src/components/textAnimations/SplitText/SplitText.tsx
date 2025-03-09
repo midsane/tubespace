@@ -1,4 +1,4 @@
-import { useSprings, animated, SpringConfig } from '@react-spring/web';
+import { useSprings, animated } from '@react-spring/web';
 import { useEffect, useRef, useState } from 'react';
 
 interface SplitTextProps {
@@ -7,17 +7,17 @@ interface SplitTextProps {
     delay?: number;
     animationFrom?: { opacity: number; transform: string };
     animationTo?: { opacity: number; transform: string };
-    easing?: SpringConfig['easing'];
+    easing?: (t: number) => number;
     threshold?: number;
     rootMargin?: string;
-    textAlign?: 'left' | 'right' | 'center' | 'justify' | 'start' | 'end';
+    textAlign?: 'left' | 'right' | 'center' | 'justify' | 'initial' | 'inherit';
     onLetterAnimationComplete?: () => void;
 }
 
 export const SplitText: React.FC<SplitTextProps> = ({
     text = '',
     className = '',
-    delay = 30,
+    delay = 20,
     animationFrom = { opacity: 0, transform: 'translate3d(0,40px,0)' },
     animationTo = { opacity: 1, transform: 'translate3d(0,0,0)' },
     easing = (t: number) => t,
@@ -73,8 +73,8 @@ export const SplitText: React.FC<SplitTextProps> = ({
     return (
         <p
             ref={ref}
-            className={`split-parent overflow-hidden inline ${className}`}
-            style={{ textAlign, whiteSpace: 'normal', wordWrap: 'break-word' }}
+            className={`split-parent ${className}`}
+            style={{ textAlign, overflow: 'hidden', display: 'inline', whiteSpace: 'normal', wordWrap: 'break-word' }}
         >
             {words.map((word, wordIndex) => (
                 <span key={wordIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
@@ -86,8 +86,11 @@ export const SplitText: React.FC<SplitTextProps> = ({
                         return (
                             <animated.span
                                 key={index}
-                                style={springs[index] as unknown as React.CSSProperties}
-                                className="inline-block transform transition-opacity will-change-transform"
+                                style={{
+                                    ...springs[index],
+                                    display: 'inline-block',
+                                    willChange: 'transform, opacity',
+                                }}
                             >
                                 {letter}
                             </animated.span>
@@ -100,3 +103,4 @@ export const SplitText: React.FC<SplitTextProps> = ({
     );
 };
 
+export default SplitText;

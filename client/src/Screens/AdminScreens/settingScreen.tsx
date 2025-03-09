@@ -103,22 +103,28 @@ const GeneralSettings = ({type} : {type: number}) => {
             <SettingsToggle label="Email" type={SettingsToggleType.Email} />
 
             <SettingsToggle label="Push Notification" type={SettingsToggleType.PushNotification} />
-            <Button onClick={handleAccountPreferenceModal} color="primary" className="w-full" variant="outlined">
-                <div className="w-full gap-2 justify-center px-1 py-1 sm:py-2 flex items-center" >
+            <Button 
+            sx={{paddingX: "0px !important"}}
+            onClick={handleAccountPreferenceModal} color="primary" className="w-full" variant="outlined">
+                <div className="w-full gap-2 sm:text-sm text-xs justify-center px-1 py-1 sm:py-2 flex items-center" >
                     <CircleUser size={20} />
                     <span>Account Preference</span>
                 </div>
             </Button>
             {type === 1 &&
-                 <Button color="warning" className="w-full" variant="contained">
-                 <div className="w-full gap-2 justify-center px-1 py-1 sm:py-2 flex items-center" >
+                 <Button 
+                 sx={{paddingX: "0px !important"}}
+                 color="warning" className="w-full" variant="contained">
+                 <div className="w-full gap-2 sm:text-sm text-xs justify-center px-1 py-1 sm:py-2 flex items-center" >
                      <YouTube />
                      <span>Link your Youtube Account</span>
                  </div>
              </Button>
             }
-            <Button color="primary" className="w-full" variant="contained">
-                <div className="w-full gap-2 justify-center px-1 py-1 sm:py-2 flex items-center" >
+            <Button 
+             sx={{paddingX: "0px !important"}}
+            color="primary" className="w-full" variant="contained">
+                <div className="w-full gap-2 sm:text-sm text-xs justify-center px-1 py-1 sm:py-2 flex items-center" >
                     <SaveIcon size={20} />
                     <span>Save all Changes</span>
                 </div>
@@ -145,7 +151,7 @@ const SettingsToggle: React.FC<{ label: string, type?: SettingsToggleType }> = (
     )
 }
 
-const SettingsFields: React.FC<{ type: settingsFiledsType, label: string }> = ({ type, label }) => {
+export const SettingsFields: React.FC<{ type: settingsFiledsType, label: string }> = ({ type, label }) => {
     const [isEditing, setIsEditing] = useState<boolean>(false)
     const [editingTxt, setEditingTxt] = useState<string>("");
     const [txt, setTxt] = useState<string>("");

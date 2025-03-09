@@ -6,29 +6,8 @@ import { storeStateType } from "../../store/store";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleXIcon, MenuIcon } from "lucide-react";
-import { SplitText } from "../textAnimations/splitText";
-import { taskInterface, TASKSTATUS } from "../../types/youtuberTypes";
 import { CardWrapper } from "../cards/cardWrapper";
-
-const calculatePendingTasks = (task: taskInterface[]) => {
-    let cnt = 0;
-    task.forEach((t) => {
-        if (t.status === TASKSTATUS.pending) {
-            cnt++;
-        }
-    })
-    return cnt;
-}
-
-const calculateCompletedTasks = (task: taskInterface[]) => {
-    let cnt = 0;
-    task.forEach((t) => {
-        if (t.status === TASKSTATUS.completed) {
-            cnt++;
-        }
-    })
-    return cnt;
-}
+import SplitText from "../textAnimations/SplitText/SplitText";
 
 export const WorkspaceCardSection: React.FC = () => {
     const cardDataArr = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
@@ -43,12 +22,8 @@ export const WorkspaceCardSection: React.FC = () => {
             {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
             {cardDataArr && cardDataArr.map((cardData, index: number) => (
                 <WorkSpaceCard
-                    name={cardData.name}
-                    pendingTasksCnt={calculatePendingTasks(cardData.tasks ?? [])}
-                    AssignedTasksCnt={cardData.tasks?.length ?? 0}
-                    completedTasksCnt={calculateCompletedTasks(cardData.tasks ?? [])}
+                    {...cardData}
                     key={index}
-                    collaborators={cardData.collaborators ?? []}
                     extraTStyle="bg-secondary border-secondaryLight" />
             ))}
         </>
@@ -95,12 +70,9 @@ export const WorkspaceCardSection2: React.FC = () => {
 
                     {cardDataArr && cardDataArr.map((cardData, index: number) => (
                         <WorkSpaceCard
-                            name="midsane Workspaces"
-                            pendingTasksCnt={calculatePendingTasks(cardData.tasks ?? [])}
-                            AssignedTasksCnt={cardData.tasks?.length ?? 0}
-                            completedTasksCnt={calculateCompletedTasks(cardData.tasks ?? [])}
+                            {...cardData}
                             key={index}
-                            collaborators={cardData.collaborators ?? []}
+
                             extraTStyle="bg-secondary border-secondaryLight" />
                     ))}
 
@@ -138,12 +110,9 @@ export const WorkspaceCardSection2: React.FC = () => {
 
                             {cardDataArr && cardDataArr.map((cardData, index: number) => (
                                 <WorkSpaceCard
-                                    name="midsane Workspaces"
-                                    pendingTasksCnt={calculatePendingTasks(cardData.tasks ?? [])}
-                                    AssignedTasksCnt={cardData.tasks?.length ?? 0}
-                                    completedTasksCnt={calculateCompletedTasks(cardData.tasks ?? [])}
+                                    {...cardData}
                                     key={index}
-                                    collaborators={cardData.collaborators ?? []}
+
                                     extraTStyle="bg-secondary border-secondaryLight" />
                             ))}
 

@@ -1,7 +1,13 @@
 import { CollaBoratorCard } from "../cards/collaboratorCard";
 import { forwardRef } from "react";
 
-export const CollaboratorCardSectionWrap = forwardRef<HTMLDivElement>((_, ref) => {
+interface propInterface {
+    workspaceName: string | undefined,
+    workspaceId: number | undefined,
+}
+
+export const CollaboratorCardSectionWrap = forwardRef<HTMLDivElement, propInterface>(({ workspaceName, workspaceId }, ref) => {
+    console.log(workspaceId, workspaceName)
     const collaboratorArr = [
         {
             name: 'lav',

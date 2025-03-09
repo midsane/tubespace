@@ -1,9 +1,11 @@
 import { Button } from "@mui/material"
-import { SplitText } from "../textAnimations/splitText"
+
 import { Squares } from "./squaresEffect"
 import { isRouteErrorResponse, Link, useRouteError } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { storeStateType } from "../../store/store"
+import SplitText from "../textAnimations/SplitText/SplitText"
+
 
 
 export const ErrorPage = () => {
@@ -13,7 +15,7 @@ export const ErrorPage = () => {
     const error = useRouteError();
 
     let errorMessage = "Something went wrong!";
-    
+
     if (isRouteErrorResponse(error)) {
         // This means it's an error response from the router
         errorMessage = error.statusText || "Unknown error";

@@ -75,37 +75,68 @@ const deleteDraft = asyncHandler(async (req: RequestType, res) => {
     res.status(200).json(new ApiResponse(true, deletedDraft, "Draft video deleted successfully!"));
 });
 
+const fetchAllDraftVideos = asyncHandler(async (req: RequestType, res) => {
 
-
-const fetchAllworkspaces = asyncHandler(async (req: RequestType, res) => {
     const user = req.user;
-    let { searchQuery } = req.query;
-    
-    if(!searchQuery) searchQuery = "";
-    
+    let { searchQuery, workspaceid } = req.query;
+
+    if (!searchQuery || searchQuery === "undefined"
+    ) searchQuery = "";
+
+
     if (typeof searchQuery !== "string") {
-        res.status(400).json(new ApiResponse(false, null, "invalid search query"));
+        return res.status(400).json(new ApiResponse(false, null, "Invalid search query"));
     }
 
-    const workspaces = await client.workspace.findMany({
-        where: {
-            youtuberId: user.Youtuber.youtuberId,
-            name: {
-                contains: searchQuery as string ,
-                mode: "insensitive", 
-            }
-        },
-    });
+    console.log("workspace id:", workspaceid);
+    console.log("type of workspace id:", typeof workspaceid);
 
-    if(!workspaces){
-        res.status(400).json(new ApiResponse(false, null, "could not fetch workspaces successfully"));
+    if (typeof workspaceid !== "string")
+        return res.status(400).json(new ApiResponse(false, null, "invalid workspace id provided1"))
+
+    const workspaceIdNum = parseInt(workspaceid);
+    console.log("workspaceIdnum:", workspaceIdNum)
+
+    if (workspaceIdNum < 1)
+        return res.status(400).json(new ApiResponse(false, null, "invalid workspace id provided2"))
+
+    let draftVideos: any[] = [];
+
+    if (!workspaceIdNum || isNaN(workspaceIdNum)) {
+        draftVideos = await client.draftVideos.findMany({
+            where: {
+                youtuberId: user.Youtuber.youtuberId,
+                DraftTitle: {
+                    contains: searchQuery as string,
+                    mode: "insensitive",
+                },
+            },
+        });
     }
-    res.status(200).json(new ApiResponse(true, workspaces, "workspaces fetched successfully"));
-})
+    else if (typeof workspaceIdNum === "number") {
+        draftVideos = await client.draftVideos.findMany({
+            where: {
+                youtuberId: user.Youtuber.youtuberId,
+                workspaceId: workspaceIdNum,
+                DraftTitle: {
+                    contains: searchQuery as string,
+                    mode: "insensitive",
+                },
+            },
+        });
+    }
+
+    if (draftVideos.length === 0) {
+        return res.status(200).json(new ApiResponse(true, [], "No draft videos found"));
+    }
+
+    return res.status(200).json(new ApiResponse(true, draftVideos, "Draft videos fetched successfully"));
+});
+
 
 export {
     addDraft,
     updateDraft,
     deleteDraft,
-    fetchAllworkspaces
+    fetchAllDraftVideos
 };

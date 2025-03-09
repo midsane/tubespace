@@ -23,10 +23,10 @@ const youtuberDraftSlice = createSlice({
         addDraft: (state, action: PayloadAction<DraftVideosInterface>) => {
             const doesItExist = state.findIndex(draft => draft.draftVideoId === action.payload.draftVideoId);
             if (doesItExist === -1) {
-                state.push(action.payload)
+                state.unshift(action.payload)
             }
         },
-        removeDraft: (state, action: PayloadAction<DraftVideosInterface>) => {
+        removeDraft: (state, action: PayloadAction<{draftVideoId: number}>) => {
             const doesItExist = state.findIndex(draft => draft.draftVideoId === action.payload.draftVideoId);
             if (doesItExist !== -1) {
                 state.splice(doesItExist, 1)

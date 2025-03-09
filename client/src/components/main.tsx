@@ -19,7 +19,7 @@ import { ScreeAreaTxt } from "./screenAreaTxt";
 import { MessageCircleIcon, StarsIcon } from "lucide-react";
 import { Button, Chip, Tooltip } from "@mui/material";
 import { useFetch } from "../hooks/fetchHooks";
-import { youtuberUserInterface } from "../types/youtuberTypes";
+import { TASKSTATUS, youtuberUserInterface } from "../types/youtuberTypes";
 import { fetchYoutuberData } from "../fetch/fetchForYoutuber";
 import { storeDispatchType, storeStateType } from "../store/store";
 import { youtuberActions } from "../store/youtuberStore/youtuber.slice";
@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { youtberAssignedTaskActions } from "../store/youtuberStore/youtuberAssignedTask.slice";
 import { youtuberWorkspacesAction } from "../store/youtuberStore/youtuberWorspaces.slice";
 import { youtuberDraftActions } from "../store/youtuberStore/youtuberDraftVideos.slice";
+import { getTaskCntByType } from "./cards/WorkspaceCard";
 
 
 
@@ -35,6 +36,8 @@ export const Main = () => {
     const [value, setValue] = useState<string>('one');
     const { data: YoutuberData, loading, error } = useFetch<youtuberUserInterface>(fetchYoutuberData)
     const youtuberDataGlobal = useSelector((state: storeStateType) => state.youtuberInfo)
+    const workspaceData = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
+    const tasksArr = useSelector((state: storeStateType) => state.youtuberAssignedTask);
     const dispatch: storeDispatchType = useDispatch()
     const navigate = useNavigate();
 
@@ -102,18 +105,8 @@ export const Main = () => {
 
     const scrollDivRef = useRef<HTMLDivElement>(null);
 
-    const handleUpSlide = () => {
-        if (scrollDivRef.current) {
-            scrollDivRef.current.scrollTop -= 200
-        }
-    }
 
-    const handleDownSlide = () => {
-
-        if (scrollDivRef.current) {
-            scrollDivRef.current.scrollTop += 200
-        }
-    }
+    console.log("youtuber full data")
 
     return (<div className={`h-full relative text-slate-300 flex flex-col  gap-4  ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
         <ScreeAreaTxt title="Home" border />
@@ -128,8 +121,8 @@ export const Main = () => {
                 </div>
                 <div className={`${onLaptopScreen ? "flex" : "w-full flex-col flex gap-3 sm:gap-4"} `} >
 
-                    <ProfileInfo loading={loading} Svg={<PendingActions />} text1="assigned tasks pending" text2={0} />
-                    <ProfileInfo loading={loading} Svg={<Workspaces />} text1="your workspaces" text2={0} />
+                    <ProfileInfo loading={loading} Svg={<PendingActions />} text1="assigned tasks pending" text2={getTaskCntByType(tasksArr, TASKSTATUS.pending)} />
+                    <ProfileInfo loading={loading} Svg={<Workspaces />} text1="your workspaces" text2={workspaceData.length} />
 
                 </div>
 
@@ -160,15 +153,15 @@ export const Main = () => {
                 <TabsWrappedLabel value={value} setValue={setValue} />
                 <div
                     ref={scrollDivRef}
-                    className={`w-full h-full max-[400px]:static relative border border-secondaryLight rounded-3xl flex justify-center items-center max-[400px]:h-[200px] max-[400px]:overflow-y-scroll
-                  max-[400px]:items-start scroll-smooth scrollbar-thin dark:scrollbar-track-primary  dark:scrollbar-thumb-accent`}>
-                    {TabSection}
-                    <div onClick={handleUpSlide} className="absolute hidden max-[400px]:block bg-secondaryLight top-20 right-4 sm:right-2 z-20 border border-primary rounded-full p-1 cursor-pointer active:scale-90 ease-linear duration-75 " >
-                        <KeyboardArrowUp fontSize='small' />
+                    className={`w-full h-full relative`}>
+                    <div
+                        className={`w-full h-full max-[400px]:static relative border border-secondaryLight rounded-3xl flex justify-center items-center max-[400px]:h-[200px] max-[400px]:overflow-y-scroll
+                        max-[400px]:items-start scroll-smooth scrollbar-thin dark:scrollbar-track-primary  dark:scrollbar-thumb-accent`}
+
+                    >
+                        {TabSection}
                     </div>
-                    <div onClick={handleDownSlide} className="absolute hidden max-[400px]:block bottom-2 right-4 z-10 cursor-pointer border-primary bg-secondaryLight border rounded-full p-1 active:scale-90 duration-75 ease-linear" >
-                        <KeyboardArrowDown fontSize='small' />
-                    </div>
+                
                 </div>
             </div>
 

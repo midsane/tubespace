@@ -19,6 +19,7 @@ import { UnAuthorzedPage } from './components/MidErrorPages/unauthorized'
 import { ErrorPage } from './components/MidErrorPages/errorPage'
 import { NotFoundPage } from './components/MidErrorPages/notFound'
 import { LogoutPage } from './Screens/logoutPage'
+import { createRouteLoader, workspaceRouteLoader } from './routeMiddlewares/loader'
 
 
 const router = createBrowserRouter([
@@ -48,14 +49,27 @@ const router = createBrowserRouter([
             path: "home", element: <HomeScreen />,
           },
           {
-            path: "Workspaces", element: <WorkSpacesScreen />
+            path: "Workspaces", loader: workspaceRouteLoader, children: [
+              {
+                path: ":workspaceName",
+                element: <WorkSpacesScreen />
+              }
+            ]
           },
           {
             path: "chat", element: <ChatScreen linkType={linkType.one} />
           },
           {
-            path: "create", element: <CreateScreen />
+            path: "create",
+            loader: createRouteLoader,
+            children: [
+              {
+                path: ":draftName",
+                element: <CreateScreen />
+              }
+            ]
           },
+
           {
             path: "settings", element: <SettingScreen type={1} />
           },

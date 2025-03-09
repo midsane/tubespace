@@ -49,9 +49,9 @@ export const ProfilePic = ({ imageSrc, userName, loading = false }: { imageSrc?:
                             transition={{ duration: 0.2 }}
                             ref={menuRef} className="absolute bottom-100 right-[10%]">
                             <ul className="menu border-2 shadow-sm shadow-secondary border-primary bg-base-200 rounded-box w-32 gap-2 ">
-                                <List link="home" paraTxt="Home" Icon={<HomeIcon size={18} />} />
-                                <List link="settings" paraTxt="Settings" Icon={<SettingsIcon size={18} />} />
-                                <List link="logout" paraTxt="Logout" Icon={<LogOutIcon size={18} />} />
+                                <List username={userName} link="home" paraTxt="Home" Icon={<HomeIcon size={18} />} />
+                                <List username={userName} link="settings" paraTxt="Settings" Icon={<SettingsIcon size={18} />} />
+                                <List username={userName} link="logout" paraTxt="Logout" Icon={<LogOutIcon size={18} />} />
 
                             </ul>
                         </motion.div>}
@@ -62,10 +62,12 @@ export const ProfilePic = ({ imageSrc, userName, loading = false }: { imageSrc?:
     </div>)
 }
 
-const List = ({ paraTxt, Icon, link }: { paraTxt: string, Icon: ReactNode, link: string }) => {
+const List = ({ paraTxt, Icon, username, link }: { paraTxt: string,link:string, Icon: ReactNode, username: string | undefined }) => {
     const navigate = useNavigate()
+    let finalLink = `y/${username}/${link}`;
+    if(link.toLowerCase() === "logout") finalLink = "/logout"
     return (
-        <div onClick={() => navigate(link)} className="flex px-w w-full py-1 p-2 rounded-md justify-between hover:bg-secondaryLight cursor-pointer ease-linear duration-75 opacity-70">
+        <div onClick={() => navigate(finalLink)} className="flex px-w w-full py-1 p-2 rounded-md justify-between hover:bg-secondaryLight cursor-pointer ease-linear duration-75 opacity-70">
             <p>{paraTxt}</p>
             {Icon}
         </div>

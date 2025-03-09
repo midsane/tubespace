@@ -1,6 +1,7 @@
+import { DraftVideosInterface, workspaceInterface } from "../types/youtuberTypes";
 import { BASE_URL } from "./fetch";
 
-interface responseData {
+export interface responseData {
     success: boolean,
     message: string,
     data: any
@@ -57,6 +58,65 @@ export const addDraft = async (draftName: string, workspaceId: number) => {
 
 }
 
+
+export const updatedDraft = async (
+    draftVideoId: number,
+    updateFields: Partial<DraftVideosInterface>
+) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/update-draft`, {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                ...updateFields,
+                draftVideoId
+
+            })
+        });
+        const resData = await response.json();
+        return resData
+    } catch (error: any) {
+
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while updating draft"
+        }
+    }
+
+}
+
+
+
+export const deleteDraft = async (draftVideoId: number) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/delete-draft`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+            draftVideoId
+            })
+        });
+        const resData = await response.json();
+        return resData
+    } catch (error: any) {
+
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while deleting draft"
+        }
+    }
+
+}
+
+
 export const createWorkspaceFetch = async (workspaceName: string) => {
     try {
         const response = await fetch(`${BASE_URL}/api/v1/youtuber/create-workspace`, {
@@ -81,7 +141,65 @@ export const createWorkspaceFetch = async (workspaceName: string) => {
     }
 }
 
-export const fetchRelevantWorkspaces = async(searchQuery: string) => {
+
+export const updateWorkspace = async (
+    workspaceId: number,
+    updateFields: Partial<workspaceInterface>
+) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/update-workspace`, {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                ...updateFields,
+                workspaceid: workspaceId
+
+            })
+        });
+        const resData = await response.json();
+        return resData
+    } catch (error: any) {
+
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while updating workspace"
+        }
+    }
+
+}
+
+
+
+export const deleteWorkspace = async (workspaceId: number) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/delete-workspace`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+            workspaceid: workspaceId
+            })
+        });
+        const resData = await response.json();
+        return resData
+    } catch (error: any) {
+
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while deleting workspace"
+        }
+    }
+
+}
+
+export const fetchRelevantWorkspaces = async (searchQuery?: string) => {
     try {
         const response = await fetch(`${BASE_URL}/api/v1/youtuber/fetch-all-workspaces?searchQuery=${searchQuery}`, {
             credentials: "include",
@@ -91,11 +209,48 @@ export const fetchRelevantWorkspaces = async(searchQuery: string) => {
         });
         const resData = await response.json();
         return resData
-    } catch (error: any) {      
+    } catch (error: any) {
         return {
             success: false,
             data: null,
             message: error.message || "An error occured while fetching workspaces"
+        }
+    }
+}
+export const fetchDraftVideos = async (searchQuery?: string, workspaceId?: number) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/fetch-all-draftVideos?searchQuery=${searchQuery}&workspaceid=${workspaceId}`, {
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const resData = await response.json();
+        return resData
+    } catch (error: any) {
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while fetching draft videos"
+        }
+    }
+}
+
+export const fetchAssignedTasks = async () => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/fetch-all-assigned-tasks`, {
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const resData = await response.json();
+        return resData
+    } catch (error: any) {
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while fetching assigned tasks"
         }
     }
 }

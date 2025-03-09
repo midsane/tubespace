@@ -28,7 +28,6 @@ export const AssignedCardSection = () => {
         <>
             {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
             {cardDataArr && cardDataArr.length === 0 && <NoAssignedTasks
-                extraTStyle=" border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
             />}
             {cardDataArr && cardDataArr.map((cardData, index: number) => (
                 <AssignedTaskCard
@@ -50,7 +49,6 @@ export const AssignedCardSectionCol: React.FC = () => {
         <>
             {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
             {cardDataArr && cardDataArr.length === 0 && <NoAssignedTasks
-                extraTStyle=" border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
             />}
             {cardDataArr && cardDataArr.map((cardData: any, index: number) => (
                 <AssignedTaskCard
@@ -65,14 +63,20 @@ export const AssignedCardSectionCol: React.FC = () => {
     </CardSection>)
 }
 
-export const AssignedCardSectionWrap = forwardRef<HTMLDivElement>((_, ref) => {
+interface AssignedCardSectionWrapProps {
+    workspaceName: string | undefined,
+    workspaceId: number | undefined,
+}
+
+export const AssignedCardSectionWrap = forwardRef<HTMLDivElement, AssignedCardSectionWrapProps>(({ workspaceName, workspaceId }, ref) => {
 
     const cardDataArr = useSelector((state: storeStateType) => state.youtuberAssignedTask)
-
+    
+    console.log(workspaceName, workspaceId)
+    
     return (
         <div ref={ref} className={`flex flex-col gap-10 p-10 justify-start items-center  overflow-x-hidden overflow-y-scroll scroll-smooth rounded-2xl border border-secondaryLight h-[90%] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent w-[95%] sm:w-[90%] `}>
             {cardDataArr && cardDataArr.length === 0 && <NoAssignedTasks
-                extraTStyle=" border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
             />}
 
             {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}

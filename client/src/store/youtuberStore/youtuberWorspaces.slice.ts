@@ -23,6 +23,19 @@ const youtuberWorkspacesSlice = createSlice({
 
         },
 
+        addWorkspaces: (state, action: PayloadAction<workspaceInterface>) => {
+            const doesItExist = state.findIndex(wrk => wrk.workspaceid === action.payload.workspaceid);
+            if (doesItExist === -1) {
+                state.unshift(action.payload)
+            }
+        },
+        removeWorkspaces: (state, action: PayloadAction<{ workspaceId: number }>) => {
+            const doesItExist = state.findIndex(wrk => wrk.workspaceid === action.payload.workspaceId);
+            if (doesItExist !== -1) {
+                state.splice(doesItExist, 1)
+            }
+        }
+
 
     }
 })

@@ -14,6 +14,8 @@ import { modalActions } from "../../store/modal"
 import { CreateNewSample } from "../modalCompnents/createNewSample"
 import toast from "react-hot-toast"
 import { addDraft } from "../../fetch/fetchForYoutuber"
+import { youtuberDraftActions } from "../../store/youtuberStore/youtuberDraftVideos.slice"
+import { Link } from "react-router-dom"
 
 
 
@@ -33,8 +35,12 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string }> = ({ extraTSt
             return;
         }
         const resData = await addDraft(draftName, workspaceId)
-        if (resData.success)
+        if (resData.success){
             toast.success(resData.message)
+            console.log(resData.data)
+            dispatch(youtuberDraftActions.addDraft(resData.data))
+        }
+    
         else toast.error(resData.message)
         dispatch(modalActions.closeModal())
     }
@@ -113,7 +119,7 @@ export const DraftVideosCard: React.FC<extendedDraftVideoType> =
                             </Tooltip>
                         </div>
                         <ThreeDots draftName={DraftName} _id={_id} />
-                        <Button variant="outlined" sx={{ height: "2rem" }} >View</Button>
+                        <Link to={`../create/${DraftName}`} ><Button variant="outlined" sx={{ height: "2rem" }} >View</Button></Link>
                     </div>
                 </>
             </CardWrapper>

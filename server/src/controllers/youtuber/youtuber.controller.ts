@@ -16,24 +16,35 @@ const fetchHome = asyncHandler(async (req: RequestType, res) => {
                 include: {
                     draftVideos: true,
                     tasksAssigned: true,
-                    workspaces: true,
+                    workspaces: {
+                        include: {
+                            tasks: true,
+                            collaborators: true,
+                        }
+                    }
                 },
             },
         },
     });
 
+    if(!updatedUser) {
+        return res.status(400).json(new ApiResponse(false, null, "could not fetch user data"));
+    }
+
+    const {password, ...dataToSend} = updatedUser;
+
     res.status(200).json(
         new ApiResponse(
             true,
             {
-                user: updatedUser,
+                user: dataToSend,
             },
             "Youtuber data home page data fetched successfully!",
         ),
     );
 });
 
-const verifyRole = (req: RequestType, res, next: NextFunction) => {
+const verifyYoutuberRole = (req: RequestType, res, next: NextFunction) => {
     const user = req.user;
     if (user?.role !== "youtuber") {
         return res.status(403).json({ message: "You are not allowed to access this resource" });
@@ -41,4 +52,4 @@ const verifyRole = (req: RequestType, res, next: NextFunction) => {
     next();
 };
 
-export { fetchHome, verifyRole };
+export { fetchHome, verifyYoutuberRole };

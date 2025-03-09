@@ -13,7 +13,7 @@ export const store = configureStore({
         youtuberInfo: youtuberReducer,
         youtuberAssignedTask: youtuberAssignedTaskReducer,
         youtuberWorkSpaces: youtuberWorkSpacesReducer,
-        youtuberDraft: youtuberDraftReducer
+        youtuberDraft: youtuberDraftReducer,
     }
 })
 
