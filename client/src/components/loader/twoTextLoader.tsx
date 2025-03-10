@@ -1,18 +1,18 @@
 import styled from 'styled-components';
 
-const Loader = ({ fixedTxt, txtArr, twoTxt }: { twoTxt?: boolean, fixedTxt?: string, txtArr: string[] }) => {
-    return (
-        <StyledWrapper>
-            <div className="card">
-                <div className="loader">
-                    {twoTxt && <p>{fixedTxt}</p>}
-                    <div className="words">
-                        {txtArr.map((txt, index) => <span className='word' key={index} >{txt}</span>)}
-                    </div>
-                </div>
-            </div>
-        </StyledWrapper>
-    );
+export const MultiTxtLoader = ({ fixedTxt, txtArr, twoTxt }: { twoTxt?: boolean, fixedTxt?: string, txtArr: string[] }) => {
+  return (
+    <StyledWrapper>
+      <div className="card">
+        <div className="loader">
+          {twoTxt && <p>{fixedTxt}</p>}
+          <div className="words">
+            {txtArr.map((txt, index) => <span className='word' key={index} >{txt}</span>)}
+          </div>
+        </div>
+      </div>
+    </StyledWrapper>
+  );
 }
 
 const StyledWrapper = styled.div`
@@ -105,4 +105,3 @@ const StyledWrapper = styled.div`
     }
   }`;
 
-export default Loader;

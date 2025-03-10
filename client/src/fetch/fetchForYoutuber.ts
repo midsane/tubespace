@@ -89,6 +89,27 @@ export const updatedDraft = async (
 
 }
 
+export const updatedDraftFile = async (
+    formData: FormData
+) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/update-draft`, {
+            method: "PUT",
+            credentials: "include",
+            body: formData
+        });
+        const resData = await response.json();
+        return resData
+    } catch (error: any) {
+
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while updating draft"
+        }
+    }
+
+}
 
 
 export const deleteDraft = async (draftVideoId: number) => {
@@ -251,6 +272,27 @@ export const fetchAssignedTasks = async () => {
             success: false,
             data: null,
             message: error.message || "An error occured while fetching assigned tasks"
+        }
+    }
+}
+
+
+export const fetchCreateScreenData = async () => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/createpage-fetch`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const resData = await response.json();
+        return resData
+    } catch (error: any) {
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while fetching create-screen data"
         }
     }
 }

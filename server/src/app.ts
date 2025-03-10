@@ -4,6 +4,7 @@ import cors from "cors";
 import authRouter from "./routes/auth.routes";
 import collaboratorRouter from "./routes/collaborator.routes";
 import youtuberRouter from "./routes/youtuber.routes";
+import { ApiResponse } from "./utils/apiResponse";
 const app = express();
 
 app.use(cookieParser());
@@ -25,5 +26,11 @@ app.use("/api/v1/youtuber", youtuberRouter);
 app.get("/", (_, res) => {
     res.send("backend is running 😺");
 });
+
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error(err.stack);
+    res.status(500).json(new ApiResponse(false, null, "Something went wrong!"));
+});
+
 
 export default app;

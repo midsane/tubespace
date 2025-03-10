@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { EditIcon, PlusCircle, Save, X } from "lucide-react";
-import { Assignment, CancelOutlined } from "@mui/icons-material";
+import { CloudIcon, EditIcon, Expand, FileIcon, Loader, PlusCircle, Save, Trash, X } from "lucide-react";
+import { Assignment } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { DraftVideosCardSection2 } from "../../components/homeTabSection/draftVideosCardSection";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BasicMenu } from "../../components/menus/basicmenu";
 import { storeDispatchType, storeStateType } from "../../store/store";
 import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
@@ -12,45 +12,59 @@ import { modalActions } from "../../store/modal";
 import { CreateNewSample } from "../../components/modalCompnents/createNewSample";
 import toast from "react-hot-toast";
 import { youtuberDraftActions } from "../../store/youtuberStore/youtuberDraftVideos.slice";
-import { addDraft, fetchDraftVideos, responseData, updatedDraft } from "../../fetch/fetchForYoutuber";
+import { addDraft, fetchCreateScreenData, responseData, updatedDraft, updatedDraftFile } from "../../fetch/fetchForYoutuber";
 import { useParams } from "react-router-dom";
 import { useFetch } from "../../hooks/fetchHooks";
-import { DraftVideosInterface } from "../../types/youtuberTypes";
+import { DraftVideosInterface, userInterface } from "../../types/youtuberTypes";
+import { youtuberActions } from "../../store/youtuberStore/youtuber.slice";
+import { Uploadbutton } from "../../components/buttons/uploadbutton";
 
 
-const getCurrentDraftInfo = (id: number, draftArr: DraftVideosInterface[]) => {
-    return draftArr.find(draft => draft.draftVideoId === id)
+
+const getCurrentDraftInfo = (draftTitle: string, draftArr: DraftVideosInterface[]) => {
+    return draftArr.find(draft => draft.DraftTitle === draftTitle) || null
 }
 
 export const CreateScreen: React.FC = () => {
 
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+
+
     const { draftName } = useParams()
+    if (!draftName) return <h1>Invalid Draft Name</h1>
     const dispatch: storeDispatchType = useDispatch()
-    const fetchFnc = useCallback(() => fetchDraftVideos(draftName), [draftName])
+
     const draftArr = useSelector((state: storeStateType) => state.youtuberDraft)
-    const { data: draftInfo, error, loading } = useFetch<DraftVideosInterface[]>(fetchFnc)
+    const { data: createScreenData, error, loading } = useFetch<userInterface>(fetchCreateScreenData)
 
     useEffect(() => {
-        if (draftInfo) {
-            console.log(draftInfo)
-            console.log("now dispatching")
-            dispatch(youtuberDraftActions.updateDraftDetails(draftInfo[0]))
+        if (createScreenData) {
+            console.log(createScreenData)
+            const ytInfo = createScreenData.Youtuber;
+            if (!ytInfo) return;
+            const { draftVideos, ...remFields } = ytInfo;
+            const updateFields = { draftVideos: null, ...remFields }
+
+            const userInfo = {
+                Youtuber: updateFields,
+                ...createScreenData,
+            }
+
+            if (!draftVideos) return;
+            dispatch(youtuberActions.setUserInfo({ user: userInfo }))
+            dispatch(youtuberDraftActions.setDraft(draftVideos))
+
         }
-    }
-        , [draftInfo])
+    }, [createScreenData])
 
     if (error) toast.error(error)
-
-    console.log("re rendered");
-
 
     return (
         <ScreenWrapper links={linkType.one} preRouter={"/y/"}  >
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Create" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
 
-                <CreateArea draftInfo={draftInfo ? getCurrentDraftInfo(draftInfo[0].draftVideoId, draftArr) || draftInfo[0] : null} loading={loading} />
+                <CreateArea draftInfo={getCurrentDraftInfo(draftName, draftArr)} loading={loading} />
                 <DraftVideosCardSection2 />
             </div>
         </ScreenWrapper>
@@ -82,7 +96,7 @@ const CreateArea = ({ loading, draftInfo }: { loading: boolean, draftInfo: Draft
 
         <HeadSection loading={loading} title={draftInfo ? draftInfo.DraftTitle : ""} />
 
-        <div className="bg-secondary mt-28 shadow-inner shadow-secondary border border-secondaryLight flex flex-col gap-8 p-5 sm:p-8 rounded-lg">
+        <div className="bg-secondary mt-28 overflow-y-scroll overflow-x-hidden shadow-inner shadow-secondary border border-secondaryLight flex flex-col gap-8 p-5 sm:p-8 rounded-lg">
             {loading ?
                 <div className="flex flex-col gap-6 sm:gap-8" >
                     <CreateAreaLoader />
@@ -99,11 +113,34 @@ const CreateArea = ({ loading, draftInfo }: { loading: boolean, draftInfo: Draft
                 </div>
                 :
                 <>
-                    <InputArea draftId={draftInfo && draftInfo?.draftVideoId} title={draftInfo?.ytTitle as string} showMenu={showMenu} setShowMenu={setShowMenu} placeholder="title" />
-                    <DescriptionArea description={draftInfo?.ytDescription as string} showMenu={showMenu} setShowMenu={setShowMenu} placeholder="description" />
-                    <FilePicker label="Select a Thumbnail" showMenu={showMenu} setShowMenu={setShowMenu} />
+                    <InputArea
+                        draftId={draftInfo && draftInfo?.draftVideoId}
+                        title={draftInfo?.ytTitle as string}
+                        showMenu={showMenu}
+                        setShowMenu={setShowMenu}
+                        placeholder="title" />
 
-                    <FilePicker label="Select a Video" showMenu={showMenu} setShowMenu={setShowMenu} />
+                    <DescriptionArea
+                        draftId={draftInfo && draftInfo?.draftVideoId}
+                        description={draftInfo?.ytDescription as string}
+                        showMenu={showMenu}
+                        setShowMenu={setShowMenu}
+                        placeholder="description" />
+
+                    <FilePicker
+                        draftId={draftInfo && draftInfo?.draftVideoId}
+                        placeholder="thumbnail"
+                        file={draftInfo?.ytThumbnailLink as string}
+                        showMenu={showMenu}
+                        setShowMenu={setShowMenu} />
+
+                    <FilePicker
+                        menuOpen="up"
+                        placeholder="video"
+                        draftId={draftInfo && draftInfo?.draftVideoId}
+                        file={draftInfo?.ytVideoLink as string}
+                        showMenu={showMenu}
+                        setShowMenu={setShowMenu} />
                 </>
             }
         </div>
@@ -150,9 +187,28 @@ const CreateDraftBtn = () => {
 }
 
 
-const VideoArea = () => {
-    return (<div className="w-[60%] max-[420px]:h-16 h-24">
-        <div className="bg-primary w-full h-full rounded-xl"></div>
+const VideoArea = ({ file }: { file: string }) => {
+    const dispatch: storeDispatchType = useDispatch();
+    const handleExpand = () => {
+        dispatch(modalActions.openMoal({
+            title: "Thumbnail",
+            content: <div className="flex flex-col gap-5 justify-center items-center">
+                <img
+                    src={file} className="max-w-44 sm:max-w-64" />
+            </div>,
+        }))
+    }
+    console.log(file)
+    return (<div className="w-[60%] max-w-56 max-[420px]:max-w-52 max-[420px]:max-h-30 max-[420px]:w-full  h-24">
+        <div className="bg-primary max-[420px]:py-2 relative flex justify-center items-center w-full h-full rounded-xl">
+            {file?.trim() === "" || !file ? "not provided" : <>
+                <img className="h-full w-full object-contain" src={file} />
+                <Expand onClick={handleExpand} className="cursor-pointer border border-label border-opacity-45 hover:bg-secondary rounded p-2 absolute top-2 right-2 text-label bg-secondaryLight active:scale-95 ease-linear duration-75" size={30} />
+                <Trash
+                    className="cursor-pointer border border-label border-opacity-45 hover:bg-secondary rounded p-2 absolute bottom-2 right-2 text-red-600 bg-secondaryLight active:scale-95 ease-linear duration-75" size={30}
+                />
+            </>}
+        </div>
     </div>)
 }
 
@@ -165,42 +221,147 @@ const HeadSection: React.FC<{ title: string, loading: boolean }> = ({ title, loa
     </div>
 }
 
+const formatSize = (sizeinByte: number) => {
+    const sizeInKb = sizeinByte / 1024;
+    const sizeInMb = sizeInKb / 1024;
+    if (sizeInMb > 1) return sizeInMb.toFixed(2) + " MB"
+    return sizeInKb.toFixed(2) + " KB"
+}
+
 const FilePicker: React.FC<{
-    label: string
+    menuOpen?: string,
+    draftId: number | null,
+    file: string,
+    placeholder: string,
     showMenu: MenuType,
     setShowMenu: (prevState: MenuType) => void
-}> = ({ showMenu, setShowMenu, label }) => {
+}> = ({ showMenu, setShowMenu, draftId, placeholder, file, menuOpen = "down" }) => {
 
     const [isEditing, setIsEditing] = useState<boolean>(false)
-    const [inputValue, setInputValue] = useState<string>("")
-    const [submitted, setSubmitted] = useState<boolean>(true);
+    const [inputValue, setInputValue] = useState<string>(file)
+    const [editableFile, setEditableFile] = useState<File | null>(null);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const dispatch: storeDispatchType = useDispatch()
 
-    const saveFnc = async (text: string) => {
-        return
+    let derivedMenutype: MenuType = MenuType.close
+
+    switch (placeholder) {
+        case "thumbnail":
+            derivedMenutype = MenuType.thumbnail
+            break;
+        case "video":
+            derivedMenutype = MenuType.video
+            break;
+
+    }
+
+
+    const handleFileChange = (event: any) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+            setEditableFile(selectedFile);
+            const fileUrl = URL.createObjectURL(selectedFile);
+            setImageUrl(fileUrl);
+        }
+    };
+
+
+    const handleUpload = async () => {
+
+        if (editableFile && draftId) {
+            const formData = new FormData();
+            formData.append("thumbnail", editableFile);
+            formData.append("draftVideoId", draftId.toString());
+            const resData = await updatedDraftFile(formData)
+
+            if (resData.success) {
+                dispatch(youtuberDraftActions.updateDraftDetails({ draftVideoId: draftId, ytThumbnailLink: resData.data.ytThumbnailLink }))
+                return resData.message
+            }
+            else toast.error(resData.message)
+            throw new Error(resData.message)
+
+        }
+        else {
+            throw new Error("no file selected!")
+        }
+    }
+
+
+
+    const saveFnc = async (txt: string) => {
+        if (draftId) {
+            if (editableFile) {
+                dispatch(modalActions.openMoal(
+                    {
+                        title: "uploading " + placeholder,
+                        content: <div className="flex flex-col gap-5">
+                            <img
+                                src={imageUrl ? imageUrl : ""} alt={editableFile.name} className="max-w-44 sm:max-w-64" />
+                            <div>
+                                <p>{editableFile.name}</p>
+                                <p>{formatSize(editableFile.size)}</p>
+
+                            </div>
+                            <Uploadbutton fn={handleUpload} />
+                        </div>,
+                    }
+                ))
+            }
+        }
+        return;
+
     }
 
     return (
         <div className="flex flex-col gap-2 w-full">
-            <span className="opacity-80">{label}</span>
-            {!submitted && <div className="max-[420px]:flex-col flex gap-2 justify-between">
-                <input disabled={false} type="file"
-                    className="file-input max-[500px]:file-input-sm file-input-bordered file-input-md file-input-info max-[500px]:w-52 w-60 text-" />
+            <span className="opacity-80 max-[420px]:ml-1">{placeholder}</span>
+            {isEditing && <div className="max-[420px]:flex-col flex gap-2 justify-between">
+
+                <div
+                    className="max-[500px]:w-52 border max-[420px]:py-2 relative border-primary hover:bg-secondaryLight rounded-lg w-60 text-sm "
+                >
+                    {!editableFile &&
+                        <div className="flex gap-4 h-full px-2 items-center cursor-pointer" >
+                            <FileIcon size={18} />
+                            <p>no file selected !</p>
+                        </div>}
+
+                    {editableFile &&
+                        <div className="flex gap-4 h-full px-2  items-center cursor-pointer" >
+                            <FileIcon size={18} />
+                            <p>{editableFile.name}</p>
+                        </div>}
+                    <input
+                        onChange={handleFileChange}
+                        disabled={false} type="file"
+                        className="file-input max-[500px]:file-input-sm file-input-bordered file-input-md file-input-info max text-sm max-[500px]:w-52 opacity-0 w-60 absolute top-0 left-0 cursor-pointer" />
+                </div>
                 <InputButton
+                    menuOpen={menuOpen}
                     editableTxt={inputValue}
                     setEditableTxt={setInputValue}
                     saveFnc={saveFnc}
                     initialTextValue={""}
                     isEditing={isEditing}
                     setIsEditing={setIsEditing}
-                    menuType={MenuType.thumbnail}
+                    menuType={derivedMenutype}
                     showMenu={showMenu}
                     setShowMenu={setShowMenu} />
             </div>}
-            {submitted && <div className="flex gap-10 items-center">
-                <VideoArea />
-                <span onClick={() => setSubmitted(false)} className="opacity-75 hover:opacity-100 active:scale-95 duration-75 ease-linear cursor-pointer" >
-                    <CancelOutlined fontSize="small" />
-                </span>
+            {!isEditing && <div className="flex max-[420px]:flex-col gap-10 max-[420px]:items-start max-[420px]:gap-2 items-center justify-between">
+                <VideoArea file={file} />
+                <InputButton
+                    menuOpen={menuOpen}
+                    editableTxt={inputValue}
+                    setEditableTxt={setInputValue}
+                    saveFnc={saveFnc}
+                    initialTextValue={""}
+                    isEditing={isEditing}
+                    setIsEditing={setIsEditing}
+                    menuType={derivedMenutype}
+                    showMenu={showMenu}
+                    setShowMenu={setShowMenu} />
             </div>}
         </div>
     )
@@ -218,6 +379,10 @@ const InputArea: React.FC<{
 
     const saveFnc = async (txt: string) => {
         if (draftId) {
+            if (title === txt) {
+                toast.error("first change the input!")
+                return;
+            }
             const resData: responseData = await updatedDraft(draftId, { ytTitle: txt })
             if (resData.success) {
                 toast.success(resData.message)
@@ -242,22 +407,29 @@ const InputArea: React.FC<{
 
     }
     return (
-        <><div className="flex max-[420px]:flex-col gap-2 w-full justify-between " >
-            {isEditing && <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} type={placeholder} placeholder={placeholder} className="input max-[500px]:input-sm input-bordered max-[500px]:w-52 w-60" />}
+  
+        <div className="flex flex-col gap-2">
+      <span className="opacity-80 max-[420px]:ml-1">{placeholder}</span>
+            <div className="flex max-[420px]:flex-col gap-2 w-full justify-between " >
 
-            {!isEditing && <div className="border border-primary text-label flex justify-center items-center rounded-lg max-[500px]:w-52 w-60" >{inputValue?.trim() === "" || !inputValue ? "not provided" : inputValue}</div>}
-            <InputButton
-                saveFnc={saveFnc}
-                editableTxt={inputValue}
-                setEditableTxt={setInputValue}
-                isEditing={isEditing}
-                setIsEditing={setIsEditing}
-                menuType={derivedMenutype}
-                initialTextValue={title}
-                showMenu={showMenu}
-                setShowMenu={setShowMenu} />
+                {isEditing && <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} type={placeholder} placeholder={placeholder} className="input max-[500px]:input-sm input-bordered max-[500px]:w-52 w-60" />}
+
+                {!isEditing && <div className="border max-[420px]:py-2 bg-primary border-primary text-label flex justify-between px-2 items-center rounded-lg max-[500px]:w-52 w-60" >
+                    <div className="w-[80">{inputValue?.trim() === "" || !inputValue ? "not provided" : inputValue}</div>
+                    <Expand className="cursor-pointer text-accent active:scale-95 ease-linear duration-75" size={18} />
+                </div>}
+                <InputButton
+                    saveFnc={saveFnc}
+                    editableTxt={inputValue}
+                    setEditableTxt={setInputValue}
+                    isEditing={isEditing}
+                    setIsEditing={setIsEditing}
+                    menuType={derivedMenutype}
+                    initialTextValue={title}
+                    showMenu={showMenu}
+                    setShowMenu={setShowMenu} />
+            </div>
         </div>
-        </>
     )
 }
 
@@ -266,37 +438,68 @@ const DescriptionArea: React.FC<{
     placeholder: string,
     showMenu: MenuType,
     description: string,
+    draftId: number | null,
     setShowMenu: (prevState: MenuType) => void,
-}> = ({ showMenu, setShowMenu, placeholder, description }) => {
+}> = ({
+    showMenu,
+    setShowMenu,
+    placeholder,
+    description,
+    draftId
+}) => {
 
-    const [descriptionVal, setDescriptionVal] = useState<string>(description)
-    const [isEditing, setIsEditing] = useState<boolean>(false)
-    const saveFnc = async (text: string) => {
-        return
-    }
-    return (
-        <><div className="flex max-[420px]:flex-col gap-2" >
-            {!isEditing && <div className="border border-primary text-label flex justify-center items-center rounded-lg max-[500px]:w-52 w-60" >{descriptionVal?.trim() === "" || !descriptionVal ? "not provided" : descriptionVal}</div>}
-            {
-                isEditing &&
-                <textarea value={descriptionVal} onChange={(e) => setDescriptionVal(e.target.value)} className="textarea textarea-bordered w-60 max-[500px]:w-52 max-[500px]:input-xs scrollbar-none input-md" placeholder={placeholder}></textarea>
+        const [descriptionVal, setDescriptionVal] = useState<string>(description)
+        const [isEditing, setIsEditing] = useState<boolean>(false)
+        const dispatch: storeDispatchType = useDispatch()
+
+        const saveFnc = async (txt: string) => {
+            if (draftId) {
+                if (description === txt) {
+                    toast.error("first change the input!")
+                    return;
+                }
+                const resData: responseData = await updatedDraft(draftId, { ytDescription: txt })
+                if (resData.success) {
+                    toast.success(resData.message)
+                    dispatch(youtuberDraftActions.updateDraftDetails({ draftVideoId: draftId, ytDescription: txt }))
+                }
+                else toast.error(resData.message)
             }
-            <InputButton
-                editableTxt={descriptionVal}
-                setEditableTxt={setDescriptionVal}
-                isEditing={isEditing}
-                saveFnc={saveFnc}
-                initialTextValue={description}
-                setIsEditing={setIsEditing}
-                menuType={MenuType.description}
-                showMenu={showMenu}
-                setShowMenu={setShowMenu} />
-        </div>
-        </>
-    )
-}
+            return;
+
+        }
+        return (
+            <div className="flex flex-col gap-2">
+                      <span className="opacity-80 max-[420px]:ml-1">{placeholder}</span>
+                <div className="flex max-[420px]:flex-col gap-2 justify-between" >
+                    {!isEditing && <div className="border max-[420px]:py-2 bg-primary border-primary text-label flex justify-between items-center rounded-lg max-[500px]:w-52 w-60 px-2" >
+                        <div className="w-[80">
+                            {descriptionVal?.trim() === "" || !descriptionVal ? "not provided" : descriptionVal}
+                        </div>
+                        <Expand className="cursor-pointer text-accent active:scale-95 ease-linear duration-75" size={18} />
+
+                    </div>}
+                    {
+                        isEditing &&
+                        <textarea value={descriptionVal} onChange={(e) => setDescriptionVal(e.target.value)} className="textarea textarea-bordered w-60 max-[500px]:w-52 max-[500px]:input-xs scrollbar-none input-md" placeholder={placeholder}></textarea>
+                    }
+                    <InputButton
+                        editableTxt={descriptionVal}
+                        setEditableTxt={setDescriptionVal}
+                        isEditing={isEditing}
+                        saveFnc={saveFnc}
+                        initialTextValue={description}
+                        setIsEditing={setIsEditing}
+                        menuType={MenuType.description}
+                        showMenu={showMenu}
+                        setShowMenu={setShowMenu} />
+                </div>
+            </div>
+        )
+    }
 
 const InputButton: React.FC<{
+    menuOpen?: string,
     menuType: MenuType,
     showMenu: MenuType,
     isEditing: boolean,
@@ -307,6 +510,7 @@ const InputButton: React.FC<{
     setIsEditing: (prevState: boolean) => void,
     setShowMenu: (prevState: MenuType) => void
 }> = ({
+    menuOpen,
     showMenu,
     setShowMenu,
     menuType,
@@ -343,11 +547,12 @@ const InputButton: React.FC<{
             setLoading(false)
         }
 
-        return <div className="flex gap-1 max-[420px]:gap-2 relative ">
+
+        return <div className="flex gap-2 max-[420px]:gap-2 relative ">
             {isEditing &&
                 <>
                     <Tooltip title="save changes" arrow>
-                        <button onClick={onClickingSave} disabled={loading} className="btn border-primary hover:bg-primary max-[500px]:btn-sm btn-square ">
+                        <button onClick={onClickingSave} disabled={loading} className="btn hover:border-primary border-secondaryLight max-[500px]:btn-sm btn-square ">
                             <Save color="green" size={18} />
                         </button>
                     </Tooltip>
@@ -358,7 +563,7 @@ const InputButton: React.FC<{
                             onClick={() => {
                                 setIsEditing(false);
                                 setEditableTxt(initialTextValue);
-                            }} className="border active:scale-95 border-secondaryLight rounded-full p-2 absolute top-1/2 -translate-y-1/2 -left-12 bg-transparent hover:bg-secondaryLight ease-linear duration-75">
+                            }} className={`border active:scale-95 max-[420px]:-translate-y-[55%] border-secondaryLight rounded-full p-2 absolute top-1/2 -translate-y-1/2 -left-12 flex max-[420px]:-top-6 max-[420px]:left-[85%] bg-transparent hover:bg-secondaryLight ease-linear duration-75`}>
                             <X className="text-red-500" size={14} />
                         </button>
                     </Tooltip>
@@ -367,7 +572,7 @@ const InputButton: React.FC<{
             {
                 !isEditing &&
                 <Tooltip title="edit" arrow>
-                    <button onClick={() => setIsEditing(true)} className="btn border-primary max-[500px]:btn-sm btn-square hover:bg-primary">
+                    <button onClick={() => setIsEditing(true)} className="btn hover:border-primary max-[500px]:btn-sm btn-square border-secondaryLight">
                         <EditIcon color="orange" size={18} />
                     </button>
                 </Tooltip>
@@ -376,10 +581,10 @@ const InputButton: React.FC<{
                 <span className="relative">
                     <button
                         disabled={loading}
-                        onClick={() => setShowMenu(menuType)} className="btn border border-primary max-[500px]:btn-sm btn-square ">
+                        onClick={() => setShowMenu(menuType)} className="btn border hover:border-primary border-secondaryLight max-[500px]:btn-sm btn-square ">
                         <Assignment color="primary" fontSize="small" />
                     </button>
-                    {showMenu === menuType && <span className="absolute max-[420px]:left-1/2 max-[420px]:top-2 left-[-400%] top-5 z-20 menuDiv" ><BasicMenu /></span>}
+                    {showMenu === menuType && <span className={`absolute z-20 menuDiv  ${menuOpen === "up" ? "max-[420px]:left-1/2 max-[420px]:bottom-[60%] left-[-400%] bottom-1/2" : "max-[420px]:left-1/2 max-[420px]:top-2 left-[-400%] top-5"}`}><BasicMenu /></span>}
                 </span>
             </Tooltip>
         </div>

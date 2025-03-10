@@ -2,6 +2,7 @@ import client from "../../db/db";
 import { RequestType } from "../../types/types";
 import { ApiResponse } from "../../utils/apiResponse";
 import { asyncHandler } from "../../utils/asyncHandler";
+import { uploadOnCloudinary } from "../../utils/cloudinary";
 
 const addDraft = asyncHandler(async (req: RequestType, res) => {
     const user = req.user;
@@ -29,10 +30,33 @@ const addDraft = asyncHandler(async (req: RequestType, res) => {
 });
 
 const updateDraft = asyncHandler(async (req: RequestType, res) => {
+
+    let thumbnailPath: string | undefined;
+    if (req.files && 'thumbnail' in req.files) {
+        thumbnailPath = req.files.thumbnail[0]?.path;
+    }
+
     const { draftVideoId, ...updateFields } = req.body;
 
     if (!draftVideoId) {
         res.status(400).json(new ApiResponse(false, null, "Draft video id is required!"));
+    }
+
+    console.log("thnumbnail path:", thumbnailPath)
+
+    let thumbnail: any;
+    if (thumbnailPath) {
+        thumbnail = await uploadOnCloudinary(thumbnailPath)
+    }
+
+    const draftVidId = parseInt(draftVideoId);
+
+    if (!thumbnail && thumbnailPath) {
+        return res.status(400).json(new ApiResponse(false, null, "could not upload thumbnail"));
+    }
+
+    if (thumbnail) {
+        updateFields.ytThumbnailLink = thumbnail.secure_url;
     }
 
     const filteredUpdates = Object.fromEntries(
@@ -41,7 +65,7 @@ const updateDraft = asyncHandler(async (req: RequestType, res) => {
 
     const updatedDraft = await client.draftVideos.update({
         where: {
-            draftVideoId,
+            draftVideoId: draftVidId
         },
         data: filteredUpdates,
     });
@@ -88,8 +112,6 @@ const fetchAllDraftVideos = asyncHandler(async (req: RequestType, res) => {
         return res.status(400).json(new ApiResponse(false, null, "Invalid search query"));
     }
 
-    console.log("workspace id:", workspaceid);
-    console.log("type of workspace id:", typeof workspaceid);
 
     if (typeof workspaceid !== "string")
         return res.status(400).json(new ApiResponse(false, null, "invalid workspace id provided1"))
@@ -134,9 +156,43 @@ const fetchAllDraftVideos = asyncHandler(async (req: RequestType, res) => {
 });
 
 
+const createPageFetch = asyncHandler(async (req: RequestType, res) => {
+
+    const user = req.user;
+    let { workspaceid } = req.body;
+
+    if (workspaceid < 1)
+        return res.status(400).json(new ApiResponse(false, null, "invalid workspace id provided "))
+
+
+    const createPageData = await client.user.findMany({
+        where: {
+            id: user.id
+        },
+        include: {
+            Youtuber: {
+                include: {
+                    draftVideos: true
+                }
+            }
+        }
+    })
+
+    if (!createPageData) {
+        return res.status(400).json(new ApiResponse(false, null, "could not fetch create page data"));
+    }
+
+    const { password, ...dataToSend } = createPageData[0];
+
+    return res.status(200).json(new ApiResponse(true, dataToSend, "create page data fetched successfully"));
+});
+
+
+
 export {
     addDraft,
     updateDraft,
     deleteDraft,
-    fetchAllDraftVideos
+    fetchAllDraftVideos,
+    createPageFetch
 };

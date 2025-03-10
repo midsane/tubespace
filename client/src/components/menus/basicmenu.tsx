@@ -11,18 +11,18 @@ import { youtuberDraftActions } from "../../store/youtuberStore/youtuberDraftVid
 import { youtuberWorkspacesAction } from "../../store/youtuberStore/youtuberWorspaces.slice"
 
 export const BasicMenu = () => {
-    return (<div className="relative" >
-      <ul className="border-2 shadow-sm shadow-secondary border-primary bg-base-200 flex flex-col gap-2 px-1 py-2 pt-10 rounded-box w-56 max-h-60 max-[500px]:max-h-40 max-[500px]:w-40 scroll-smooth overflow-y-scroll overflow-x-hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent">
-    <SearchBar />
-    {[
-      { cname: "lavneesh", url: "https://mui.com/static/images/avatar/2.jpg", link: "/c/lavneesh" },
-      { cname: "lavneesh", url: "https://mui.com/static/images/avatar/2.jpg", link: "/c/lavneesh" },
-      { cname: "lavneesh", url: "https://mui.com/static/images/avatar/2.jpg", link: "/c/lavneesh" },
-      { cname: "adi", url: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg", link: "/c/lavneesh" },
-    ].map((c, i) => <CollaboratorTab key={i} name={c.cname} url={c.url} link={c.link} />)
-    }
-  </ul>
-    </div>)
+  return (<div className="relative" >
+    <ul className="border-2 shadow-sm shadow-secondary border-primary bg-base-200 flex flex-col gap-2 px-1 py-2 pt-10 rounded-box w-56 max-h-60 max-[500px]:max-h-40 max-[500px]:w-40 scroll-smooth overflow-y-scroll overflow-x-hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent">
+      <SearchBar />
+      {[
+        { cname: "lavneesh", url: "https://mui.com/static/images/avatar/2.jpg", link: "/c/lavneesh" },
+        { cname: "lavneesh", url: "https://mui.com/static/images/avatar/2.jpg", link: "/c/lavneesh" },
+        { cname: "lavneesh", url: "https://mui.com/static/images/avatar/2.jpg", link: "/c/lavneesh" },
+        { cname: "adi", url: "https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg", link: "/c/lavneesh" },
+      ].map((c, i) => <CollaboratorTab key={i} name={c.cname} url={c.url} link={c.link} />)
+      }
+    </ul>
+  </div>)
 }
 
 export const ThreeDotsMenu: FC<{ _id: number, draftName: string }> = ({ _id, draftName }) => {
@@ -114,8 +114,8 @@ const CollaboratorTab = ({ name, url, link }: { name: string, url: string, link:
     <Avatar sx={{ width: `${onLaptopScreen ? "40px" : "20px"}`, height: `${onLaptopScreen ? "40px" : "20px"}` }} src={url} >
     </Avatar>
     <div className="flex flex-col justify-center">
-    <p>{name}</p>
-    <CornerDownLeft color="orange" size={12} />
+      <p>{name}</p>
+      <CornerDownLeft color="orange" size={12} />
     </div>
   </Link></li>
 }

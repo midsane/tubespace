@@ -10,6 +10,8 @@ export const useFetch = <T>(fnc: (...args : any) => Promise<any>) => {
         const fetchData = async () => {
             setLoading(true)
             fnc().then((res: { data: T, success: boolean, message: string }) => {
+
+                console.log(res)
              
                 if (res.success)
                     setData(res.data);

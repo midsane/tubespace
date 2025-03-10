@@ -89,7 +89,7 @@ const GeneralSettings = ({type} : {type: number}) => {
                 title: "Account Preference",
                 buttons: true,
                 handleSubmit: saveAccountPreferenceChanges,
-                submitText: "Save Changes"
+                submitText: "Ok"
             }
         ))
     }

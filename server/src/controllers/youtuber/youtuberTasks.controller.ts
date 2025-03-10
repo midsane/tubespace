@@ -35,7 +35,6 @@ const fetchAllAssignedTasks = asyncHandler(async (req: RequestType, res) => {
     res.status(200).json(new ApiResponse(true, assignedTasks, "assigned tasks fetched successfully"));
 })
 
-
 const assignTask = asyncHandler(async (req: RequestType, res) => {
     const user = req.user;
     const {
@@ -77,7 +76,6 @@ const assignTask = asyncHandler(async (req: RequestType, res) => {
     res.status(200).json(new ApiResponse(true, task, "task assigned successfully"));
 })
 
-
 const unassignTask = asyncHandler(async (req: RequestType, res) => {
 
     const {
@@ -106,9 +104,6 @@ const unassignTask = asyncHandler(async (req: RequestType, res) => {
     }
     res.status(200).json(new ApiResponse(true, unAssignedtask, "task unassigned successfully"));
 })
-
-
-
 
 const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
     const { searchQuery } = req.query;
@@ -163,7 +158,6 @@ const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
     res.status(200).json(new ApiResponse(true, dataToSend, "youtubers fetched successfully"));
 })
 
-
 const fetchYoutubersShallow = asyncHandler(async (req: RequestType, res) => {
     const { searchQuery } = req.query;
 
@@ -205,6 +199,7 @@ const fetchYoutubersShallow = asyncHandler(async (req: RequestType, res) => {
 })
 
 const updateTasks = asyncHandler(async (req: RequestType, res) => {
+
     const { taskId, ...updateFields } = req.body;
 
     const task = await client.tasks.update({
@@ -212,7 +207,8 @@ const updateTasks = asyncHandler(async (req: RequestType, res) => {
             taskId
         },
         data: {
-            ...updateFields
+            ...updateFields,
+            
         }
     });
 
