@@ -121,7 +121,7 @@ export const deleteDraft = async (draftVideoId: number) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-            draftVideoId
+                draftVideoId
             })
         });
         const resData = await response.json();
@@ -137,6 +137,36 @@ export const deleteDraft = async (draftVideoId: number) => {
 
 }
 
+export enum FILE_TYPE {
+    VIDEO = "video",
+    THUMBNAIL = "thumbnail"
+}
+
+export const deleteFileInDraft = async (draftVideoId: number , fileType: FILE_TYPE ) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/delete-file-in-draft`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                draftVideoId,
+                fileType
+            })
+        });
+        const resData = await response.json();
+        return resData
+    } catch (error: any) {
+
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while updating draft"
+        }
+    }
+
+}
 
 export const createWorkspaceFetch = async (workspaceName: string) => {
     try {
@@ -204,7 +234,7 @@ export const deleteWorkspace = async (workspaceId: number) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-            workspaceid: workspaceId
+                workspaceid: workspaceId
             })
         });
         const resData = await response.json();

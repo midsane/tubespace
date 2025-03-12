@@ -173,7 +173,7 @@ export const MainCol = () => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
 
-
+    
     let TabSection = <></>
     switch (value) {
         case "one":

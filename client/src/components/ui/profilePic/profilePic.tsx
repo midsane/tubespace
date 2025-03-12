@@ -3,8 +3,9 @@ import { ReactNode, useState, useRef, useEffect } from "react"
 import { HomeIcon, LogOutIcon, SettingsIcon } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
+import { userRole } from "../../../types/youtuberTypes"
 
-export const ProfilePic = ({ imageSrc, userName, loading = false }: { imageSrc?: string, userName?: string, loading?: boolean }) => {
+export const ProfilePic = ({role, imageSrc, userName, loading = false }: { imageSrc?: string, userName?: string, loading?: boolean, role: userRole }) => {
 
     const menuRef = useRef<HTMLDivElement>(null)
     const [showMenu, setShowMenu] = useState<boolean>(false)
@@ -49,9 +50,9 @@ export const ProfilePic = ({ imageSrc, userName, loading = false }: { imageSrc?:
                             transition={{ duration: 0.2 }}
                             ref={menuRef} className="absolute bottom-100 right-[10%]">
                             <ul className="menu border-2 shadow-sm shadow-secondary border-primary bg-base-200 rounded-box w-32 gap-2 ">
-                                <List username={userName} link="home" paraTxt="Home" Icon={<HomeIcon size={18} />} />
-                                <List username={userName} link="settings" paraTxt="Settings" Icon={<SettingsIcon size={18} />} />
-                                <List username={userName} link="logout" paraTxt="Logout" Icon={<LogOutIcon size={18} />} />
+                                <List role={role} username={userName} link="home" paraTxt="Home" Icon={<HomeIcon size={18} />} />
+                                <List role={role} username={userName} link="settings" paraTxt="Settings" Icon={<SettingsIcon size={18} />} />
+                                <List role={role}  username={userName} link="logout" paraTxt="Logout" Icon={<LogOutIcon size={18} />} />
 
                             </ul>
                         </motion.div>}
@@ -62,10 +63,13 @@ export const ProfilePic = ({ imageSrc, userName, loading = false }: { imageSrc?:
     </div>)
 }
 
-const List = ({ paraTxt, Icon, username, link }: { paraTxt: string,link:string, Icon: ReactNode, username: string | undefined }) => {
+
+
+const List = ({ role, paraTxt, Icon, username, link }: { paraTxt: string, link: string, Icon: ReactNode, username: string | undefined, role: userRole }) => {
     const navigate = useNavigate()
-    let finalLink = `y/${username}/${link}`;
-    if(link.toLowerCase() === "logout") finalLink = "/logout"
+    const prefix = role === userRole.YOUTUBER ? "y" : "c"
+    let finalLink = `${prefix}/${username}/${link}`;
+    if (link.toLowerCase() === "logout") finalLink = "/logout"
     return (
         <div onClick={() => navigate(finalLink)} className="flex px-w w-full py-1 p-2 rounded-md justify-between hover:bg-secondaryLight cursor-pointer ease-linear duration-75 opacity-70">
             <p>{paraTxt}</p>

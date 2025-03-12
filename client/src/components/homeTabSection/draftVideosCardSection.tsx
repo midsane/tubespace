@@ -14,6 +14,7 @@ import { fetchDraftVideos } from "../../fetch/fetchForYoutuber";
 import toast from "react-hot-toast";
 import { CardWrapper } from "../cards/cardWrapper";
 import SplitText from "../textAnimations/SplitText/SplitText";
+import { useParams } from "react-router-dom";
 
 
 
@@ -39,6 +40,8 @@ export const DraftVideosCardSection2: React.FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const dispatch: storeDispatchType = useDispatch();
 
+    const { draftName } = useParams()
+
     const { data: DraftArr, error, loading } = useFetch<DraftVideosInterface[]>(fetchDraftVideos)
     console.log(DraftArr)
     useEffect(() => {
@@ -62,6 +65,8 @@ export const DraftVideosCardSection2: React.FC = () => {
             scrollDivRef.current.scrollTop += 330;
         }
     };
+
+    console.log(draftName)
 
     return (
         <>
@@ -87,11 +92,13 @@ export const DraftVideosCardSection2: React.FC = () => {
                         {loading && <CardWrapper extraTStyle="bg-secondary border-secondaryLight skeleton" >
                             <div className="skeleton rounded " ></div>
                         </CardWrapper>}
+                        
                         {DraftArr &&
                             DraftArr.map((draft) => (
                                 <DraftVideosCard
+                                    selected={draftName === draft.DraftTitle}
                                     {...draft}
-                                    extraTStyle="cursor-pointer hover:opacity-100 opacity-90 bg-secondary border-secondaryLight  duration-75 ease-linear "
+                                    extraTStyle={`cursor-pointer hover:opacity-100 opacity-90  ${draftName === draft.DraftTitle ? "bg-secondaryLight " : "bg-secondary"} border-secondaryLight  duration-75 ease-linear `}
                                     key={draft.draftVideoId}
                                 />
                             ))}

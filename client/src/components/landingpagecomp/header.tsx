@@ -12,7 +12,7 @@ import { IOSSwitch } from "../switches/switches"
 import { DarkMode } from "@mui/icons-material"
 import { checkLoggedIn } from "../../fetch/fetch"
 import { ProfilePic } from "../ui/profilePic/profilePic"
-import { userInterface } from "../../types/youtuberTypes"
+import { userInterface, userRole } from "../../types/youtuberTypes"
 
 
 export function Header({ color = "text-gray-300" }: { color?: string }) {
@@ -77,14 +77,14 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
                 {sidebarState.onLaptopScreen ?
                     <div className="flex gap-8 items-center">
                         <IOSSwitch color="error" size="medium" icon={<DarkMode />} />
-                        {loggedIn && <ProfilePic imageSrc={user?.profilepic ?? undefined} userName={user?.username} />
+                        {loggedIn && <ProfilePic role={user?.role === "youtuber"? userRole.YOUTUBER : userRole.COLLABORATOR} imageSrc={user?.profilepic ?? undefined} userName={user?.username} />
                         }
                         {!loggedIn && !loading && <Button
                             onClick={handleClick}
                             size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
                             Login
                         </Button>}
-                        {!loggedIn && loading && <ProfilePic loading />}
+                        {!loggedIn && loading && <ProfilePic role={user?.role === "youtuber"? userRole.YOUTUBER : userRole.COLLABORATOR} loading />}
                     </div>
                     :
                     <div className="flex gap-2 justify-center items-center">
@@ -92,14 +92,14 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
                         <div className="flex gap-3 items-center">
                             <IOSSwitch color="error" size="medium" icon={<DarkMode />} />
 
-                            {!loggedIn && loading && <ProfilePic loading />}
+                            {!loggedIn && loading && <ProfilePic role={user?.role === "youtuber"? userRole.YOUTUBER : userRole.COLLABORATOR} loading />}
                             {!loggedIn && !loading && <Button
                                 onClick={handleClick}
                                 size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
                                 Login
                             </Button>}
 
-                            {loggedIn && <ProfilePic imageSrc={user?.profilepic ?? undefined} userName={user?.username} />}
+                            {loggedIn && <ProfilePic role={user?.role === "youtuber"? userRole.YOUTUBER : userRole.COLLABORATOR} imageSrc={user?.profilepic ?? undefined} userName={user?.username} />}
 
                         </div>
                         <MenuIcon onClick={() => setShowMenu(true)} size={30} className="cursor-pointer active:scale-90 ease-linear duration-75" />
@@ -119,7 +119,6 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
                                 size={30}
                                 onClick={() => setShowMenu(false)} />
                             <nav className="flex flex-col items-center italic font-extrabold text-xl  gap-7">
-
                                 <Link to="/home" className={`ease-linear duration-75 text-sm  ${color} hover:scale-110 hover:text-accent transition-colors`}>
                                     Home
                                 </Link>

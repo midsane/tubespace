@@ -39,7 +39,6 @@ export const LoginBox = () => {
             if (resData.success) {
                 dispatch(modalActions.closeModal())
                 toast.success(resData.message)
-
                 navigate("/y/" + resData.data.user.username+"/home")
             }
             else {
@@ -192,7 +191,7 @@ export const SignUpBox = () => {
                 dispatch(modalActions.closeModal())
                 toast.success(resData.message)
 
-                navigate("/y/" + resData.data.user.username+"/home")
+                navigate("/c/" + resData.data.user.username+"/home")
             }
             else {
                 toast.error(resData.message)

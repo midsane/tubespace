@@ -22,7 +22,7 @@ import { Link } from "react-router-dom"
 const LOGO1SIZE = 18
 const LOGO2SIZE = 10
 
-type extendedDraftVideoType = DraftVideosInterface & { extraTStyle: string }
+type extendedDraftVideoType = DraftVideosInterface & { extraTStyle: string, selected?: boolean }
 
 
 export const CreateNewVideoCard: React.FC<{ extraTStyle: string }> = ({ extraTStyle }) => {
@@ -67,11 +67,14 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string }> = ({ extraTSt
 
 export const DraftVideosCard: React.FC<extendedDraftVideoType> =
     ({
+        selected=false,
         extraTStyle,
         DraftTitle: DraftName,
         draftVideoId: _id,
         // ...rest
     }) => {
+
+        console.log(DraftName, " ", selected)
 
         return (
             <CardWrapper extraTStyle={extraTStyle}>
@@ -119,7 +122,7 @@ export const DraftVideosCard: React.FC<extendedDraftVideoType> =
                             </Tooltip>
                         </div>
                         <ThreeDots draftName={DraftName} _id={_id} />
-                        <Link to={`../create/${DraftName}`} ><Button variant="outlined" sx={{ height: "2rem" }} >View</Button></Link>
+                        <Link to={`../../create/${DraftName}`} ><Button variant="outlined" sx={{ height: "2rem" }} >View</Button></Link>
                     </div>
                 </>
             </CardWrapper>

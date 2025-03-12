@@ -7,6 +7,7 @@ import {
     createPageFetch,
 
     deleteDraft,
+    deleteFileinDraft,
     fetchAllDraftVideos,
     updateDraft,
 } from "../controllers/youtuber/youtuberDraft.controller";
@@ -27,6 +28,7 @@ router.route("/fetch-youtubers-shallow").get(fetchYoutubersShallow);
 
 router.use(verifyJWT);
 router.use(verifyYoutuberRole);
+
 router.route("/fetch-home").post(fetchHome);
 
 router.route("/fetch-all-draftVideos").get(fetchAllDraftVideos);
@@ -42,6 +44,7 @@ router.route("/update-draft").put(upload.fields([
     }
 ]), updateDraft);
 router.route("/delete-draft").delete(deleteDraft);
+router.route("/delete-file-in-draft").delete(deleteFileinDraft);
 
 router.route("/fetch-all-workspaces").get(fetchAllworkspaces);
 router.route("/create-workspace").post(createWorkspace);

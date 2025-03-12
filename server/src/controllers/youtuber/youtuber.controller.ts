@@ -12,16 +12,11 @@ const fetchHome = asyncHandler(async (req: RequestType, res) => {
             id: user.id,
         },
         include: {
-            Youtuber: {
+            Collaborator: {
                 include: {
-                    draftVideos: true,
-                    tasksAssigned: true,
-                    workspaces: {
-                        include: {
-                            tasks: true,
-                            collaborators: true,
-                        }
-                    }
+                    assignedTasks: true,
+                    wokspaces: true,
+                    joinedDraftVideos: true,
                 },
             },
         },

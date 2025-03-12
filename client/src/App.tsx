@@ -78,21 +78,37 @@ const router = createBrowserRouter([
           }
         ]
 
-      }
-      ,
-      {
-        path: "col/:colId/home", element: <HomeScreenCol />
-      },
-      {
-        path: "col/:colId/Settings", element: <SettingScreenCol />
-      },
-      {
-        path: "col/:colId/Youtubers", element: <YoutuberScreen />
-      },
-      {
-        path: "col/:colId/chat", element: <ChatScreen linkType={linkType.two} />
       },
 
+      {
+        path: "c/:username/",
+        children: [
+          {
+            path: "home", element: <HomeScreenCol/>,
+          },
+          
+          {
+            path: "chat", element: <ChatScreen linkType={linkType.two} />
+          },
+          {
+            path: "create",
+            loader: createRouteLoader,
+            children: [
+              {
+                path: ":draftName",
+                element: <CreateScreen />
+              }
+            ]
+          },
+
+          {
+            path: "settings", element: <SettingScreenCol />
+          },
+          {
+            path: "Youtubers", element: <YoutuberScreen />
+          }
+        ]
+      }
 
     ]
   }

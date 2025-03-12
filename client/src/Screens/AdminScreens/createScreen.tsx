@@ -12,7 +12,7 @@ import { modalActions } from "../../store/modal";
 import { CreateNewSample } from "../../components/modalCompnents/createNewSample";
 import toast from "react-hot-toast";
 import { youtuberDraftActions } from "../../store/youtuberStore/youtuberDraftVideos.slice";
-import { addDraft, fetchCreateScreenData, responseData, updatedDraft, updatedDraftFile } from "../../fetch/fetchForYoutuber";
+import { addDraft, deleteFileInDraft, fetchCreateScreenData, FILE_TYPE, responseData, updatedDraft, updatedDraftFile } from "../../fetch/fetchForYoutuber";
 import { useParams } from "react-router-dom";
 import { useFetch } from "../../hooks/fetchHooks";
 import { DraftVideosInterface, userInterface } from "../../types/youtuberTypes";
@@ -20,6 +20,7 @@ import { youtuberActions } from "../../store/youtuberStore/youtuber.slice";
 import { Uploadbutton } from "../../components/buttons/uploadbutton";
 import { VideoPlayer } from "../../components/videoPlayer/videoplayer";
 
+import { motion } from "framer-motion"
 
 
 const getCurrentDraftInfo = (draftTitle: string, draftArr: DraftVideosInterface[]) => {
@@ -97,7 +98,12 @@ const CreateArea = ({ loading, draftInfo }: { loading: boolean, draftInfo: Draft
 
         <HeadSection loading={loading} title={draftInfo ? draftInfo.DraftTitle : ""} />
 
-        <div className="bg-secondary mt-28 overflow-y-scroll overflow-x-hidden shadow-inner shadow-secondary border border-secondaryLight flex flex-col gap-8 p-5 sm:p-8 rounded-lg">
+        <motion.div
+            key={draftInfo?.draftVideoId}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-secondary mt-28 overflow-y-scroll overflow-x-hidden shadow-inner shadow-secondary border border-secondaryLight flex flex-col gap-8 p-5 sm:p-8 rounded-lg">
             {loading ?
                 <div className="flex flex-col gap-6 sm:gap-8" >
                     <CreateAreaLoader />
@@ -144,8 +150,8 @@ const CreateArea = ({ loading, draftInfo }: { loading: boolean, draftInfo: Draft
                         setShowMenu={setShowMenu} />
                 </>
             }
-        </div>
-    </div>)
+        </motion.div>
+    </div >)
 }
 
 const CreateDraftBtn = () => {
@@ -188,7 +194,7 @@ const CreateDraftBtn = () => {
 }
 
 
-const VideoArea = ({ file, placeholder }: { file: string, placeholder: string }) => {
+const VideoArea = ({ file, placeholder, videoId }: { file: string, placeholder: string, videoId: number | null }) => {
     const dispatch: storeDispatchType = useDispatch();
     const handleExpand = () => {
         dispatch(modalActions.openMoal({
@@ -204,6 +210,34 @@ const VideoArea = ({ file, placeholder }: { file: string, placeholder: string })
         }))
     }
     console.log(file)
+
+    const onTrashClick = () => {
+        dispatch(modalActions.openMoal({
+            title: "are you sure you want to delete this file?",
+            content: <div className="flex gap-5 justify-center items-center">
+                <button onClick={deleteFile} className="btn btn-danger">delete</button>
+            </div>,
+        }))
+    }
+    const deleteFile = async () => {
+        if (!videoId) {
+            toast.error("no video id found!")
+            return;
+        }
+        const resData = await deleteFileInDraft(videoId, placeholder === "video" ? FILE_TYPE.VIDEO : FILE_TYPE.THUMBNAIL)
+        if (resData.success) {
+            toast.success(resData.message)
+            if (placeholder === "video")
+                dispatch(youtuberDraftActions.updateDraftDetails({ draftVideoId: videoId, ytVideoLink: null }))
+
+            else
+                dispatch(youtuberDraftActions.updateDraftDetails({ draftVideoId: videoId, ytThumbnailLink: null }))
+            dispatch(modalActions.closeModal())
+        }
+        else {
+            toast.error(resData.message)
+        }
+    }
     return (<div className="w-[60%] max-w-56 max-[420px]:max-w-52 max-[420px]:max-h-30 max-[420px]:w-full  h-24">
         <div className="bg-primary max-[420px]:py-2 relative flex justify-center items-center w-full h-full rounded-xl">
             {file?.trim() === "" || !file ? "not provided" : <>
@@ -212,6 +246,7 @@ const VideoArea = ({ file, placeholder }: { file: string, placeholder: string })
                     <img className="h-full w-full object-contain" src={file} />}
                 <Expand onClick={handleExpand} className="cursor-pointer border border-label border-opacity-45 hover:bg-secondary rounded p-2 absolute top-2 right-2 text-label bg-secondaryLight active:scale-95 ease-linear duration-75" size={30} />
                 <Trash
+                    onClick={onTrashClick}
                     className="cursor-pointer border border-label border-opacity-45 hover:bg-secondary rounded p-2 absolute bottom-2 right-2 text-red-600 bg-secondaryLight active:scale-95 ease-linear duration-75" size={30}
                 />
             </>}
@@ -313,7 +348,7 @@ const FilePicker: React.FC<{
 
 
 
-    const saveFnc = async (txt: string) => {
+    const saveFnc = async () => {
         if (draftId) {
             if (editableFile) {
                 dispatch(modalActions.openMoal(
@@ -380,7 +415,7 @@ const FilePicker: React.FC<{
                     setShowMenu={setShowMenu} />
             </div>}
             {!isEditing && <div className="flex max-[420px]:flex-col gap-10 max-[420px]:items-start max-[420px]:gap-2 items-center justify-between">
-                <VideoArea placeholder={placeholder} file={file} />
+                <VideoArea videoId={draftId} placeholder={placeholder} file={file} />
                 <InputButton
                     menuOpen={menuOpen}
                     editableTxt={inputValue}

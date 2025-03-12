@@ -96,6 +96,43 @@ const updateDraft = asyncHandler(async (req: RequestType, res) => {
     res.status(200).json(new ApiResponse(true, updatedDraft, "Draft video updated successfully!"));
 });
 
+const deleteFileinDraft = asyncHandler(async (req: RequestType, res) => {
+    const { draftVideoId, fileType } = req.body;
+    if(fileType==="thumbnail"){
+        const updatedDraft = await client.draftVideos.update({
+            where: {
+                draftVideoId
+            },
+            data: {
+                ytThumbnailLink: null
+            }
+        });
+    
+        if (!updatedDraft) {
+            res.status(400).json(new ApiResponse(false, null, "Draft video could not be updated!"));
+        }
+    
+        res.status(200).json(new ApiResponse(true, updatedDraft, "Draft video updated successfully!"));
+    }
+    else if(fileType==="video"){
+        const updatedDraft = await client.draftVideos.update({
+            where: {
+                draftVideoId
+            },
+            data: {
+                ytVideoLink: null
+            }
+        });
+    
+        if (!updatedDraft) {
+            res.status(400).json(new ApiResponse(false, null, "Draft video could not be updated!"));
+        }
+    
+        res.status(200).json(new ApiResponse(true, updatedDraft, "Draft video updated successfully!"));
+    }
+});
+
+
 const deleteDraft = asyncHandler(async (req: RequestType, res) => {
     const { draftVideoId } = req.body;
 
@@ -213,5 +250,6 @@ export {
     updateDraft,
     deleteDraft,
     fetchAllDraftVideos,
-    createPageFetch
+    createPageFetch,
+    deleteFileinDraft
 };
