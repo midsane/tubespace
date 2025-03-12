@@ -32,9 +32,15 @@ const addDraft = asyncHandler(async (req: RequestType, res) => {
 const updateDraft = asyncHandler(async (req: RequestType, res) => {
 
     let thumbnailPath: string | undefined;
+    let videoPath: string | undefined;
     if (req.files && 'thumbnail' in req.files) {
         thumbnailPath = req.files.thumbnail[0]?.path;
     }
+
+    if (req.files && 'video' in req.files) {
+        videoPath = req.files.video[0]?.path;
+    }
+
 
     const { draftVideoId, ...updateFields } = req.body;
 
@@ -42,22 +48,35 @@ const updateDraft = asyncHandler(async (req: RequestType, res) => {
         res.status(400).json(new ApiResponse(false, null, "Draft video id is required!"));
     }
 
-    console.log("thnumbnail path:", thumbnailPath)
 
-    let thumbnail: any;
+    let thumbnail: any = null;
     if (thumbnailPath) {
         thumbnail = await uploadOnCloudinary(thumbnailPath)
     }
 
+
+    let video : any = null; 
+    if (videoPath) {
+        video = await uploadOnCloudinary(videoPath)
+    }
     const draftVidId = parseInt(draftVideoId);
 
     if (!thumbnail && thumbnailPath) {
         return res.status(400).json(new ApiResponse(false, null, "could not upload thumbnail"));
     }
 
+    if (!video && videoPath) {
+        return res.status(400).json(new ApiResponse(false, null, "could not upload video"));
+    }
+
     if (thumbnail) {
         updateFields.ytThumbnailLink = thumbnail.secure_url;
     }
+
+    if (video) {
+        updateFields.ytVideoLink = video.secure_url;
+    }
+
 
     const filteredUpdates = Object.fromEntries(
         Object.entries(updateFields).filter(([_, value]) => value !== undefined),

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { CloudIcon, EditIcon, Expand, FileIcon, Loader, PlusCircle, Save, Trash, X } from "lucide-react";
+import { EditIcon, Expand, FileIcon, PlusCircle, Save, Trash, X } from "lucide-react";
 import { Assignment } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { DraftVideosCardSection2 } from "../../components/homeTabSection/draftVideosCardSection";
@@ -18,6 +18,7 @@ import { useFetch } from "../../hooks/fetchHooks";
 import { DraftVideosInterface, userInterface } from "../../types/youtuberTypes";
 import { youtuberActions } from "../../store/youtuberStore/youtuber.slice";
 import { Uploadbutton } from "../../components/buttons/uploadbutton";
+import { VideoPlayer } from "../../components/videoPlayer/videoplayer";
 
 
 
@@ -187,14 +188,18 @@ const CreateDraftBtn = () => {
 }
 
 
-const VideoArea = ({ file }: { file: string }) => {
+const VideoArea = ({ file, placeholder }: { file: string, placeholder: string }) => {
     const dispatch: storeDispatchType = useDispatch();
     const handleExpand = () => {
         dispatch(modalActions.openMoal({
-            title: "Thumbnail",
+            fullScreen: true,
+            title: placeholder,
             content: <div className="flex flex-col gap-5 justify-center items-center">
-                <img
-                    src={file} className="max-w-44 sm:max-w-64" />
+                {placeholder === "video" ?
+                    <VideoPlayer videoUrl={file} />
+                    :
+                    <img
+                        src={file} className="max-w-full max-h-[70dvh] rounded" />}
             </div>,
         }))
     }
@@ -202,7 +207,9 @@ const VideoArea = ({ file }: { file: string }) => {
     return (<div className="w-[60%] max-w-56 max-[420px]:max-w-52 max-[420px]:max-h-30 max-[420px]:w-full  h-24">
         <div className="bg-primary max-[420px]:py-2 relative flex justify-center items-center w-full h-full rounded-xl">
             {file?.trim() === "" || !file ? "not provided" : <>
-                <img className="h-full w-full object-contain" src={file} />
+                {placeholder === "video" ?
+                    <video controls className="h-full w-full object-contain" src={file} /> :
+                    <img className="h-full w-full object-contain" src={file} />}
                 <Expand onClick={handleExpand} className="cursor-pointer border border-label border-opacity-45 hover:bg-secondary rounded p-2 absolute top-2 right-2 text-label bg-secondaryLight active:scale-95 ease-linear duration-75" size={30} />
                 <Trash
                     className="cursor-pointer border border-label border-opacity-45 hover:bg-secondary rounded p-2 absolute bottom-2 right-2 text-red-600 bg-secondaryLight active:scale-95 ease-linear duration-75" size={30}
@@ -270,16 +277,33 @@ const FilePicker: React.FC<{
 
         if (editableFile && draftId) {
             const formData = new FormData();
-            formData.append("thumbnail", editableFile);
+            if (placeholder === "video") formData.append("video", editableFile);
+            else formData.append("thumbnail", editableFile);
+
             formData.append("draftVideoId", draftId.toString());
             const resData = await updatedDraftFile(formData)
 
-            if (resData.success) {
-                dispatch(youtuberDraftActions.updateDraftDetails({ draftVideoId: draftId, ytThumbnailLink: resData.data.ytThumbnailLink }))
-                return resData.message
+            if (placeholder === "video") {
+                if (resData.success) {
+                    dispatch(youtuberDraftActions.updateDraftDetails({ draftVideoId: draftId, ytVideoLink: resData.data.ytVideoLink }))
+                    return resData.message
+                }
+                else {
+                    throw new Error(resData.message)
+                }
+
             }
-            else toast.error(resData.message)
-            throw new Error(resData.message)
+
+            else {
+                if (resData.success) {
+                    dispatch(youtuberDraftActions.updateDraftDetails({ draftVideoId: draftId, ytThumbnailLink: resData.data.ytThumbnailLink }))
+                    return resData.message
+                }
+                else {
+                    throw new Error(resData.message)
+                }
+            }
+
 
         }
         else {
@@ -296,8 +320,14 @@ const FilePicker: React.FC<{
                     {
                         title: "uploading " + placeholder,
                         content: <div className="flex flex-col gap-5">
-                            <img
-                                src={imageUrl ? imageUrl : ""} alt={editableFile.name} className="max-w-44 sm:max-w-64" />
+                            {placeholder === "video" ?
+                                <video
+                                    src={imageUrl ? imageUrl : ""} controls className="max-w-44 sm:max-w-64" />
+                                :
+                                <img
+                                    src={imageUrl ? imageUrl : ""} alt={editableFile.name} className="max-w-44 sm:max-w-64" />
+
+                            }
                             <div>
                                 <p>{editableFile.name}</p>
                                 <p>{formatSize(editableFile.size)}</p>
@@ -350,7 +380,7 @@ const FilePicker: React.FC<{
                     setShowMenu={setShowMenu} />
             </div>}
             {!isEditing && <div className="flex max-[420px]:flex-col gap-10 max-[420px]:items-start max-[420px]:gap-2 items-center justify-between">
-                <VideoArea file={file} />
+                <VideoArea placeholder={placeholder} file={file} />
                 <InputButton
                     menuOpen={menuOpen}
                     editableTxt={inputValue}
@@ -407,9 +437,9 @@ const InputArea: React.FC<{
 
     }
     return (
-  
+
         <div className="flex flex-col gap-2">
-      <span className="opacity-80 max-[420px]:ml-1">{placeholder}</span>
+            <span className="opacity-80 max-[420px]:ml-1">{placeholder}</span>
             <div className="flex max-[420px]:flex-col gap-2 w-full justify-between " >
 
                 {isEditing && <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} type={placeholder} placeholder={placeholder} className="input max-[500px]:input-sm input-bordered max-[500px]:w-52 w-60" />}
@@ -470,7 +500,7 @@ const DescriptionArea: React.FC<{
         }
         return (
             <div className="flex flex-col gap-2">
-                      <span className="opacity-80 max-[420px]:ml-1">{placeholder}</span>
+                <span className="opacity-80 max-[420px]:ml-1">{placeholder}</span>
                 <div className="flex max-[420px]:flex-col gap-2 justify-between" >
                     {!isEditing && <div className="border max-[420px]:py-2 bg-primary border-primary text-label flex justify-between items-center rounded-lg max-[500px]:w-52 w-60 px-2" >
                         <div className="w-[80">
