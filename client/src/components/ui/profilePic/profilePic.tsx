@@ -43,8 +43,8 @@ export const ProfilePic = ({
             break;
 
         case ProfileSize.medium:
-            sxH = "4";
-            pH = "20";
+            sxH = "3";
+            pH = "10";
             break;
         case ProfileSize.large:
             sxH = "5";
@@ -52,14 +52,14 @@ export const ProfilePic = ({
             break;
         default:
             sxH = "4";
-            pH = "20";
+            pH = "14";
             break;
     }
 
     return (<div className="">
         {imageSrc ?
             <Avatar
-                className={`w-${pH} group-hover:opacity-55 h-${pH}`}
+                className={`w-${pH} w-10 group-hover:opacity-55 h-${pH}`}
                 src={imageSrc}
                 sx={{ width: `${sxH}rem`, height: `${sxH}rem` }}
             /> :

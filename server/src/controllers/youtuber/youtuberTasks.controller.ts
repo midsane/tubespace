@@ -116,8 +116,6 @@ const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
         return res.status(400).json(new ApiResponse(false, null, "search query must be a string"));
     }
 
-    let youtubers: any = null;
-
     const countOfYoutubers = await client.user.count({
         where: searchQuery ? {
             role: "youtuber",
@@ -130,7 +128,7 @@ const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
         },
     });
 
-    youtubers = await client.user.findMany({
+    const youtubers = await client.user.findMany({
         where: searchQuery ? {
             role: "youtuber",
             username: {
@@ -153,7 +151,7 @@ const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
         take,
     });
 
-    if (!youtubers || youtubers.length === 0) {
+    if (!youtubers) {
         return res.status(400).json(new ApiResponse(false, null, "could not fetch youtubers"));
     }
 
