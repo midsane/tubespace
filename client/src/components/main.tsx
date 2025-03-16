@@ -11,7 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast"
 import { TabsWrappedLabel, TabsWrappedLabelCol } from "./tabs";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AssignedCardSection, AssignedCardSectionCol } from "./homeTabSection/AssignedCardSection";
 import { WorkspaceCardSection } from "./homeTabSection/WorkspaceCardSection";
 import { DraftVideosCardSection } from "./homeTabSection/draftVideosCardSection";
@@ -21,9 +21,9 @@ import { Button, Chip, Tooltip } from "@mui/material";
 import { useFetch } from "../hooks/fetchHooks";
 import { TASKSTATUS, youtuberUserInterface } from "../types/youtuberTypes";
 import { fetchYoutuberData } from "../fetch/fetchForYoutuber";
-import { storeDispatchType, storeStateType } from "../store/store";
+import { store, storeDispatchType, storeStateType } from "../store/store";
 import { youtuberActions } from "../store/youtuberStore/youtuber.slice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { youtberAssignedTaskActions } from "../store/youtuberStore/youtuberAssignedTask.slice";
 import { youtuberWorkspacesAction } from "../store/youtuberStore/youtuberWorspaces.slice";
 import { youtuberDraftActions } from "../store/youtuberStore/youtuberDraftVideos.slice";
@@ -32,16 +32,18 @@ import { getTaskCntByType } from "./cards/WorkspaceCard";
 
 
 export const Main = () => {
-    const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
+    const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
-    const { data: YoutuberData, loading, error } = useFetch<youtuberUserInterface>(fetchYoutuberData)
+    const { username } = useParams();
+
+    const fetchFnc = useCallback(() => fetchYoutuberData(username ? username : null), [username])
+    const { data: YoutuberData, loading, error } = useFetch<youtuberUserInterface>(fetchFnc)
     const youtuberDataGlobal = useSelector((state: storeStateType) => state.youtuberInfo)
     const workspaceData = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
     const tasksArr = useSelector((state: storeStateType) => state.youtuberAssignedTask);
     const dispatch: storeDispatchType = useDispatch()
     const navigate = useNavigate();
-
-    console.log("Raw Fetch Response:", YoutuberData);
+  
 
     useEffect(() => {
         if (YoutuberData && YoutuberData.user?.Youtuber) {
@@ -84,12 +86,9 @@ export const Main = () => {
                 duration: 3000,
             }
         );
-
-    }
-
-    if (error === "No token provided") {
         navigate("/");
     }
+
 
     let TabSection = <></>
     switch (value) {
@@ -161,7 +160,7 @@ export const Main = () => {
                     >
                         {TabSection}
                     </div>
-                
+
                 </div>
             </div>
 
@@ -173,7 +172,7 @@ export const MainCol = () => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
 
-    
+
     let TabSection = <></>
     switch (value) {
         case "one":

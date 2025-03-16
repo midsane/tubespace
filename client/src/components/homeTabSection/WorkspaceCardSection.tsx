@@ -11,13 +11,13 @@ import SplitText from "../textAnimations/SplitText/SplitText";
 
 export const WorkspaceCardSection: React.FC = () => {
     const cardDataArr = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
-
+    const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson)
 
     return (<CardSection>
         <>
-            <CreateNewWorkSpaceCard
+            {!thirdPerson && <CreateNewWorkSpaceCard
                 extraTStyle="bg-secondary border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
-            />
+            />}
 
             {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
             {cardDataArr && cardDataArr.map((cardData, index: number) => (
@@ -36,7 +36,7 @@ export const WorkspaceCardSection2: React.FC = () => {
     const scrollDivRef = useRef<HTMLDivElement>(null);
     const sideBarState = useSelector((state: storeStateType) => state.sidebar)
     const [isOpen, setIsOpen] = useState<boolean>(false)
-
+    
     const cardDataArr = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
 
     const handleTopSide = () => {

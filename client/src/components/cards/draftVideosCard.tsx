@@ -2,8 +2,8 @@ import { Description, Done, Movie, Panorama, Pending, Title, } from "@mui/icons-
 import { Button, Tooltip, } from "@mui/material"
 
 import { useEffect, useState } from "react"
-import { storeDispatchType } from "../../store/store"
-import { useDispatch } from "react-redux"
+import { storeDispatchType, storeStateType } from "../../store/store"
+import { useDispatch, useSelector } from "react-redux"
 
 import { ThreeDotsMenu } from "../menus/basicmenu"
 
@@ -15,7 +15,7 @@ import { CreateNewSample } from "../modalCompnents/createNewSample"
 import toast from "react-hot-toast"
 import { addDraft } from "../../fetch/fetchForYoutuber"
 import { youtuberDraftActions } from "../../store/youtuberStore/youtuberDraftVideos.slice"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 
 
@@ -35,12 +35,12 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string }> = ({ extraTSt
             return;
         }
         const resData = await addDraft(draftName, workspaceId)
-        if (resData.success){
+        if (resData.success) {
             toast.success(resData.message)
             console.log(resData.data)
             dispatch(youtuberDraftActions.addDraft(resData.data))
         }
-    
+
         else toast.error(resData.message)
         dispatch(modalActions.closeModal())
     }
@@ -67,14 +67,17 @@ export const CreateNewVideoCard: React.FC<{ extraTStyle: string }> = ({ extraTSt
 
 export const DraftVideosCard: React.FC<extendedDraftVideoType> =
     ({
-        selected=false,
+        selected = false,
         extraTStyle,
         DraftTitle: DraftName,
         draftVideoId: _id,
         // ...rest
     }) => {
 
+
+        const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson)
         console.log(DraftName, " ", selected)
+        const {username} = useParams()
 
         return (
             <CardWrapper extraTStyle={extraTStyle}>
@@ -121,8 +124,9 @@ export const DraftVideosCard: React.FC<extendedDraftVideoType> =
                                 </div>
                             </Tooltip>
                         </div>
-                        <ThreeDots draftName={DraftName} _id={_id} />
-                        <Link to={`../../create/${DraftName}`} ><Button variant="outlined" sx={{ height: "2rem" }} >View</Button></Link>
+                        {!thirdPerson && <ThreeDots draftName={DraftName} _id={_id} />}
+                        {!thirdPerson &&
+                            <Link to={`/y/${username}/create/${DraftName}`} ><Button variant="outlined" sx={{ height: "2rem" }} >View</Button></Link>}
                     </div>
                 </>
             </CardWrapper>

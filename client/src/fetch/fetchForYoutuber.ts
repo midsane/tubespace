@@ -7,7 +7,7 @@ export interface responseData {
     data: any
 }
 
-export const fetchYoutuberData = async () => {
+export const fetchYoutuberData = async (userName: string | null) => {
 
     try {
         const response = await fetch(`${BASE_URL}/api/v1/youtuber/fetch-home`, {
@@ -16,9 +16,9 @@ export const fetchYoutuberData = async () => {
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify({ userName })
         });
         const resData = await response.json();
-        console.log(resData)
         return resData
     } catch (error: any) {
         console.log(error)
@@ -142,7 +142,7 @@ export enum FILE_TYPE {
     THUMBNAIL = "thumbnail"
 }
 
-export const deleteFileInDraft = async (draftVideoId: number , fileType: FILE_TYPE ) => {
+export const deleteFileInDraft = async (draftVideoId: number, fileType: FILE_TYPE) => {
     try {
         const response = await fetch(`${BASE_URL}/api/v1/youtuber/delete-file-in-draft`, {
             method: "DELETE",
@@ -307,10 +307,33 @@ export const fetchAssignedTasks = async () => {
 }
 
 
-export const fetchCreateScreenData = async () => {
+export const fetchCreateScreenData = async (userName: string | null) => {
     try {
         const response = await fetch(`${BASE_URL}/api/v1/youtuber/createpage-fetch`, {
             method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userName })
+        });
+        const resData = await response.json();
+
+        return resData
+    } catch (error: any) {
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while fetching create-screen data"
+        }
+    }
+}
+
+
+export const fetchYoutubers = async (searchQuery: string, limit: number, start: number) => {
+    console.log("searchquery:" + searchQuery)
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/fetch-youtubers?searchQuery=${searchQuery}&limit=${limit}&start=${start}`, {
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
@@ -319,10 +342,36 @@ export const fetchCreateScreenData = async () => {
         const resData = await response.json();
         return resData
     } catch (error: any) {
+        console.log(error)
         return {
             success: false,
             data: null,
-            message: error.message || "An error occured while fetching create-screen data"
+            message: error.message || "An error occured while fetching youtubers"
         }
+
+    }
+}
+
+
+export const fetchYoutubersShallow = async (searchQuery: string) => {
+
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/fetch-youtubers-shallow?searchQuery=${searchQuery}`, {
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const resData = await response.json();
+
+        return resData
+    } catch (error: any) {
+        console.log(error)
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while fetching youtubers"
+        }
+
     }
 }

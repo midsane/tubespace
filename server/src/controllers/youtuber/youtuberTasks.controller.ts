@@ -1,3 +1,4 @@
+import { count } from "console";
 import client from "../../db/db";
 import { RequestType } from "../../types/types";
 import { ApiResponse } from "../../utils/apiResponse";
@@ -106,57 +107,66 @@ const unassignTask = asyncHandler(async (req: RequestType, res) => {
 })
 
 const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
-    const { searchQuery } = req.query;
+    let { searchQuery, limit, start } = req.query;
+
+    const take = limit ? parseInt(limit as string, 10) : 10;
+    const skip = start ? parseInt(start as string, 10) : 0;
 
     if (searchQuery && typeof searchQuery !== "string") {
-        return res.status(400).json(new ApiResponse(false, null, "search query is required"));
+        return res.status(400).json(new ApiResponse(false, null, "search query must be a string"));
     }
 
     let youtubers: any = null;
-    if (typeof searchQuery === "string") {
-        youtubers = await client.user.findMany({
-            where: {
-                role: "youtuber",
 
-                username: {
-                    contains: searchQuery as string,
-                    mode: "insensitive",
-                }
+    const countOfYoutubers = await client.user.count({
+        where: searchQuery ? {
+            role: "youtuber",
+            username: {
+                contains: searchQuery as string,
+                mode: "insensitive",
             },
-            include: {
-                Youtuber: {
-                    include: {
-                        tasksAssigned: true,
-                        workspaces: true,
-                        draftVideos: true,
-                    },
-                },
-            }
-        });
-    }
-    else {
-        youtubers = await client.user.findMany({
-            where: {
-                role: "youtuber"
+        } : {
+            role: "youtuber"
+        },
+    });
+
+    youtubers = await client.user.findMany({
+        where: searchQuery ? {
+            role: "youtuber",
+            username: {
+                contains: searchQuery as string,
+                mode: "insensitive",
             },
-            include: {
-                Youtuber: {
-                    include: {
-                        tasksAssigned: true,
-                    },
+        } : {
+            role: "youtuber"
+        },
+        include: {
+            Youtuber: {
+                include: {
+                    tasksAssigned: true,
+                    workspaces: true,
+                    draftVideos: true,
                 },
-            }
-        });
+            },
+        },
+        skip,
+        take,
+    });
+
+    if (!youtubers || youtubers.length === 0) {
+        return res.status(400).json(new ApiResponse(false, null, "could not fetch youtubers"));
     }
 
+    const sanitizedData = youtubers.map(({ password, ...user }) => user);
 
-    if (!youtubers) {
-        res.status(400).json(new ApiResponse(false, null, "could not fetch youtubers"));
+    const dataToSend = {
+        ytData: sanitizedData,
+        count: countOfYoutubers,
     }
 
-    const { password, ...dataToSend } = youtubers;
     res.status(200).json(new ApiResponse(true, dataToSend, "youtubers fetched successfully"));
-})
+});
+
 
 const fetchYoutubersShallow = asyncHandler(async (req: RequestType, res) => {
     const { searchQuery } = req.query;
@@ -193,9 +203,12 @@ const fetchYoutubersShallow = asyncHandler(async (req: RequestType, res) => {
     if (!youtubers) {
         res.status(400).json(new ApiResponse(false, null, "could not fetch youtubers"));
     }
-    const { password, ...dataToSend } = youtubers;
 
-    res.status(200).json(new ApiResponse(true, dataToSend, "youtubers fetched successfully"));
+    const dataToSend = youtubers.map(({ password, ...user }) => user);
+
+    res.status(200).json(new ApiResponse(true, {
+        ytData: dataToSend
+    }, "youtubers fetched successfully"));
 })
 
 const updateTasks = asyncHandler(async (req: RequestType, res) => {
@@ -208,7 +221,7 @@ const updateTasks = asyncHandler(async (req: RequestType, res) => {
         },
         data: {
             ...updateFields,
-            
+
         }
     });
 

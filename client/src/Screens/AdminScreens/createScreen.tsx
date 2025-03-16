@@ -3,7 +3,7 @@ import { EditIcon, Expand, FileIcon, PlusCircle, Save, Trash, X } from "lucide-r
 import { Assignment } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 import { DraftVideosCardSection2 } from "../../components/homeTabSection/draftVideosCardSection";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { BasicMenu } from "../../components/menus/basicmenu";
 import { storeDispatchType, storeStateType } from "../../store/store";
 import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
@@ -13,7 +13,7 @@ import { CreateNewSample } from "../../components/modalCompnents/createNewSample
 import toast from "react-hot-toast";
 import { youtuberDraftActions } from "../../store/youtuberStore/youtuberDraftVideos.slice";
 import { addDraft, deleteFileInDraft, fetchCreateScreenData, FILE_TYPE, responseData, updatedDraft, updatedDraftFile } from "../../fetch/fetchForYoutuber";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useFetch } from "../../hooks/fetchHooks";
 import { DraftVideosInterface, userInterface } from "../../types/youtuberTypes";
 import { youtuberActions } from "../../store/youtuberStore/youtuber.slice";
@@ -30,16 +30,26 @@ const getCurrentDraftInfo = (draftTitle: string, draftArr: DraftVideosInterface[
 export const CreateScreen: React.FC = () => {
 
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+    const thirdperson = useSelector((state: storeStateType) => state.thirdPerson)
+    
 
-
-    const { draftName } = useParams()
+    const { draftName, username } = useParams()
     if (!draftName) return <h1>Invalid Draft Name</h1>
     const dispatch: storeDispatchType = useDispatch()
+    const navigate = useNavigate()
+    const fetchFnc = useCallback(() => fetchCreateScreenData(username ? username : null), [username])
 
     const draftArr = useSelector((state: storeStateType) => state.youtuberDraft)
-    const { data: createScreenData, error, loading } = useFetch<userInterface>(fetchCreateScreenData)
+
+    const { data: createScreenData, error, loading } = useFetch<userInterface>(fetchFnc)
+
+    if(!loading && thirdperson){
+        navigate(-1);
+        toast.error("you are not authorized to view this page")
+    }    
 
     useEffect(() => {
+        
         if (createScreenData) {
             console.log(createScreenData)
             const ytInfo = createScreenData.Youtuber;

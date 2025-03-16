@@ -55,7 +55,7 @@ const updateDraft = asyncHandler(async (req: RequestType, res) => {
     }
 
 
-    let video : any = null; 
+    let video: any = null;
     if (videoPath) {
         video = await uploadOnCloudinary(videoPath)
     }
@@ -98,7 +98,7 @@ const updateDraft = asyncHandler(async (req: RequestType, res) => {
 
 const deleteFileinDraft = asyncHandler(async (req: RequestType, res) => {
     const { draftVideoId, fileType } = req.body;
-    if(fileType==="thumbnail"){
+    if (fileType === "thumbnail") {
         const updatedDraft = await client.draftVideos.update({
             where: {
                 draftVideoId
@@ -107,14 +107,14 @@ const deleteFileinDraft = asyncHandler(async (req: RequestType, res) => {
                 ytThumbnailLink: null
             }
         });
-    
+
         if (!updatedDraft) {
             res.status(400).json(new ApiResponse(false, null, "Draft video could not be updated!"));
         }
-    
+
         res.status(200).json(new ApiResponse(true, updatedDraft, "Draft video updated successfully!"));
     }
-    else if(fileType==="video"){
+    else if (fileType === "video") {
         const updatedDraft = await client.draftVideos.update({
             where: {
                 draftVideoId
@@ -123,11 +123,11 @@ const deleteFileinDraft = asyncHandler(async (req: RequestType, res) => {
                 ytVideoLink: null
             }
         });
-    
+
         if (!updatedDraft) {
             res.status(400).json(new ApiResponse(false, null, "Draft video could not be updated!"));
         }
-    
+
         res.status(200).json(new ApiResponse(true, updatedDraft, "Draft video updated successfully!"));
     }
 });
@@ -216,6 +216,9 @@ const createPageFetch = asyncHandler(async (req: RequestType, res) => {
 
     const user = req.user;
     let { workspaceid } = req.body;
+    const { userName } = req.body;
+
+    const thirdPerson = user.username === userName;
 
     if (workspaceid < 1)
         return res.status(400).json(new ApiResponse(false, null, "invalid workspace id provided "))
@@ -240,7 +243,7 @@ const createPageFetch = asyncHandler(async (req: RequestType, res) => {
 
     const { password, ...dataToSend } = createPageData[0];
 
-    return res.status(200).json(new ApiResponse(true, dataToSend, "create page data fetched successfully"));
+    return res.status(200).json(new ApiResponse(true, dataToSend, "create page data fetched successfully", !thirdPerson));
 });
 
 

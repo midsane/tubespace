@@ -20,11 +20,14 @@ import { useParams } from "react-router-dom";
 
 export const DraftVideosCardSection: React.FC = () => {
     const DraftArr = useSelector((state: storeStateType) => state.youtuberDraft);
+
+    const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson)
     return (<CardSection>
         <>
+            {!thirdPerson &&
             <CreateNewVideoCard
-                extraTStyle="bg-secondary border-white/10 hover:opacity-100 opacity-70 duration-75 ease-linear "
-            />
+            extraTStyle="bg-secondary border-white/10 hover:opacity-100 opacity-70 duration-75 ease-linear "
+        />}
             {DraftArr && DraftArr.map(draft => <DraftVideosCard {
                 ...draft}
                 extraTStyle="cursor-pointer hover:opacity-100 opacity-70 bg-secondary border-white/10 duration-75 ease-linear "
@@ -92,7 +95,7 @@ export const DraftVideosCardSection2: React.FC = () => {
                         {loading && <CardWrapper extraTStyle="bg-secondary border-secondaryLight skeleton" >
                             <div className="skeleton rounded " ></div>
                         </CardWrapper>}
-                        
+
                         {DraftArr &&
                             DraftArr.map((draft) => (
                                 <DraftVideosCard

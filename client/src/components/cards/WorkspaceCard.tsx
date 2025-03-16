@@ -3,10 +3,10 @@ import { Avatar, AvatarGroup, Button, Tooltip } from "@mui/material"
 import { CardWrapper, CreateNewCard } from "./cardWrapper"
 import { taskInterface, TASKSTATUS, workspaceInterface } from "../../types/youtuberTypes"
 import { SproutIcon } from "lucide-react"
-import { storeDispatchType } from "../../store/store"
+import { storeDispatchType, storeStateType } from "../../store/store"
 import { modalActions } from "../../store/modal"
 import { CreateNewSample } from "../modalCompnents/createNewSample"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import toast from "react-hot-toast"
 import { createWorkspaceFetch } from "../../fetch/fetchForYoutuber"
 import { Frown } from 'lucide-react';
@@ -27,6 +27,7 @@ export const getTaskCntByType = (tasks: taskInterface[], type: TASKSTATUS) => {
 }
 
 export const CreateNewWorkSpaceCard: React.FC<{ extraTStyle: string }> = ({ extraTStyle }) => {
+
 
     const dispatch: storeDispatchType = useDispatch()
 
@@ -75,6 +76,9 @@ export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
     }) => {
         console.log("restfields")
         console.log(restFields)
+
+        const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson)
+
         return (
             <CardWrapper extraTStyle={extraTStyle}>
                 <>
@@ -95,7 +99,7 @@ export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
 
 
                     <div className="w-full  flex justify-between gap-4 ">
-                        <Link to={`../Workspaces/${restFields.name}`}><Button size="small" color="primary" variant="outlined" >View</Button></Link>
+                        {!thirdPerson && <Link to={`../Workspaces/${restFields.name}`}><Button size="small" color="primary" variant="outlined" >View</Button></Link>}
 
                         <div className="w-full h-full  justify-end gap-1 flex items-end">
 
@@ -124,7 +128,7 @@ export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
                                 <div className="w-5 bg-primary border border-secondaryLight aspect-square rounded skeleton" ></div>
                             }
                         </div>
-                        <ThreeDotsWrk draftName={restFields.name} _id={restFields.workspaceid} />
+                        {!thirdPerson && <ThreeDotsWrk draftName={restFields.name} _id={restFields.workspaceid} />}
                     </div>
                 </>
             </CardWrapper>
