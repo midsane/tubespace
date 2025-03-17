@@ -21,13 +21,14 @@ import { useParams } from "react-router-dom";
 export const DraftVideosCardSection: React.FC = () => {
     const DraftArr = useSelector((state: storeStateType) => state.youtuberDraft);
 
-    const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson)
+    const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson.val)
+    console.log("third person: ", thirdPerson)
     return (<CardSection>
         <>
             {!thirdPerson &&
-            <CreateNewVideoCard
-            extraTStyle="bg-secondary border-white/10 hover:opacity-100 opacity-70 duration-75 ease-linear "
-        />}
+                <CreateNewVideoCard
+                    extraTStyle="bg-secondary border-white/10 hover:opacity-100 opacity-70 duration-75 ease-linear "
+                />}
             {DraftArr && DraftArr.map(draft => <DraftVideosCard {
                 ...draft}
                 extraTStyle="cursor-pointer hover:opacity-100 opacity-70 bg-secondary border-white/10 duration-75 ease-linear "

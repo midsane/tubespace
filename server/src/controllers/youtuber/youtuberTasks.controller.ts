@@ -109,6 +109,15 @@ const unassignTask = asyncHandler(async (req: RequestType, res) => {
 const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
     let { searchQuery, limit, start } = req.query;
 
+    const user = req.user;
+    const { userName } = req.body;
+
+    const notThirdPerson = user.username === userName;
+
+    if (!notThirdPerson) {
+        return res.status(400).json(new ApiResponse(false, null, "You are unauthorized to visit this page"));
+    }
+
     const take = limit ? parseInt(limit as string, 10) : 10;
     const skip = start ? parseInt(start as string, 10) : 0;
 

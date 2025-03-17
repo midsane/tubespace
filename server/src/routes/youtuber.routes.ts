@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware";
-import { fetchHome, verifyYoutuberRole } from "../controllers/youtuber/youtuber.controller";
+import { fetchHome } from "../controllers/youtuber/youtuber.controller";
 import {
     addDraft,
 
@@ -23,12 +23,10 @@ import { upload } from "../middlewares/multer.middleware";
 
 const router = Router();
 
-router.route("/fetch-youtubers").get(fetchYoutubers);
-router.route("/fetch-youtubers-shallow").get(fetchYoutubersShallow);
-
 router.use(verifyJWT);
-router.use(verifyYoutuberRole);
-
+// router.use(verifyYoutuberRole);
+router.route("/fetch-youtubers").post(fetchYoutubers);
+router.route("/fetch-youtubers-shallow").get(fetchYoutubersShallow);
 router.route("/fetch-home").post(fetchHome);
 
 router.route("/fetch-all-draftVideos").get(fetchAllDraftVideos);

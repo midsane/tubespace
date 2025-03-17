@@ -5,19 +5,24 @@ import { useSelector } from "react-redux";
 import { storeStateType } from "../../store/store";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
-import { CircleXIcon, MenuIcon } from "lucide-react";
+import { CircleXIcon, CloudIcon, MenuIcon } from "lucide-react";
 import { CardWrapper } from "../cards/cardWrapper";
 import SplitText from "../textAnimations/SplitText/SplitText";
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
-export const WorkspaceCardSection: React.FC = () => {
+export const WorkspaceCardSection = ({ role = "youtuber" }: { role?: string }) => {
     const cardDataArr = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
-    const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson)
+    const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson.val)
+
 
     return (<CardSection>
         <>
-            {!thirdPerson && <CreateNewWorkSpaceCard
+            {!thirdPerson && role === "youtuber" && <CreateNewWorkSpaceCard
                 extraTStyle="bg-secondary border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
             />}
+
+            {!thirdPerson && role === "collaborator" && <NoWorkspacesJoined />}
 
             {!cardDataArr && <CardWrapper extraTStyle=" border-secondary skeleton text-transparent" >loading</CardWrapper>}
             {cardDataArr && cardDataArr.map((cardData, index: number) => (
@@ -31,12 +36,21 @@ export const WorkspaceCardSection: React.FC = () => {
 }
 
 
+export const NoWorkspacesJoined = () => {
+    const onlaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+    return (<div className=" w-full h-36 sm:h-48 flex-shrink-0 flex flex-col px-4 sm:px-9 gap-2 justify-center items-center" >
+        <CloudIcon size={onlaptopScreen ? 50 : 30} />
+        <p className="text-center">No Workspaces assigned</p>
+        <Link to={"../Youtubers"}><Button variant="outlined" size="small" >Join</Button></Link>
+    </div>)
+
+}
 
 export const WorkspaceCardSection2: React.FC = () => {
     const scrollDivRef = useRef<HTMLDivElement>(null);
     const sideBarState = useSelector((state: storeStateType) => state.sidebar)
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    
+
     const cardDataArr = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
 
     const handleTopSide = () => {

@@ -12,7 +12,7 @@ const fetchHome = asyncHandler(async (req: RequestType, res) => {
 
     const updatedUser = await client.user.findUnique({
         where: {
-            id: user.id,
+            username: userName,
         },
         include: {
             Youtuber: {

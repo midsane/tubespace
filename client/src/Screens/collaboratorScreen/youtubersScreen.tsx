@@ -7,6 +7,7 @@ import { userInterface } from "../../types/youtuberTypes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { YoutuberCard } from "../../components/cards/youtuberCard";
 import { CardWrapper } from "../../components/cards/cardWrapper";
+import { storeStateType } from "../../store/store";
 
 
 export const YoutuberScreen: React.FC = () => {
@@ -34,6 +35,7 @@ const YoutuberArea = () => {
     const observer = useRef<IntersectionObserver | null>(null);
     const bottomDivRef = useRef<HTMLDivElement | null>(null);
 
+    const userName = useSelector((state: storeStateType) => state.collaboratorInfo.user?.username);
     const onLaptopScreen = useSelector((state: any) => state.sidebar).onLaptopScreen;
 
     const fetchMoreYoutubers = useCallback(async () => {
@@ -42,7 +44,7 @@ const YoutuberArea = () => {
         setLoading(true);
         console.log('second')
 
-        const response = await fetchYoutubers(searchQuery, LIMIT, start);
+        const response = await fetchYoutubers(searchQuery, LIMIT, start, userName || "");
         if (response) {
             setYoutuberData((prev) => [...prev, ...response.data.ytData]);
             setStart((prev) => prev + LIMIT);

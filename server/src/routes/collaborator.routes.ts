@@ -5,10 +5,10 @@ import { verifyJWT } from "../middlewares/auth.middleware";
 
 
 const router = Router();
+router.use(verifyJWT);
 router.route("/fetch-collaborators").get(fetchCollaborators);
 router.route("/fetch-collaborators-shallow").get(fetchCollaboratorsShallow);
-router.use(verifyJWT);
-router.use(verifyCollaboratorRole)
+
 router.route("/fetch-home").post(fetchHome);
 
 

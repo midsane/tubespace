@@ -27,13 +27,13 @@ export enum TASKSTATUS {
 }
 
 
-enum starsValue {
-    unrated,
-    one,
-    two,
-    three,
-    four,
-    five,
+export enum starsValue {
+    unrated = "unrated",
+    one = "one",
+    two = "two",
+    three = "three",
+    four = "four",
+    five = "five",
 }
 
 export enum taskType {
@@ -89,6 +89,7 @@ export interface DraftVideosInterface {
 
 export interface youtuberInterface {
     userId: number,
+    userInfo?: userInterface | null;
     youtuberId: number,
     videosUploaded: number,
     assignedTasksCompleted: number,
@@ -106,12 +107,18 @@ export interface youtuberInterface {
 
 export interface collaboratorInterface {
     userId: number,
-    user: userInterface | null,
+    userInfo?: userInterface | null;
+    collaboratorId: number,
     accountType: ACCOUNT_TYPE,
     whatsAppNotifcation: boolean,
     emailNotifcation: boolean,
     pushNotifcation: boolean,
     deactivated: boolean,
+    numberOfRatings: number,
+    starsAvg: starsValue
+    workspaces: workspaceInterface[] | null,
+    assignedTasks: taskInterface[] | null,
+    joinedDraftVideos: DraftVideosInterface[] | null
 }
 
 export interface userInterface {
@@ -122,7 +129,7 @@ export interface userInterface {
     profilepic: string | null,
     createdAt: Date,
     role: userRole,
-    collaborator?: youtuberInterface,
+    collaborator?: collaboratorInterface,
     Youtuber?: youtuberInterface
 }
 

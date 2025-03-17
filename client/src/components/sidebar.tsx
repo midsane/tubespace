@@ -8,10 +8,12 @@ import { storeStateType } from "../store/store";
 
 interface sidebarInterface {
     links: (string | JSX.Element)[][],
-    preRouter?: string
+    preRouter?: string,
+    loading: boolean
 }
 
 export const Sidebar: React.FC<sidebarInterface> = ({
+    loading,
     links,
     preRouter = "/" }) => {
 
@@ -31,6 +33,7 @@ export const Sidebar: React.FC<sidebarInterface> = ({
                     <div className="flex flex-col py-20 gap-4">
                         {links?.map((icon, ind) =>
                             <IconParent
+                                loading={loading}
                                 showTxt={true}
                                 preRoute={preRouter}
                                 label={icon[0] as string}
@@ -42,6 +45,7 @@ export const Sidebar: React.FC<sidebarInterface> = ({
                     <div className="flex flex-col gap-2">
                         {[["Settings", <Settings />], ["Logout", <Logout />]].map((icon, ind) =>
                             <IconParent
+                                loading={loading}
                                 showTxt={true}
                                 label={icon[0] as string}
                                 preRoute={preRouter}
@@ -63,6 +67,7 @@ export const Sidebar: React.FC<sidebarInterface> = ({
                 <div className="flex flex-col gap-3 pb-16 w-full ">
                     {links?.map((icon, ind) =>
                         <IconParent
+                            loading={loading}
                             preRoute={preRouter}
                             label={icon[0] as string}
                             key={ind}>
@@ -74,6 +79,7 @@ export const Sidebar: React.FC<sidebarInterface> = ({
                         ["Settings", <Settings />], ["Logout", <Logout />]
                     ].map((icon, ind) =>
                         <IconParent
+                            loading={loading}
                             preRoute={preRouter}
                             label={icon[0] as string}
                             key={ind}>
@@ -91,7 +97,8 @@ interface IconParentInterface {
     children: ReactNode,
     preRoute?: string,
     label: string,
-    showTxt?: boolean
+    showTxt?: boolean,
+    loading: boolean
 }
 
 const IconParent: React.FC<IconParentInterface> =
@@ -99,19 +106,20 @@ const IconParent: React.FC<IconParentInterface> =
         children,
         label,
         showTxt = false,
-        preRoute = "/"
+        preRoute = "/",
+        loading
 
     }) => {
-        if(label.toLowerCase() === "logout"){
+        if (label.toLowerCase() === "logout") {
             preRoute = "/"
         }
-     
+
         const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar.onLaptopScreen);
         const route = window.location.pathname.toLowerCase();
         const navigate = useNavigate()
-        return <span onClick={() => navigate(preRoute + label)} className={`flex gap-4 w-full cursor-pointer hover:bg-secondary ${route.slice(1, route.length) === label.toLowerCase() ? "text-opacity-100 text-accent" : "text-opacity-50 text-label"} ${!onLaptopScreen ? "justify-center w-fit px-0" : "px-2"}  ease-linear duration-75  active:scale-95  py-1 rounded`}>
-            <div className="cursor-pointer" >{children}</div>
-            {showTxt && <p>{label}</p>}
+        return <span onClick={() => navigate(preRoute + label)} className={`flex gap-4 w-full cursor-pointer hover:bg-secondary ${route.slice(1, route.length) === label.toLowerCase() ? "text-opacity-100 text-accent" : "text-opacity-50 text-label"} ${!onLaptopScreen ? "justify-center w-fit px-0" : "px-2"}  ease-linear duration-75  items-center  active:scale-95  py-1 rounded`}>
+            <div className={`cursor-pointer ${loading && "skeleton w-7 h-7 sm:w-10 sm:h-10 rounded"} `} >{!loading && children}</div>
+            {showTxt && <p className={`${loading && "skeleton rounded h-5 w-20"}`} >{!loading && label}</p>}
         </span>
     }
 

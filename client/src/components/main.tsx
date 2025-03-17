@@ -1,7 +1,5 @@
 import {
     AssignmentTurnedIn,
-    KeyboardArrowDown,
-    KeyboardArrowUp,
     PendingActions,
     StarsSharp,
     Videocam,
@@ -19,15 +17,17 @@ import { ScreeAreaTxt } from "./screenAreaTxt";
 import { MessageCircleIcon, StarsIcon } from "lucide-react";
 import { Button, Chip, Tooltip } from "@mui/material";
 import { useFetch } from "../hooks/fetchHooks";
-import { TASKSTATUS, youtuberUserInterface } from "../types/youtuberTypes";
+import { collaboratorUserInterface, starsValue, TASKSTATUS, youtuberUserInterface } from "../types/youtuberTypes";
 import { fetchYoutuberData } from "../fetch/fetchForYoutuber";
-import { store, storeDispatchType, storeStateType } from "../store/store";
+import { storeDispatchType, storeStateType } from "../store/store";
 import { youtuberActions } from "../store/youtuberStore/youtuber.slice";
 import { useNavigate, useParams } from "react-router-dom";
 import { youtberAssignedTaskActions } from "../store/youtuberStore/youtuberAssignedTask.slice";
 import { youtuberWorkspacesAction } from "../store/youtuberStore/youtuberWorspaces.slice";
 import { youtuberDraftActions } from "../store/youtuberStore/youtuberDraftVideos.slice";
 import { getTaskCntByType } from "./cards/WorkspaceCard";
+import { fetchCollaboratorData } from "../fetch/fetchForCollaborators";
+import { collaboratorActions } from "../store/collaboratorStore/collaborator.slice";
 
 
 
@@ -37,13 +37,19 @@ export const Main = () => {
     const { username } = useParams();
 
     const fetchFnc = useCallback(() => fetchYoutuberData(username ? username : null), [username])
+
     const { data: YoutuberData, loading, error } = useFetch<youtuberUserInterface>(fetchFnc)
+
     const youtuberDataGlobal = useSelector((state: storeStateType) => state.youtuberInfo)
+
     const workspaceData = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
+
     const tasksArr = useSelector((state: storeStateType) => state.youtuberAssignedTask);
+
     const dispatch: storeDispatchType = useDispatch()
+
     const navigate = useNavigate();
-  
+
 
     useEffect(() => {
         if (YoutuberData && YoutuberData.user?.Youtuber) {
@@ -172,6 +178,44 @@ export const MainCol = () => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
 
+    const { username } = useParams();
+
+    const fetchFnc = useCallback(() => fetchCollaboratorData(username ? username : null), [username])
+
+    const { data: collaboratorData, loading, error } = useFetch<collaboratorUserInterface>(fetchFnc)
+
+    const collaboratorDataGlobal = useSelector((state: storeStateType) => state.collaboratorInfo)
+
+    const dispatch: storeDispatchType = useDispatch()
+
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        if (collaboratorData && collaboratorData.user?.collaborator) {
+            const collaboratorDataToUpdate: collaboratorUserInterface = {
+                user: {
+                    ...collaboratorData.user,
+
+                }
+            }
+            dispatch(collaboratorActions.setUserInfo(collaboratorDataToUpdate))
+        }
+
+    }, [collaboratorData])
+
+
+    if (error) {
+        toast.error(
+            error || "UnAuthorized to visit this page",
+            {
+                duration: 3000,
+            }
+        );
+        navigate("/");
+    }
+
+
 
     let TabSection = <></>
     switch (value) {
@@ -182,23 +226,12 @@ export const MainCol = () => {
             TabSection = <AssignedCardSectionCol />
             break;
         case "three":
-            TabSection = <WorkspaceCardSection />
+            TabSection = <WorkspaceCardSection role="collaborator" />
     }
 
     const scrollDivRef = useRef<HTMLDivElement>(null);
 
-    const handleUpSlide = () => {
-        if (scrollDivRef.current) {
-            scrollDivRef.current.scrollTop -= 200
-        }
-    }
 
-    const handleDownSlide = () => {
-
-        if (scrollDivRef.current) {
-            scrollDivRef.current.scrollTop += 200
-        }
-    }
 
     return (<div className={`h-full relative text-slate-300 flex flex-col  gap-4  ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
         <ScreeAreaTxt title="Home" border />
@@ -207,34 +240,39 @@ export const MainCol = () => {
 
                 <div className={`${onLaptopScreen ? "flex " : "w-full flex-col flex gap-3 sm:gap-4"} `}>
 
-                    <ProfileInfo Svg={<StarsIcon />} text1="Reviews" text2={25} />
-                    <ProfileInfo Svg={<AssignmentTurnedIn />} text1="Completed Tasks" text2={23} />
+                    <ProfileInfo loading={loading} Svg={<StarsIcon />} text1="Reviews" text2={collaboratorDataGlobal.user?.collaborator?.numberOfRatings || 0} />
+                    <ProfileInfo loading={loading} Svg={<AssignmentTurnedIn />} text1="Completed Tasks" text2={23} />
 
                 </div>
                 <div className={`${onLaptopScreen ? "flex" : "w-full flex-col flex gap-3 sm:gap-4"} `} >
 
-                    <ProfileInfo Svg={<PendingActions />} text1="Pending Tasks" text2={2} />
-                    <ProfileInfo Svg={<Workspaces />} text1="Joined WorkSpaces" text2={2} />
+                    <ProfileInfo loading={loading} Svg={<PendingActions />} text1="Pending Tasks" text2={2} />
+                    <ProfileInfo loading={loading} Svg={<Workspaces />} text1="Joined WorkSpaces" text2={2} />
 
                 </div>
 
-                <div className="fixed flex flex-col gap-2 top-[-45px] right-1/2 translate-x-1/2 rounded-3xl max-[400px]:w-14 max-[400px]:h-20 w-16 h-24 sm:w-20 sm:h-28 ">
-
-                    <div className="w-full h-[70%] bg-blue-200 mask mask-squircle" >
-                        <img src="https://i.pinimg.com/736x/83/4f/e6/834fe637588ed7ccca41c0ebd659e855.jpg"
+                <div className="fixed flex flex-col gap-2 top-[-45px] right-1/2 translate-x-1/2 rounded-3xl max-[400px]:w-14 max-[400px]:h-20 w-16 h-24 sm:w-20 sm:h-28 "> <div className="w-full h-[100%] bg-secondary mask mask-squircle" >
+                    {!loading && collaboratorDataGlobal?.user?.profilepic &&
+                        <img src={collaboratorDataGlobal?.user?.profilepic}
                             className="object-cover rounded-3xl"
-                        />
-                    </div>
-
-                    <p className="text-center sm:text-lg text-sm" >username</p>
+                        />}
+                    {!loading && !collaboratorDataGlobal?.user?.profilepic &&
+                        <img src={"https://photosking.net/wp-content/uploads/2024/05/no-dp-for-whatsapp_60.webp"}
+                            className="object-cover rounded-3xl"
+                        />}
+                    {loading &&
+                        <div className="w-[210%] h-[210%] bg-secondary skeleton">
+                        </div>}
                 </div>
+
+                    <p className={`text-center sm:text-lg text-sm  ${loading && "skeleton w-16 max-[400px]:w-14 sm:w-20 h-4 rounded"}`} >{!loading && collaboratorDataGlobal?.user?.username}</p>
+                </div>
+
 
                 <div className="fixed flex justify-center items-center gap-2 sm:gap-3 top-[-35px] right-[62%] sm:right-[60%] lg:right-[58%]  ">
-
-
-                    <Chip label="pubic" size="small" color="primary" variant="outlined" />
+                    <Chip label={collaboratorDataGlobal?.user?.collaborator?.accountType} size="small" color={collaboratorDataGlobal?.user?.collaborator?.accountType === "public" ? "primary" : "warning"} variant="outlined" />
                     <div className="flex gap-1 justify-center items-center">
-                        <p className="text-center sm:text-lg text-sm" >3</p>
+                        <p className="text-center sm:text-lg text-sm" >{collaboratorDataGlobal?.user?.collaborator?.starsAvg === starsValue.unrated ? 0 : collaboratorDataGlobal?.user?.collaborator?.starsAvg}</p>
                         <StarsSharp fontSize="small" color="warning" />
                     </div>
                 </div>
@@ -258,12 +296,7 @@ export const MainCol = () => {
                     className={`w-full h-full max-[400px]:static relative border border-secondaryLight rounded-3xl flex justify-center items-center max-[400px]:h-[200px] max-[400px]:overflow-y-scroll
                   max-[400px]:items-start scroll-smooth scrollbar-thin dark:scrollbar-track-primary  dark:scrollbar-thumb-accent`}>
                     {TabSection}
-                    <div onClick={handleUpSlide} className="absolute hidden max-[400px]:block bg-secondaryLight top-20 right-4 sm:right-2 z-20 border border-primary rounded-full p-1 cursor-pointer active:scale-90 ease-linear duration-75 " >
-                        <KeyboardArrowUp fontSize='small' />
-                    </div>
-                    <div onClick={handleDownSlide} className="absolute hidden max-[400px]:block bottom-2 right-4 z-10 cursor-pointer border-primary bg-secondaryLight border rounded-full p-1 active:scale-90 duration-75 ease-linear" >
-                        <KeyboardArrowDown fontSize='small' />
-                    </div>
+
                 </div>
             </div>
 

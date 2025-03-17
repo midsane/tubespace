@@ -9,6 +9,8 @@ import { WebsiteLogo } from "../websitelogo/websitelogo"
 import { useNavigate } from "react-router-dom"
 import AuthLoader from "../loader/auth.loader"
 import toast from "react-hot-toast"
+import { collaboratorActions } from "../../store/collaboratorStore/collaborator.slice"
+import { youtuberActions } from "../../store/youtuberStore/youtuber.slice"
 
 
 export const LoginBox = () => {
@@ -38,8 +40,9 @@ export const LoginBox = () => {
 
             if (resData.success) {
                 dispatch(modalActions.closeModal())
+                dispatch(youtuberActions.setUserInfo(resData.data))
                 toast.success(resData.message)
-                navigate("/y/" + resData.data.user.username+"/home")
+                navigate("/y/" + resData.data.user.username + "/home")
             }
             else {
                 toast.error(resData.message)
@@ -52,8 +55,9 @@ export const LoginBox = () => {
 
             if (resData.success) {
                 dispatch(modalActions.closeModal())
+                dispatch(collaboratorActions.setUserInfo(resData.data))
                 toast.success(resData.message)
-                navigate("/c/" + resData.data.user.username+"/home")
+                navigate("/c/" + resData.data.user.username + "/home")
             }
             else {
                 toast.error(resData.message)
@@ -174,9 +178,10 @@ export const SignUpBox = () => {
 
             if (resData.success) {
                 dispatch(modalActions.closeModal())
+                dispatch(youtuberActions.setUserInfo(resData.data))
                 toast.success(resData.message)
 
-                navigate("/y/" + resData.data.user.username+"/home")
+                navigate("/y/" + resData.data.user.username + "/home")
             }
             else {
                 toast.error(resData.message)
@@ -189,9 +194,10 @@ export const SignUpBox = () => {
 
             if (resData.success) {
                 dispatch(modalActions.closeModal())
+                dispatch(collaboratorActions.setUserInfo(resData.data))
                 toast.success(resData.message)
 
-                navigate("/c/" + resData.data.user.username+"/home")
+                navigate("/c/" + resData.data.user.username + "/home")
             }
             else {
                 toast.error(resData.message)

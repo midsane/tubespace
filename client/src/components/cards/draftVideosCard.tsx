@@ -75,9 +75,9 @@ export const DraftVideosCard: React.FC<extendedDraftVideoType> =
     }) => {
 
 
-        const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson)
+        const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson.val)
         console.log(DraftName, " ", selected)
-        const {username} = useParams()
+        const { username } = useParams()
 
         return (
             <CardWrapper extraTStyle={extraTStyle}>

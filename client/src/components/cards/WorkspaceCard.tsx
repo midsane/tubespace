@@ -77,7 +77,7 @@ export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
         console.log("restfields")
         console.log(restFields)
 
-        const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson)
+        const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson.val)
 
         return (
             <CardWrapper extraTStyle={extraTStyle}>

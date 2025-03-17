@@ -6,6 +6,8 @@ import youtuberAssignedTaskReducer from "./youtuberStore/youtuberAssignedTask.sl
 import youtuberWorkSpacesReducer from "./youtuberStore/youtuberWorspaces.slice"
 import thirdPersonReducer from "./thirdperson.slice"
 
+import collaboratorReducer from "./collaboratorStore/collaborator.slice"
+
 import youtuberDraftReducer from "./youtuberStore/youtuberDraftVideos.slice"
 export const store = configureStore({
     reducer: {
@@ -15,7 +17,8 @@ export const store = configureStore({
         youtuberAssignedTask: youtuberAssignedTaskReducer,
         youtuberWorkSpaces: youtuberWorkSpacesReducer,
         youtuberDraft: youtuberDraftReducer,
-        thirdPerson: thirdPersonReducer
+        thirdPerson: thirdPersonReducer,
+        collaboratorInfo: collaboratorReducer,
     }
 })
 

@@ -330,14 +330,16 @@ export const fetchCreateScreenData = async (userName: string | null) => {
 }
 
 
-export const fetchYoutubers = async (searchQuery: string, limit: number, start: number) => {
+export const fetchYoutubers = async (searchQuery: string, limit: number, start: number, userName: string) => {
     console.log("searchquery:" + searchQuery)
     try {
         const response = await fetch(`${BASE_URL}/api/v1/youtuber/fetch-youtubers?searchQuery=${searchQuery}&limit=${limit}&start=${start}`, {
+            method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify({ userName })
         });
         const resData = await response.json();
         return resData
