@@ -13,7 +13,7 @@ import { CreateNewSample } from "../../components/modalCompnents/createNewSample
 import toast from "react-hot-toast";
 import { youtuberDraftActions } from "../../store/youtuberStore/youtuberDraftVideos.slice";
 import { addDraft, deleteFileInDraft, fetchCreateScreenData, FILE_TYPE, responseData, updatedDraft, updatedDraftFile } from "../../fetch/fetchForYoutuber";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useFetch } from "../../hooks/fetchHooks";
 import { DraftVideosInterface, userInterface } from "../../types/youtuberTypes";
 import { youtuberActions } from "../../store/youtuberStore/youtuber.slice";
@@ -31,7 +31,6 @@ export const CreateScreen: React.FC = () => {
 
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     const thirdperson = useSelector((state: storeStateType) => state.thirdPerson)
-    
 
     const { draftName, username } = useParams()
     if (!draftName) return <h1>Invalid Draft Name</h1>
@@ -42,14 +41,15 @@ export const CreateScreen: React.FC = () => {
     const draftArr = useSelector((state: storeStateType) => state.youtuberDraft)
 
     const { data: createScreenData, error, loading } = useFetch<userInterface>(fetchFnc)
+    console.log("third person", thirdperson, ", loading", loading, "createscreendata: ", createScreenData)
+    if (createScreenData && thirdperson.val) {
 
-    if(!loading && thirdperson){
         navigate(-1);
         toast.error("you are not authorized to view this page")
-    }    
+    }
 
     useEffect(() => {
-        
+
         if (createScreenData) {
             console.log(createScreenData)
             const ytInfo = createScreenData.Youtuber;

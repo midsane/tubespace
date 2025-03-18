@@ -11,6 +11,8 @@ import AuthLoader from "../loader/auth.loader"
 import toast from "react-hot-toast"
 import { collaboratorActions } from "../../store/collaboratorStore/collaborator.slice"
 import { youtuberActions } from "../../store/youtuberStore/youtuber.slice"
+import { userRoleActions } from "../../store/role.slice"
+import { userRole } from "../../types/youtuberTypes"
 
 
 export const LoginBox = () => {
@@ -40,6 +42,7 @@ export const LoginBox = () => {
 
             if (resData.success) {
                 dispatch(modalActions.closeModal())
+                dispatch(userRoleActions.setRole(userRole.YOUTUBER))
                 dispatch(youtuberActions.setUserInfo(resData.data))
                 toast.success(resData.message)
                 navigate("/y/" + resData.data.user.username + "/home")
@@ -56,6 +59,7 @@ export const LoginBox = () => {
             if (resData.success) {
                 dispatch(modalActions.closeModal())
                 dispatch(collaboratorActions.setUserInfo(resData.data))
+                dispatch(userRoleActions.setRole(userRole.COLLABORATOR))
                 toast.success(resData.message)
                 navigate("/c/" + resData.data.user.username + "/home")
             }
@@ -179,6 +183,7 @@ export const SignUpBox = () => {
             if (resData.success) {
                 dispatch(modalActions.closeModal())
                 dispatch(youtuberActions.setUserInfo(resData.data))
+                dispatch(userRoleActions.setRole(userRole.YOUTUBER))
                 toast.success(resData.message)
 
                 navigate("/y/" + resData.data.user.username + "/home")
@@ -196,6 +201,7 @@ export const SignUpBox = () => {
                 dispatch(modalActions.closeModal())
                 dispatch(collaboratorActions.setUserInfo(resData.data))
                 toast.success(resData.message)
+                dispatch(userRoleActions.setRole(userRole.COLLABORATOR))
 
                 navigate("/c/" + resData.data.user.username + "/home")
             }

@@ -77,6 +77,7 @@ export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
         console.log("restfields")
         console.log(restFields)
 
+        const dispatch: storeDispatchType = useDispatch()
         const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson.val)
 
         return (
@@ -89,17 +90,23 @@ export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
                     </div>
                     {restFields.collaborators && restFields.collaborators.length === 0 && <div className="flex flex-col justify-center mt-4 items-center text-xs sm:text-sm gap-2 opacity-60" >
                         <Frown />
-                        <p>No people in your workspace!</p>
+                        <p>No people in workspace!</p>
                     </div>}
                     <AvatarGroup max={4}>
-                        {restFields.collaborators?.map(c => <Avatar key={c.userId} alt="collaborator1" src={c.user?.profilepic || "https://photosking.net/wp-content/uploads/2024/05/no-dp-for-whatsapp_60.webp"} />)}
+                        {restFields.collaborators?.map(c => <Avatar key={c.userId} alt="collaborator1" src={c.userInfo?.profilepic || "https://photosking.net/wp-content/uploads/2024/05/no-dp-for-whatsapp_60.webp"} />)}
 
                     </AvatarGroup>
 
 
 
                     <div className="w-full  flex justify-between gap-4 ">
-                        {!thirdPerson && <Link to={`../Workspaces/${restFields.name}`}><Button size="small" color="primary" variant="outlined" >View</Button></Link>}
+                        {!thirdPerson ?
+                            <Link to={`../Workspaces/${restFields.name}`}><Button size="small" color="primary" variant="outlined" >View</Button></Link>
+                            :
+                            <Button
+
+                                size="small" color="primary" variant="outlined" >Join</Button>
+                        }
 
                         <div className="w-full h-full  justify-end gap-1 flex items-end">
 

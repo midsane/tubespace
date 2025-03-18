@@ -5,6 +5,8 @@ import React, { ReactNode } from 'react';
 import { Home } from 'lucide-react';
 import { AddCircleOutline, Chat, Workspaces } from '@mui/icons-material';
 import GroupsIcon from '@mui/icons-material/Groups';
+import { userRole } from '../types/youtuberTypes';
+
 
 
 interface screenWrapperInterface {
@@ -30,19 +32,25 @@ export const ScreenWrapper: React.FC<screenWrapperInterface> =
         const userInfo = useSelector((state: storeStateType) => state.youtuberInfo.user);
         const userInfoCol = useSelector((state: storeStateType) => state.collaboratorInfo.user);
 
+        const userRoleVal = useSelector((state: storeStateType) => state.userRole.role)
         const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
 
         let userName = ""
 
-        const preRouter = userInfo?.role === "youtuber" ? "/y/" : "/c/";
+        let preRouter = "";
 
         let userLinkType: linkType = linkType.one;
-        if (userInfo) {
+
+
+
+        if (userInfo && userRoleVal === userRole.YOUTUBER) {
+            preRouter = "/y/";
             userLinkType = linkType.one
             userName = userInfo.username
         }
 
-        else if (userInfoCol) {
+        else if (userInfoCol && userRoleVal === userRole.COLLABORATOR) {
+            preRouter = "/c/";
             userLinkType = linkType.two
             userName = userInfoCol.username
         }
