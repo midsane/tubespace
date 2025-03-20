@@ -19,6 +19,7 @@ import {
 } from "../controllers/youtuber/youtuberWorkspaces.controller";
 import { assignTask, fetchAllAssignedTasks, fetchYoutubers, fetchYoutubersShallow, unassignTask, updateTasks } from "../controllers/youtuber/youtuberTasks.controller";
 import { upload } from "../middlewares/multer.middleware";
+import { settingPageFetch, updateSettings } from "../controllers/youtuber/youtuber.settings.controller";
 
 
 const router = Router();
@@ -56,4 +57,6 @@ router.route("/update-tasks").put(updateTasks);
 
 router.route('/createpage-fetch').post(createPageFetch)
 
+router.route("/settingPage").post(settingPageFetch)
+router.route("/update-settings").put(upload.single("profilePic"), updateSettings)
 export default router;
