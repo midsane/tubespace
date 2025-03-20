@@ -69,7 +69,7 @@ export const Modal = () => {
                                     </div>
                                     <div className="rounded-lg">{modalState.content}</div>
                                     {modalState.buttons &&
-                                        <div className="flex w-full justify-center gap-4">
+                                        <div className="flex w-full justify-center items-center gap-4">
                                             <Button onClick={onClose} variant="outlined" >Cancel</Button>
                                             <Button onClick={modalState.handleSubmit} variant="contained" >{modalState.submitText}</Button>
                                         </div>

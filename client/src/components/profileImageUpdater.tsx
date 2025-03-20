@@ -2,8 +2,8 @@ import { Avatar, Chip } from "@mui/material";
 import { Edit, FolderLock } from "lucide-react";
 import React, { useState } from "react";
 
-export const ProfileImageUploader: React.FC<{ imgUrl: string }> = ({ imgUrl }) => {
-    const [currentImage, setCurrentImage] = useState<string>(imgUrl);
+export const ProfileImageUploader: React.FC<{ imgUrl: string | null | undefined }> = ({ imgUrl }) => {
+    const [currentImage, setCurrentImage] = useState<string>(imgUrl ? imgUrl : "");
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const uploadedImg = e.target.files?.[0];
         if (uploadedImg) {
@@ -20,11 +20,13 @@ export const ProfileImageUploader: React.FC<{ imgUrl: string }> = ({ imgUrl }) =
                 className="absolute inset-0 w-full z-30 h-full opacity-0 cursor-pointer"
             />
             <div className="absolute inset-0 flex items-center justify-center border border-dashed rounded-full transition">
-                <Avatar
-                    className="w-20 group-hover:opacity-55 h-20"
-                    src={currentImage}
-                    sx={{ width: "4rem", height: "4rem" }}
-                />
+                {imgUrl === "" ? <></>
+                    :
+                    <Avatar
+                        className="w-20 group-hover:opacity-55 h-20"
+                        src={currentImage}
+                        sx={{ width: "4rem", height: "4rem" }}
+                    />}
 
                 <div className="absolute right-[-60%] bottom-0">
                     <Chip

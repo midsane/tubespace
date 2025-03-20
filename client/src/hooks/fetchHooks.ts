@@ -18,6 +18,7 @@ export const useFetch = <T>(fnc: (...args: any) => Promise<any>) => {
 
 
     useEffect(() => {
+
         const fetchData = async () => {
             setLoading(true)
             fnc().then((res: { data: T, success: boolean, message: string, thirdPerson?: boolean }) => {

@@ -99,9 +99,9 @@ export interface youtuberInterface {
     pushNotifcation: boolean,
     deactivated: boolean,
     youtubeConnected: boolean,
-    draftVideos: DraftVideosInterface[] | null,
-    tasksAssigned: taskInterface[] | null,
-    workspaces: workspaceInterface[] | null,
+    draftVideos?: DraftVideosInterface[] | null,
+    tasksAssigned?: taskInterface[] | null,
+    workspaces?: workspaceInterface[] | null,
 }
 
 
