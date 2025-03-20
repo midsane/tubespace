@@ -11,8 +11,8 @@ import AuthLoader from "../loader/auth.loader"
 import toast from "react-hot-toast"
 import { collaboratorActions } from "../../store/collaboratorStore/collaborator.slice"
 import { youtuberActions } from "../../store/youtuberStore/youtuber.slice"
-import { userRoleActions } from "../../store/role.slice"
 import { userRole } from "../../types/youtuberTypes"
+import { userRoleActions } from "../../store/role.slice"
 
 
 export const LoginBox = () => {
