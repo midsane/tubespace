@@ -28,23 +28,23 @@ import { youtuberDraftActions } from "../store/youtuberStore/youtuberDraftVideos
 import { getTaskCntByType } from "./cards/WorkspaceCard";
 import { fetchCollaboratorData } from "../fetch/fetchForCollaborators";
 import { collaboratorActions } from "../store/collaboratorStore/collaborator.slice";
+import { otherUserYoutuberActions } from "../store/otherUser/youtuber/otherUserYoutuber.slice";
+import { otherUserYoutberAssignedTaskActions, otherUserYoutuberDraftActions, otherUserYoutuberWorkspacesAction } from "../store/otherUser/youtuber/restOtherYoutuber.slice";
 
 
-
-export const Main = () => {
+export const Main = ({ username, otherUser }: { username: string, otherUser: boolean }) => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
-    const { username } = useParams();
 
     const fetchFnc = useCallback(() => fetchYoutuberData(username ? username : null), [username])
 
     const { data: YoutuberData, loading, error } = useFetch<youtuberUserInterface>(fetchFnc)
 
-    const youtuberDataGlobal = useSelector((state: storeStateType) => state.youtuberInfo)
+    const youtuberDataGlobal = useSelector((state: storeStateType) => otherUser ? state.otherUserYoutuber : state.youtuberInfo)
 
-    const workspaceData = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
+    const workspaceData = useSelector((state: storeStateType) => otherUser ? state.otherUserYoutuberWorkspaces : state.youtuberWorkSpaces)
 
-    const tasksArr = useSelector((state: storeStateType) => state.youtuberAssignedTask);
+    const tasksArr = useSelector((state: storeStateType) => otherUser ? state.otherUserYoutuberAssignedTask : state.youtuberAssignedTask);
 
     const dispatch: storeDispatchType = useDispatch()
 
@@ -53,7 +53,6 @@ export const Main = () => {
 
     useEffect(() => {
         if (YoutuberData && YoutuberData.user?.Youtuber) {
-            console.log("YoutuberData", YoutuberData)
             const youtuberDataToUpdate: youtuberUserInterface = {
                 user: {
                     ...YoutuberData.user,
@@ -72,18 +71,28 @@ export const Main = () => {
 
             const draftsToUpdate = YoutuberData.user?.Youtuber?.draftVideos
 
-            dispatch(youtuberActions.setUserInfo(youtuberDataToUpdate))
+            if (otherUser) {
+                dispatch(otherUserYoutuberActions.setUserInfo(youtuberDataToUpdate))
+                dispatch(otherUserYoutuberWorkspacesAction.setWorkspaces(workspacesToUpdate || []))
+                dispatch(otherUserYoutberAssignedTaskActions.setTasks(tasksAssignedToUpdate || []))
+                dispatch(otherUserYoutuberDraftActions.setDraft(draftsToUpdate || []))
+            }
+            else {
+                dispatch(youtuberActions.setUserInfo(youtuberDataToUpdate))
 
-            dispatch(youtuberWorkspacesAction.setWorkspaces(workspacesToUpdate || []))
+                dispatch(youtuberWorkspacesAction.setWorkspaces(workspacesToUpdate || []))
 
-            dispatch(youtberAssignedTaskActions.setTasks(tasksAssignedToUpdate || []))
+                dispatch(youtberAssignedTaskActions.setTasks(tasksAssignedToUpdate || []))
 
-            dispatch(youtuberDraftActions.setDraft(draftsToUpdate || []))
+                dispatch(youtuberDraftActions.setDraft(draftsToUpdate || []))
+            }
+
+
         }
 
     }, [YoutuberData])
 
-    console.log("error", error)
+
 
     if (error) {
         toast.error(
@@ -109,9 +118,6 @@ export const Main = () => {
     }
 
     const scrollDivRef = useRef<HTMLDivElement>(null);
-
-
-    console.log("youtuber full data")
 
     return (<div className={`h-full relative text-slate-300 flex flex-col  gap-4  ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
         <ScreeAreaTxt title="Home" border />

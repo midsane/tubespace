@@ -55,6 +55,7 @@ export const loginCollaborator = async (data: any) => {
 export const checkLoggedIn = async () => {
 
     try {
+        console.log("hitting api")
         const response = await fetch(`${BASE_URL}/api/v1/auth/check-loggedInStatus`, {
             method: "POST",
             credentials: "include",

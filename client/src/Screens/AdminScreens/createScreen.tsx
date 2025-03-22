@@ -38,10 +38,10 @@ export const CreateScreen: React.FC = () => {
     const navigate = useNavigate()
     const fetchFnc = useCallback(() => fetchCreateScreenData(username ? username : null), [username])
 
+    const [fetching, setFetching] = useState<boolean>(true);
     const draftArr = useSelector((state: storeStateType) => state.youtuberDraft)
 
-    const { data: createScreenData, error, loading } = useFetch<userInterface>(fetchFnc)
-    console.log("third person", thirdperson, ", loading", loading, "createscreendata: ", createScreenData)
+    const { data: createScreenData, error } = useFetch<userInterface>(fetchFnc)
     if (createScreenData && thirdperson.val) {
 
         navigate(-1);
@@ -65,6 +65,7 @@ export const CreateScreen: React.FC = () => {
             if (!draftVideos) return;
             dispatch(youtuberActions.setUserInfo({ user: userInfo }))
             dispatch(youtuberDraftActions.setDraft(draftVideos))
+            setFetching(false)
 
         }
     }, [createScreenData])
@@ -76,7 +77,7 @@ export const CreateScreen: React.FC = () => {
             <div className="flex h-full relative justify-center bg-black items-center ">
                 <ScreeAreaTxt border title="Create" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
 
-                <CreateArea draftInfo={getCurrentDraftInfo(draftName, draftArr)} loading={loading} />
+                <CreateArea draftInfo={getCurrentDraftInfo(draftName, draftArr)} loading={fetching} />
                 <DraftVideosCardSection2 />
             </div>
         </ScreenWrapper>
@@ -104,9 +105,12 @@ const CreateAreaLoader = () => {
 
 const CreateArea = ({ loading, draftInfo }: { loading: boolean, draftInfo: DraftVideosInterface | null }) => {
     const [showMenu, setShowMenu] = useState<MenuType>(MenuType.close)
+
+    const noDraftFound = !draftInfo && !loading
+    if (noDraftFound) toast.error("no draft found!")
     return (<div className="w-[90%] sm:w-[70%] text-xs sm:text-sm justify-center items-center h-[80%] relative flex flex-col gap-2 sm:gap-2 " >
 
-        <HeadSection loading={loading} title={draftInfo ? draftInfo.DraftTitle : ""} />
+        <HeadSection loading={loading || noDraftFound} title={draftInfo ? draftInfo.DraftTitle : ""} />
 
         <motion.div
             key={draftInfo?.draftVideoId}
@@ -114,7 +118,7 @@ const CreateArea = ({ loading, draftInfo }: { loading: boolean, draftInfo: Draft
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="bg-secondary mt-28 overflow-y-scroll overflow-x-hidden shadow-inner shadow-secondary border border-secondaryLight flex flex-col gap-8 p-5 sm:p-8 rounded-lg">
-            {loading ?
+            {loading || noDraftFound ?
                 <div className="flex flex-col gap-6 sm:gap-8" >
                     <CreateAreaLoader />
                     <CreateAreaLoader />

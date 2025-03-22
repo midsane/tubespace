@@ -14,6 +14,9 @@ import { checkLoggedIn } from "../../fetch/fetch"
 import { ProfilePic } from "../ui/profilePic/profilePic"
 import { userInterface, userRole } from "../../types/youtuberTypes"
 
+import { youtuberActions } from "../../store/youtuberStore/youtuber.slice"
+import { collaboratorActions } from "../../store/collaboratorStore/collaborator.slice"
+
 
 export function Header({ color = "text-gray-300" }: { color?: string }) {
     const sidebarState = useSelector((state: storeStateType) => state.sidebar)
@@ -21,6 +24,8 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
     const [loggedIn, setLoggedIn] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(true)
     const [user, setUser] = useState<null | userInterface>(null)
+    const youtuberInfo = useSelector((state: storeStateType) => state.youtuberInfo)
+    const collaboratorInfo = useSelector((state: storeStateType) => state.collaboratorInfo)
     const dispatch: storeDispatchType = useDispatch()
 
     useEffect(() => {
@@ -31,7 +36,10 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
 
                 setLoggedIn(true)
                 setUser(status.data.user)
-
+                if (status.data.user?.role === "youtuber" && !youtuberInfo.user)
+                    dispatch(youtuberActions.setUserInfo({ user: status.data.user }))
+                else if (status.data.user?.role === "collaborator" && !collaboratorInfo.user)
+                    dispatch(collaboratorActions.setUserInfo({ user: status.data.user }))
             }
             setLoading(false)
 
@@ -77,14 +85,14 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
                 {sidebarState.onLaptopScreen ?
                     <div className="flex gap-8 items-center">
                         <IOSSwitch color="error" size="medium" icon={<DarkMode />} />
-                        {loggedIn && <ProfilePic role={user?.role === "youtuber"? userRole.YOUTUBER : userRole.COLLABORATOR} imageSrc={user?.profilepic ?? undefined} userName={user?.username} />
+                        {loggedIn && <ProfilePic role={user?.role === "youtuber" ? userRole.YOUTUBER : userRole.COLLABORATOR} imageSrc={user?.profilepic ?? undefined} userName={user?.username} />
                         }
                         {!loggedIn && !loading && <Button
                             onClick={handleClick}
                             size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
                             Login
                         </Button>}
-                        {!loggedIn && loading && <ProfilePic role={user?.role === "youtuber"? userRole.YOUTUBER : userRole.COLLABORATOR} loading />}
+                        {!loggedIn && loading && <ProfilePic role={user?.role === "youtuber" ? userRole.YOUTUBER : userRole.COLLABORATOR} loading />}
                     </div>
                     :
                     <div className="flex gap-2 justify-center items-center">
@@ -92,14 +100,14 @@ export function Header({ color = "text-gray-300" }: { color?: string }) {
                         <div className="flex gap-3 items-center">
                             <IOSSwitch color="error" size="medium" icon={<DarkMode />} />
 
-                            {!loggedIn && loading && <ProfilePic role={user?.role === "youtuber"? userRole.YOUTUBER : userRole.COLLABORATOR} loading />}
+                            {!loggedIn && loading && <ProfilePic role={user?.role === "youtuber" ? userRole.YOUTUBER : userRole.COLLABORATOR} loading />}
                             {!loggedIn && !loading && <Button
                                 onClick={handleClick}
                                 size={`${sidebarState.onLaptopScreen ? "large" : "small"}`} variant="contained" >
                                 Login
                             </Button>}
 
-                            {loggedIn && <ProfilePic role={user?.role === "youtuber"? userRole.YOUTUBER : userRole.COLLABORATOR} imageSrc={user?.profilepic ?? undefined} userName={user?.username} />}
+                            {loggedIn && <ProfilePic role={user?.role === "youtuber" ? userRole.YOUTUBER : userRole.COLLABORATOR} imageSrc={user?.profilepic ?? undefined} userName={user?.username} />}
 
                         </div>
                         <MenuIcon onClick={() => setShowMenu(true)} size={30} className="cursor-pointer active:scale-90 ease-linear duration-75" />

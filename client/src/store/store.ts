@@ -8,9 +8,18 @@ import thirdPersonReducer from "./thirdperson.slice"
 
 import userRoleReducer from "./role.slice"
 
+import otherUserYoutuberReducer from "./otherUser/youtuber/otherUserYoutuber.slice"
+import OtherUsercollaboratorReducer from "./otherUser/collaborator/otherUserCollaborator.slice"
 import collaboratorReducer from "./collaboratorStore/collaborator.slice"
 
 import youtuberDraftReducer from "./youtuberStore/youtuberDraftVideos.slice"
+
+import {
+    otherUserYoutberAssignedTaskReducer,
+    otherUserYoutuberDraftReducer,
+    otherUserYoutuberWorkspaceReducer
+} from "./otherUser/youtuber/restOtherYoutuber.slice"
+
 export const store = configureStore({
     reducer: {
         modal: modalReducer,
@@ -21,9 +30,17 @@ export const store = configureStore({
         youtuberDraft: youtuberDraftReducer,
         thirdPerson: thirdPersonReducer,
         collaboratorInfo: collaboratorReducer,
-        userRole: userRoleReducer
+        userRole: userRoleReducer,
+
+        otherUserYoutuber: otherUserYoutuberReducer,
+        otherUserCollaborator: OtherUsercollaboratorReducer,
+        otherUserYoutuberAssignedTask: otherUserYoutberAssignedTaskReducer,
+        otherUserYoutuberDraft: otherUserYoutuberDraftReducer,
+        otherUserYoutuberWorkspaces: otherUserYoutuberWorkspaceReducer
     }
 })
+
+
 
 export type storeStateType = ReturnType<typeof store.getState>
 export type storeDispatchType = typeof store.dispatch

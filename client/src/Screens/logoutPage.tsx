@@ -20,7 +20,7 @@ export const LogoutPage = () => {
             }
             else {
                 toast.error(resData.message)
-                navigate(-1)
+                navigate("/")
             }
         }
         logout()

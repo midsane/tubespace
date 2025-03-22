@@ -12,8 +12,10 @@ import { CollaboratorCardSectionWrap } from "../../components/homeTabSection/col
 import { useParams } from "react-router-dom";
 
 
+
 export const WorkSpacesScreen: React.FC = () => {
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+
     return (
         <ScreenWrapper links={linkType.one} preRouter={"/y/"}>
             <div className="flex h-full relative justify-center bg-black items-center ">
@@ -36,7 +38,7 @@ const OfficeArea = () => {
     let TabSection = <></>
     switch (value) {
         case "one":
-            TabSection = <AssignedCardSectionWrap workspaceId={2} workspaceName={workspaceName}  ref={arrowRef} />
+            TabSection = <AssignedCardSectionWrap workspaceId={2} workspaceName={workspaceName} ref={arrowRef} />
             break;
         case "two":
             TabSection = <DraftVideosCardSectionWrap workspaceId={2} workspaceName={workspaceName} ref={arrowRef} />

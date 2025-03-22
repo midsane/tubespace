@@ -10,7 +10,8 @@ const youtuberUserSlice = createSlice({
     initialState,
     reducers: {
         setUserInfo: (state, action: PayloadAction<youtuberUserInterface>) => {
-
+            console.log("inside reducer")
+            console.log(action.payload.user)
             state.user = action.payload.user
         },
 
