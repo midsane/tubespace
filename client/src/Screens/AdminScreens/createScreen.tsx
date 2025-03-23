@@ -21,6 +21,7 @@ import { Uploadbutton } from "../../components/buttons/uploadbutton";
 import { VideoPlayer } from "../../components/videoPlayer/videoplayer";
 
 import { motion } from "framer-motion"
+import { console } from "inspector";
 
 
 const getCurrentDraftInfo = (draftTitle: string, draftArr: DraftVideosInterface[]) => {
@@ -33,6 +34,7 @@ export const CreateScreen: React.FC = () => {
     const thirdperson = useSelector((state: storeStateType) => state.thirdPerson)
 
     const { draftName, username } = useParams()
+    console.log("username: ", username)
     if (!draftName) return <h1>Invalid Draft Name</h1>
     const dispatch: storeDispatchType = useDispatch()
     const navigate = useNavigate()
