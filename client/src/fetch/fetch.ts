@@ -87,3 +87,18 @@ export const logoutUser = async () => {
     const resData = await response.json();
     return resData;
 }
+
+
+
+export const verifyPasswordFetch = async (password: string) => {
+    const response = await fetch(`${BASE_URL}/api/v1/auth/verifyPassword`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+    });
+    const resData = await response.json();
+    return resData;
+}

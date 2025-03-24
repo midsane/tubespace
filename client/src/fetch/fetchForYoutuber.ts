@@ -330,6 +330,29 @@ export const fetchCreateScreenData = async (userName: string | null) => {
 }
 
 
+export const fetchWorkspaceScreenData = async (userName: string | null) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/v1/youtuber/workspacePage-fetch`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userName })
+        });
+        const resData = await response.json();
+
+        return resData
+    } catch (error: any) {
+        return {
+            success: false,
+            data: null,
+            message: error.message || "An error occured while fetching workspace-screen data"
+        }
+    }
+}
+
+
 export const fetchYoutubers = async (searchQuery: string, limit: number, start: number, userName: string) => {
     console.log("searchquery:" + searchQuery)
     try {
