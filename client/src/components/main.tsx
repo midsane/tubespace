@@ -123,7 +123,6 @@ export const Main = ({ username, otherUser }: { username: string, otherUser: boo
         <ScreeAreaTxt title="Home" border />
         <div className={` h-[30%] ${onLaptopScreen ? "mt-28" : "mt-44"} relative rounded`}>
             <div className={`w-[90%] rounded-3xl flex ${onLaptopScreen ? "py-12 px-2" : "flex-col  sm:gap-4 gap-3 pb-10 pt-12 px-1 sm:px-6"} justify-between translate-x-1/2 right-1/2 h-min-10 bg-black absolute bottom-0 border border-secondaryLight `} >
-
                 <div className={`${onLaptopScreen ? "flex " : "w-full flex-col flex gap-3 sm:gap-4"} `}>
 
                     <ProfileInfo loading={loading} Svg={<Videocam />} text1="videos uploaded" text2={youtuberDataGlobal?.user?.Youtuber?.videosUploaded || 0} />

@@ -121,9 +121,10 @@ const IconParent: React.FC<IconParentInterface> =
 
         return (
             <span
-                onClick={() => navigate(preRoute + label)}
 
-                className={`flex gap-4 w-full cursor-pointer hover:bg-secondary ${route.slice(1, route.length) === label.toLowerCase() ? "text-opacity-100 text-accent" : "text-opacity-50 text-label"} ${!onLaptopScreen ? "justify-center w-fit px-0" : "px-2"}  ease-linear duration-75  items-center  active:scale-95  py-1 rounded`}>
+                onClick={() => { if (!loading) navigate(preRoute + label) }}
+
+                className={`flex gap-4 w-full ${!loading && "hover:bg-secondary cursor-pointer"} ${route.slice(1, route.length) === label.toLowerCase() ? "text-opacity-100 text-accent" : "text-opacity-50 text-label"} ${!onLaptopScreen ? "justify-center w-fit px-0" : "px-2"}  ease-linear duration-75  items-center  active:scale-95  py-1 rounded`}>
 
                 <div
                     className={`cursor-pointer ${loading && "skeleton w-7 h-7 sm:w-10 sm:h-10 rounded"} `} >

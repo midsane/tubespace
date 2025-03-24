@@ -7,8 +7,8 @@ const youtuberWorkspacesSlice = createSlice({
     name: "youtuberWorkspaces",
     initialState,
     reducers: {
-        setWorkspaces: (state, action: PayloadAction<workspaceInterface[]>) => {
-            Object.assign(state, action.payload)
+        setWorkspaces: (_, action: PayloadAction<workspaceInterface[]>) => {
+            return action.payload
         },
 
         updateWorkspacesDetails: (state, action: PayloadAction<Partial<workspaceInterface>>) => {

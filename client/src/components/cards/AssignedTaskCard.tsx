@@ -5,6 +5,8 @@ import { storeStateType } from "../../store/store";
 import { CardWrapper } from "./cardWrapper";
 import { TASKSTATUS } from "../../types/youtuberTypes";
 import { CloudIcon } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { motion } from "framer-motion"
 
 
 const formatDeadline = (deadline: Date) => {
@@ -26,10 +28,15 @@ interface AssignedCardInterface {
 
 export const NoAssignedTasks = () => {
     const onlaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
-    return (<div className=" w-full h-36 sm:h-48 flex-shrink-0 flex flex-col px-4 sm:px-9 gap-2 justify-center items-center" >
-        <CloudIcon size={onlaptopScreen ? 50: 30} />
+    return (<motion.div
+        initial={{ y: "10%", opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: "10%", opacity: 0 }}
+        transition={{ duration: 0.5 }}
+        className=" w-full h-36 sm:h-48 flex-shrink-0 flex flex-col px-4 sm:px-9 gap-2 justify-center items-center" >
+        <CloudIcon size={onlaptopScreen ? 50 : 30} />
         <p className="text-center">No tasks assigned</p>
-    </div>)
+    </motion.div>)
 
 }
 

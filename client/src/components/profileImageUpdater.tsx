@@ -1,16 +1,30 @@
 import { Avatar, Chip } from "@mui/material";
 import { Edit, FolderLock } from "lucide-react";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { storeDispatchType } from "../store/store";
+import { youtuberActions } from "../store/youtuberStore/youtuber.slice";
+import { ACCOUNT_TYPE } from "../types/youtuberTypes";
 
-export const ProfileImageUploader: React.FC<{ imgUrl: string | null | undefined }> = ({ imgUrl }) => {
+export const ProfileImageUploader: React.FC<{
+    setNewProfilepicFile: (pfp: File) => void,
+    accountType: ACCOUNT_TYPE | undefined,
+    imgUrl: string | null | undefined
+}> = ({ imgUrl, accountType, setNewProfilepicFile }) => {
+
     const [currentImage, setCurrentImage] = useState<string>(imgUrl ? imgUrl : "");
+
+    const dispatch: storeDispatchType = useDispatch()
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const uploadedImg = e.target.files?.[0];
         if (uploadedImg) {
             const imageUrl = URL.createObjectURL(uploadedImg);
             setCurrentImage(imageUrl);
+            setNewProfilepicFile(uploadedImg);
+            dispatch(youtuberActions.updateUserInfo({ profilepic: imageUrl }))
         }
     }
+
     return (
         <div className="relative w-[4rem] sm:w-[4.5rem] aspect-square group">
             <input
@@ -32,7 +46,7 @@ export const ProfileImageUploader: React.FC<{ imgUrl: string | null | undefined 
                     <Chip
                         icon={<FolderLock size={15} />}
                         className="z-40 p-1 rounded-lg"
-                        label="private" size="small" variant="filled" color="info" />
+                        label={accountType} size="small" variant="filled" color={accountType === ACCOUNT_TYPE.PUBLIC ? "info" : "secondary"} />
 
                 </div>
 

@@ -16,6 +16,7 @@ import {
     deleteWorkspace,
     fetchAllworkspaces,
     updateWorkspace,
+    workspacePageFetch,
 } from "../controllers/youtuber/youtuberWorkspaces.controller";
 import { assignTask, fetchAllAssignedTasks, fetchYoutubers, fetchYoutubersShallow, unassignTask, updateTasks } from "../controllers/youtuber/youtuberTasks.controller";
 import { upload } from "../middlewares/multer.middleware";
@@ -56,7 +57,9 @@ router.route("/unassign-task").delete(unassignTask);
 router.route("/update-tasks").put(updateTasks);
 
 router.route('/createpage-fetch').post(createPageFetch)
+router.route('/workspacePage-fetch').post(workspacePageFetch);
+
 
 router.route("/settingPage").post(settingPageFetch)
-router.route("/update-settings").put(upload.single("profilePic"), updateSettings)
+router.route("/update-settings").put(upload.single("profilepic"), updateSettings)
 export default router;

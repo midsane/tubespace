@@ -4,6 +4,7 @@ import sidebarReducer from "./sidebar.slice"
 import youtuberReducer from "./youtuberStore/youtuber.slice"
 import youtuberAssignedTaskReducer from "./youtuberStore/youtuberAssignedTask.slice"
 import youtuberWorkSpacesReducer from "./youtuberStore/youtuberWorspaces.slice"
+import youtuberSettingsReducer from "./youtuberStore/youtuber.settings.slice"
 import thirdPersonReducer from "./thirdperson.slice"
 
 import userRoleReducer from "./role.slice"
@@ -28,6 +29,7 @@ export const store = configureStore({
         youtuberAssignedTask: youtuberAssignedTaskReducer,
         youtuberWorkSpaces: youtuberWorkSpacesReducer,
         youtuberDraft: youtuberDraftReducer,
+        youtuberSettings: youtuberSettingsReducer,
         thirdPerson: thirdPersonReducer,
         collaboratorInfo: collaboratorReducer,
         userRole: userRoleReducer,

@@ -5,6 +5,7 @@ import {
     logoutUser,
     registerCollaborator,
     registerYoutuber,
+    verifyPassword,
 } from "../controllers/auth.controller";
 import { verifyJWT } from "../middlewares/auth.middleware";
 import { RequestType } from "../types/types";
@@ -17,6 +18,8 @@ router.route("/register-collaborator").post(registerCollaborator);
 router.route("/login-collaborator").post(loginCollaborator);
 
 router.use(verifyJWT);
+
+router.route("/verifyPassword").post(verifyPassword)
 
 router.route("/check-loggedInStatus").post((req: RequestType, res) => {
     res.status(200).json(

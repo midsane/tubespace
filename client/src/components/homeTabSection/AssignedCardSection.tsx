@@ -1,10 +1,11 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { AssignedTaskCard, NoAssignedTasks } from "../cards/AssignedTaskCard"
 import { CardSection, } from "./cardSection";
 import { useSelector } from "react-redux";
 import { storeStateType } from "../../store/store";
-import { taskType } from "../../types/youtuberTypes";
+import { taskInterface, taskType, workspaceInterface } from "../../types/youtuberTypes";
 import { CardWrapper } from "../cards/cardWrapper";
+import { getCurrentWorkspaceInfo } from "../../Screens/AdminScreens/workspacesScreen";
 
 const getTaskTitle = (tType: taskType) => {
     switch (tType) {
@@ -64,16 +65,13 @@ export const AssignedCardSectionCol: React.FC = () => {
 }
 
 interface AssignedCardSectionWrapProps {
-    workspaceName: string | undefined,
-    workspaceId: number | undefined,
+    workspaceName?: string | undefined,
+    workspaceId?: number | undefined,
+    taskInfo: taskInterface[] | null | undefined
 }
 
-export const AssignedCardSectionWrap = forwardRef<HTMLDivElement, AssignedCardSectionWrapProps>(({ workspaceName, workspaceId }, ref) => {
+export const AssignedCardSectionWrap = forwardRef<HTMLDivElement, AssignedCardSectionWrapProps>(({ taskInfo: cardDataArr }, ref) => {
 
-    const cardDataArr = useSelector((state: storeStateType) => state.youtuberAssignedTask)
-    
-    console.log(workspaceName, workspaceId)
-    
     return (
         <div ref={ref} className={`flex flex-col gap-10 p-10 justify-start items-center  overflow-x-hidden overflow-y-scroll scroll-smooth rounded-2xl border border-secondaryLight h-[90%] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent w-[95%] sm:w-[90%] `}>
             {cardDataArr && cardDataArr.length === 0 && <NoAssignedTasks
@@ -88,7 +86,8 @@ export const AssignedCardSectionWrap = forwardRef<HTMLDivElement, AssignedCardSe
                     deadline={cardData.deadline}
                     taskTitle={cardData.taskTitle}
                     status={cardData.status}
-                    extraTStyle="bg-secondary border-secondaryLight" />
+                    extraTStyle="bg-secondary border-secondaryLight"
+                />
             ))}
         </div>
     )

@@ -218,6 +218,10 @@ const createPageFetch = asyncHandler(async (req: RequestType, res) => {
     let { workspaceid } = req.body;
     const { userName } = req.body;
 
+    if (userName !== user.username) {
+        return res.status(400).json(new ApiResponse(false, null, "invalid username provided"))
+    }
+
     const thirdPerson = user.username === userName;
 
     if (workspaceid < 1)

@@ -56,6 +56,8 @@ export const ProfilePic = ({
             break;
     }
 
+    console.log("imgsrc: ", imageSrc)
+
     return (<div className="">
         {imageSrc ?
             <Avatar

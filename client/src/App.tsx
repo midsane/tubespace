@@ -51,6 +51,9 @@ const router = createBrowserRouter([
           {
             path: "Workspaces", loader: workspaceRouteLoader, children: [
               {
+                index: true, element: <WorkSpacesScreen />
+              },
+              {
                 path: ":workspaceName",
                 element: <WorkSpacesScreen />
               }
@@ -61,8 +64,10 @@ const router = createBrowserRouter([
           },
           {
             path: "create",
-            loader: createRouteLoader,
             children: [
+              {
+                index: true, element: <CreateScreen />
+              },
               {
                 path: ":draftName",
                 element: <CreateScreen />
@@ -84,9 +89,9 @@ const router = createBrowserRouter([
         path: "c/:username/",
         children: [
           {
-            path: "home", element: <HomeScreenCol/>,
+            path: "home", element: <HomeScreenCol />,
           },
-          
+
           {
             path: "chat", element: <ChatScreen linkType={linkType.two} />
           },

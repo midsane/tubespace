@@ -123,9 +123,61 @@ const fetchAllworkspaces = asyncHandler(async (req: RequestType, res) => {
     res.status(200).json(new ApiResponse(true, workspaces, "workspaces fetched successfully"));
 })
 
+
+const workspacePageFetch = asyncHandler(async (req: RequestType, res) => {
+
+    const user = req.user;
+    const { userName } = req.body;
+
+    if (userName !== user.username) {
+        return res.status(400).json(new ApiResponse(false, null, "unauthorized access"))
+    }
+
+    const thirdPerson = user.username === userName;
+
+    const workspacePageData = await client.workspace.findMany({
+        where: {
+            youtuberId: user.Youtuber.youtuberId
+        },
+        include: {
+            draftVideos: {
+                orderBy: {
+                    createdAt: "desc"
+                }
+            },
+            tasks: {
+                orderBy: {
+                    createdAt: "desc"
+                }
+            },
+            collaborators: {
+                include: {
+                    userInfo: true
+                }
+            }
+        }
+    })
+
+    if (!workspacePageData) {
+        return res.status(400).json(new ApiResponse(false, null, "could not fetch create page data"));
+    }
+
+    const dataToSend = workspacePageData.map(wpd => {
+        const newColData = wpd.collaborators.map(cd => {
+            const { password, ...newUserInfo } = cd.userInfo;
+            return { ...cd, userInfo: newUserInfo }
+        })
+
+        return { ...wpd, collaborators: newColData }
+    })
+
+    return res.status(200).json(new ApiResponse(true, dataToSend, "create page data fetched successfully", !thirdPerson));
+});
+
 export {
     createWorkspace,
     updateWorkspace,
     deleteWorkspace,
-    fetchAllworkspaces
+    fetchAllworkspaces,
+    workspacePageFetch
 };

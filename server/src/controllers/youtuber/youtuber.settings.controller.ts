@@ -1,3 +1,4 @@
+import { ACCOUNTTYPE } from "@prisma/client";
 import client from "../../db/db";
 import { RequestType } from "../../types/types";
 import { ApiResponse } from "../../utils/apiResponse";
@@ -36,6 +37,7 @@ const settingPageFetch = asyncHandler(async (req: RequestType, res) => {
 })
 
 const updateSettings = asyncHandler(async (req: RequestType, res) => {
+
     const user = req.user;
 
     let pfpPath: string | undefined;
@@ -46,9 +48,14 @@ const updateSettings = asyncHandler(async (req: RequestType, res) => {
 
     const { ...updateFields } = req.body;
 
+    console.log("updatedFields" + updateFields)
+
     let pfp: any = null;
     if (pfpPath) {
+        console.log("pfpPath" + pfpPath)
         pfp = await uploadOnCloudinary(pfpPath)
+        console.log("pfp");
+        console.log(pfp)
     }
 
 
@@ -68,14 +75,21 @@ const updateSettings = asyncHandler(async (req: RequestType, res) => {
         password?: string,
         name?: string,
         username?: string,
-        profilepic?: string
+        profilepic?: string,
+        whatsAppNotification?: boolean,
+        emailNotification?: boolean,
+        pushNotification?: boolean,
+        accountType?: ACCOUNTTYPE
     } = {};
 
-    const hashedPassword = await hashPassword(filteredUpdates.password as string);
+    let hashedPassword: string | null = null;
+    if (filteredUpdates.password)
+        hashedPassword = await hashPassword(filteredUpdates.password as string);
+
 
     for (const key in filteredUpdates) {
-        if (key === "password") {
-            allowedUpdates.password = hashedPassword as string;
+        if (key === "password" && hashedPassword) {
+            allowedUpdates.password = hashedPassword;
         }
         else if (key === "name") {
             allowedUpdates.name = filteredUpdates.name as string;
@@ -86,14 +100,46 @@ const updateSettings = asyncHandler(async (req: RequestType, res) => {
         else if (key === "profilepic") {
             allowedUpdates.profilepic = filteredUpdates.profilepic as string;
         }
+        else if (key === "whatsAppNotifcation") {
+            allowedUpdates.whatsAppNotification = filteredUpdates.whatsAppNotifcation === "true" ? true : false as boolean;
+        } else if (key === "emailNotifcation") {
+            allowedUpdates.emailNotification = filteredUpdates.emailNotifcation === "true" ? true : false as boolean;
+        }
+        else if (key === "pushNotifcation") {
+            allowedUpdates.pushNotification = filteredUpdates.pushNotifcation === "true" ? true : false as boolean;
+        }
+        else if (key === "accountType") {
+            allowedUpdates.accountType = filteredUpdates.accountType === "public" ? ACCOUNTTYPE.public : ACCOUNTTYPE.private as ACCOUNTTYPE;
+        }
     }
+
+    const userAllowedUpdate = Object.fromEntries(
+        Object.entries(allowedUpdates).filter(([key, value]) => {
+            if (key !== "accountType" && key !== "whatsAppNotification" && key !== "emailNotification" && key !== "pushNotification" && key !== "deactivated" && key !== "youtubeConnected")
+                return [key, value]
+        }),
+    );
+
 
     const updatedUser = await client.user.update({
         where: {
             id: user.id
         },
         data: {
-            ...allowedUpdates
+            ...userAllowedUpdate
+        }
+    })
+
+
+    const updateduserYoutuberSection = await client.youtuber.update({
+        where: {
+            userId: user.id
+        },
+        data: {
+            whatsAppNotifcation: allowedUpdates.whatsAppNotification,
+            emailNotifcation: allowedUpdates.emailNotification,
+            pushNotifcation: allowedUpdates.pushNotification,
+            accountType: allowedUpdates.accountType
         }
     })
 
@@ -102,7 +148,19 @@ const updateSettings = asyncHandler(async (req: RequestType, res) => {
         return res.status(400).json(new ApiResponse(false, null, "could not update user"));
     }
 
-    res.status(200).json(new ApiResponse(true, updatedUser, "User updated successfully!"))
+    const filteredUpdatedUser = Object.fromEntries(
+        Object.entries(updatedUser).filter(([key, value]) => {
+            if (key !== "accountType" && key !== "whatsAppNotifcation" && key !== "emailNotifcation" && key !== "pushNotifcation" && key !== "deactivated" && key !== "youtubeConnected" && key !== "password")
+                return [key, value]
+        }),
+    );
+
+    const dataToSend = {
+        ...filteredUpdatedUser,
+        Youtuber: updateduserYoutuberSection
+    }
+
+    res.status(200).json(new ApiResponse(true, dataToSend, "User updated successfully!"))
 })
 
 export {

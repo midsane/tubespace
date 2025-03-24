@@ -18,6 +18,7 @@ import { youtuberWorkspacesAction } from "../../store/youtuberStore/youtuberWors
 
 export interface collaboratorsCardInterface extends workspaceInterface {
     extraTStyle: string,
+    to?: string
 }
 
 
@@ -70,14 +71,12 @@ export const CreateNewWorkSpaceCard: React.FC<{ extraTStyle: string }> = ({ extr
 
 export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
     ({
+        to,
         extraTStyle,
         ...restFields
 
     }) => {
-        console.log("restfields")
-        console.log(restFields)
 
-        const dispatch: storeDispatchType = useDispatch()
         const thirdPerson = useSelector((state: storeStateType) => state.thirdPerson.val)
 
         return (
@@ -101,7 +100,7 @@ export const WorkSpaceCard: React.FC<collaboratorsCardInterface> =
 
                     <div className="w-full  flex justify-between gap-4 ">
                         {!thirdPerson ?
-                            <Link to={`../Workspaces/${restFields.name}`}><Button size="small" color="primary" variant="outlined" >View</Button></Link>
+                            <Link to={to ? to : `../Workspaces/${restFields.name}`}><Button size="small" color="primary" variant="outlined" >View</Button></Link>
                             :
                             <Button
 

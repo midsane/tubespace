@@ -9,6 +9,8 @@ import { storeDispatchType, storeStateType } from "../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { youtuberActions } from "../store/youtuberStore/youtuber.slice";
 import { collaboratorActions } from "../store/collaboratorStore/collaborator.slice";
+import { userRoleActions } from "../store/role.slice";
+import { userRole } from "../types/youtuberTypes";
 
 
 export const RefreshLogin = () => {
@@ -26,11 +28,14 @@ export const RefreshLogin = () => {
                 if (status.data.user?.role === "youtuber" && !youtuberInfo.user) {
                     console.log(status.data.user)
                     dispatch(youtuberActions.setUserInfo({ user: status.data.user }))
+                    dispatch(userRoleActions.setRole(userRole.YOUTUBER))
                 }
 
                 else if (status.data.user?.role === "collaborator" && !collaboratorInfo.user) {
                     dispatch(collaboratorActions.setUserInfo({ user: status.data.user }))
+                    dispatch(userRoleActions.setRole(userRole.COLLABORATOR))
                 }
+
 
             }
             else {

@@ -9,7 +9,7 @@ import { CircleXIcon, CloudIcon, MenuIcon } from "lucide-react";
 import { CardWrapper } from "../cards/cardWrapper";
 import SplitText from "../textAnimations/SplitText/SplitText";
 import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export const WorkspaceCardSection = ({ role = "youtuber" }: { role?: string }) => {
     const cardDataArr = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
@@ -46,11 +46,11 @@ export const NoWorkspacesJoined = () => {
 
 }
 
-export const WorkspaceCardSection2: React.FC = () => {
+export const WorkspaceCardSection2 = ({ loading }: { loading: boolean }) => {
     const scrollDivRef = useRef<HTMLDivElement>(null);
     const sideBarState = useSelector((state: storeStateType) => state.sidebar)
     const [isOpen, setIsOpen] = useState<boolean>(false)
-
+    const { workspaceName } = useParams()
     const cardDataArr = useSelector((state: storeStateType) => state.youtuberWorkSpaces)
 
     const handleTopSide = () => {
@@ -77,6 +77,7 @@ export const WorkspaceCardSection2: React.FC = () => {
                     </div>
 
                     <CreateNewWorkSpaceCard
+
                         extraTStyle="bg-secondary border-secondaryLight hover:opacity-100 opacity-90 duration-75 ease-linear "
                     />
 
@@ -84,10 +85,12 @@ export const WorkspaceCardSection2: React.FC = () => {
 
                     {cardDataArr && cardDataArr.map((cardData, index: number) => (
                         <WorkSpaceCard
+                            to={`../${cardData.name}`}
                             {...cardData}
                             key={index}
 
-                            extraTStyle="bg-secondary border-secondaryLight" />
+                            extraTStyle={`cursor-pointer border-secondaryLight hover:opacity-100 opacity-90  ${workspaceName === cardData.name ? "bg-secondaryLight " : "bg-secondary"} `}
+                        />
                     ))}
 
 

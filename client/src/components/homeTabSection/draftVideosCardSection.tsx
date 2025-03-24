@@ -1,20 +1,15 @@
 import { CreateNewVideoCard, DraftVideosCard } from "../cards/draftVideosCard"
-import React, { forwardRef, useEffect, useRef, useState } from "react";
+import React, { forwardRef, useRef, useState } from "react";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
-import { storeDispatchType, storeStateType } from "../../store/store";
+import { useSelector } from "react-redux";
+import { storeStateType } from "../../store/store";
 import { CardSection } from "./cardSection";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleXIcon, MenuIcon } from "lucide-react";
-
-import { DraftVideosInterface } from "../../types/youtuberTypes";
-import { youtuberDraftActions } from "../../store/youtuberStore/youtuberDraftVideos.slice";
-import { useFetch } from "../../hooks/fetchHooks";
-import { fetchDraftVideos } from "../../fetch/fetchForYoutuber";
-import toast from "react-hot-toast";
 import { CardWrapper } from "../cards/cardWrapper";
 import SplitText from "../textAnimations/SplitText/SplitText";
 import { useParams } from "react-router-dom";
+import { DraftVideosInterface } from "../../types/youtuberTypes";
 
 
 
@@ -37,26 +32,13 @@ export const DraftVideosCardSection: React.FC = () => {
     </CardSection>)
 }
 
-export const DraftVideosCardSection2: React.FC = () => {
+export const DraftVideosCardSection2 = ({ loading }: { loading: boolean }) => {
     const scrollDivRef = useRef<HTMLDivElement>(null);
-    const youtuberDraftData = useSelector((state: storeStateType) => state.youtuberDraft);
+    const DraftArr = useSelector((state: storeStateType) => state.youtuberDraft);
     const sideBarState = useSelector((state: storeStateType) => state.sidebar);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const dispatch: storeDispatchType = useDispatch();
 
     const { draftName } = useParams()
-
-    const { data: DraftArr, error, loading } = useFetch<DraftVideosInterface[]>(fetchDraftVideos)
-    console.log(DraftArr)
-    useEffect(() => {
-        if (youtuberDraftData) {
-            dispatch(youtuberDraftActions.setDraft(youtuberDraftData))
-        }
-    }, [youtuberDraftData])
-
-    if (error) {
-        toast.error(error)
-    }
 
     const handleTopSide = () => {
         if (scrollDivRef.current) {
@@ -169,13 +151,13 @@ export const DraftVideosCardSection2: React.FC = () => {
 };
 
 interface propInterface {
-    workspaceName: string | undefined,
-    workspaceId: number | undefined,
+    workspaceName?: string | undefined,
+    workspaceId?: number | undefined,
+    draftInfo: DraftVideosInterface[] | null | undefined
 }
 
-export const DraftVideosCardSectionWrap = forwardRef<HTMLDivElement, propInterface>(({ workspaceName, workspaceId }, ref) => {
-    console.log(workspaceId, workspaceName)
-    const DraftArr = useSelector((state: storeStateType) => state.youtuberDraft);
+export const DraftVideosCardSectionWrap = forwardRef<HTMLDivElement, propInterface>(({ draftInfo: DraftArr }, ref) => {
+
     return (
         <div ref={ref} className={`flex flex-col gap-10 p-10 justify-start items-center  overflow-x-hidden overflow-y-scroll rounded-2xl scroll-smooth border border-secondaryLight h-[90%] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-accent  w-[95%] sm:w-[90%] `}>
             <CreateNewVideoCard

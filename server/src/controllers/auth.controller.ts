@@ -233,4 +233,25 @@ const logoutUser = asyncHandler(async (_, res) => {
     res.status(200).json(new ApiResponse(true, {}, "User logged out successfully"));
 });
 
-export { registerYoutuber, loginYoutuber, registerCollaborator, loginCollaborator, logoutUser };
+const verifyPassword = asyncHandler(async (req, res) => {
+    const { password } = req.body;
+    const userData = await client.user.findFirst({
+        where: {
+            id: req.user.id
+        }
+    })
+    if (!userData) return res.status(500).json(new ApiResponse(false, {}, "something went wrong"))
+
+    const isPasswordCorrect = await comparePassword(password, userData.password);
+
+    if (!isPasswordCorrect) {
+        return res.status(403).json(new ApiResponse(false, {}, "invalid password!"));
+    }
+
+    return res.status(200).json(new ApiResponse(true, {}, "password is correct"));
+
+});
+
+export { registerYoutuber, loginYoutuber, registerCollaborator, loginCollaborator, logoutUser, verifyPassword };
+
+

@@ -21,33 +21,35 @@ import { Uploadbutton } from "../../components/buttons/uploadbutton";
 import { VideoPlayer } from "../../components/videoPlayer/videoplayer";
 
 import { motion } from "framer-motion"
-import { console } from "inspector";
 
 
-const getCurrentDraftInfo = (draftTitle: string, draftArr: DraftVideosInterface[]) => {
-    return draftArr.find(draft => draft.DraftTitle === draftTitle) || null
+
+const getCurrentDraftInfo = (draftTitle: string | undefined, draftArr: DraftVideosInterface[]) => {
+    console.log("draftname: ", draftTitle)
+    if (draftTitle)
+        return draftArr.find(draft => draft.DraftTitle === draftTitle) || null
+    else {
+        return draftArr[0];
+    }
 }
 
 export const CreateScreen: React.FC = () => {
 
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
-    const thirdperson = useSelector((state: storeStateType) => state.thirdPerson)
 
     const { draftName, username } = useParams()
-    console.log("username: ", username)
-    if (!draftName) return <h1>Invalid Draft Name</h1>
+    const navigate = useNavigate();
+
     const dispatch: storeDispatchType = useDispatch()
-    const navigate = useNavigate()
     const fetchFnc = useCallback(() => fetchCreateScreenData(username ? username : null), [username])
 
     const [fetching, setFetching] = useState<boolean>(true);
     const draftArr = useSelector((state: storeStateType) => state.youtuberDraft)
 
     const { data: createScreenData, error } = useFetch<userInterface>(fetchFnc)
-    if (createScreenData && thirdperson.val) {
-
-        navigate(-1);
+    if (error) {
         toast.error("you are not authorized to view this page")
+        navigate(-1);
     }
 
     useEffect(() => {
@@ -80,7 +82,7 @@ export const CreateScreen: React.FC = () => {
                 <ScreeAreaTxt border title="Create" width={onLaptopScreen ? "70%" : "100%"} paddingBottom="12px" borderRadius="0px" />
 
                 <CreateArea draftInfo={getCurrentDraftInfo(draftName, draftArr)} loading={fetching} />
-                <DraftVideosCardSection2 />
+                <DraftVideosCardSection2 loading={fetching} />
             </div>
         </ScreenWrapper>
     )
