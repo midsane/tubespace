@@ -5,7 +5,7 @@ import { storeStateType } from "../../store/store";
 import { CardWrapper } from "./cardWrapper";
 import { TASKSTATUS } from "../../types/youtuberTypes";
 import { CloudIcon } from "lucide-react";
-import { useParams } from "react-router-dom";
+
 import { motion } from "framer-motion"
 
 

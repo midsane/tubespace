@@ -47,6 +47,7 @@ export const NoWorkspacesJoined = () => {
 }
 
 export const WorkspaceCardSection2 = ({ loading }: { loading: boolean }) => {
+    console.log(loading)
     const scrollDivRef = useRef<HTMLDivElement>(null);
     const sideBarState = useSelector((state: storeStateType) => state.sidebar)
     const [isOpen, setIsOpen] = useState<boolean>(false)

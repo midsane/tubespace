@@ -9,7 +9,7 @@ import { TabsWrappedLabel2 } from "../../components/tabs";
 import { AssignedCardSectionWrap } from "../../components/homeTabSection/AssignedCardSection";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { CollaboratorCardSectionWrap } from "../../components/homeTabSection/collaboratorCardSection";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { fetchWorkspaceScreenData } from "../../fetch/fetchForYoutuber";
 import { useFetch } from "../../hooks/fetchHooks";
 import { workspaceInterface } from "../../types/youtuberTypes";
@@ -40,7 +40,7 @@ export const WorkSpacesScreen: React.FC = () => {
 
 
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [fetching, setFetching] = useState<boolean>(true);
     const workspaces = useSelector((state: storeStateType) => state.youtuberWorkSpaces)

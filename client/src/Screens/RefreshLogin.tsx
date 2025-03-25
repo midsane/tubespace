@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { checkLoggedIn } from "../fetch/fetch";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Squares } from "../components/MidErrorPages/squaresEffect";
 import { HamsterLoader } from "../components/loader/hamsterLoading";

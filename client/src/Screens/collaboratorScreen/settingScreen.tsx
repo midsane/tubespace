@@ -8,7 +8,7 @@ import { CircleUser, Edit, Folder, FolderLock, Save, Shapes, Skull, X } from "lu
 import { IOSSwitch } from "../../components/switches/switches";
 import { Button, Chip } from "@mui/material";
 import { modalActions } from "../../store/modal";
-import { ProfileImageUploader } from "../../components/profileImageUpdater";
+// import { ProfileImageUploader } from "../../components/profileImageUpdater";
 import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
 
 
@@ -95,7 +95,7 @@ const GeneralSettings = () => {
 
     return (<div className={`flex flex-col p-4 gap-8 sm:gap-10 sm:p-8 overflow-y-scroll overflow-x-hidden justify-start items-center rounded-2xl border border-secondaryLight w-full scroll-smooth scrollbar-thin dark:scrollbar-track-primary  dark:scrollbar-thumb-accent h-[95%] `}>
         <div className="flex flex-col gap-8 sm:gap-10 w-fit justify-center items-center" >
-            <ProfileImageUploader imgUrl="https://platform.polygon.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/9997313/Devilman_Crybaby_Queeen_Bee_Clip_02.jpg?quality=90&strip=all&crop=7.8125%2C0%2C84.375%2C100&w=1080" />
+            {/* <ProfileImageUploader  imgUrl="https://platform.polygon.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/9997313/Devilman_Crybaby_Queeen_Bee_Clip_02.jpg?quality=90&strip=all&crop=7.8125%2C0%2C84.375%2C100&w=1080" /> */}
             <SettingsFields type={settingsFiledsType.username} label="username" />
             <SettingsFields type={settingsFiledsType.username} label="password" />
             <SettingsToggle label="Whatsapp" type={SettingsToggleType.Whatsapp} />

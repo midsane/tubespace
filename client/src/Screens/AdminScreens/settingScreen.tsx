@@ -42,6 +42,7 @@ enum settingsFiledsType {
 }
 
 const GeneralSettings = ({ type, loading = false }: { type: number, loading?: boolean }) => {
+    console.log(loading)
     const dispatch: storeDispatchType = useDispatch()
     const userInfo = useSelector((state: storeStateType) => state.youtuberInfo)
     const accType = userInfo.user?.Youtuber?.accountType

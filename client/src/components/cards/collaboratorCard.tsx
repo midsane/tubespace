@@ -1,5 +1,5 @@
-import { Assignment, FactCheck, Pending, WorkspacePremiumSharp } from "@mui/icons-material"
-import { Avatar, Button, Rating, Tooltip } from "@mui/material"
+import { WorkspacePremiumSharp } from "@mui/icons-material"
+import { Avatar, Button, Rating } from "@mui/material"
 import { CardWrapper } from "./cardWrapper"
 import { useNavigate } from "react-router-dom"
 import { userInterface } from "../../types/youtuberTypes"

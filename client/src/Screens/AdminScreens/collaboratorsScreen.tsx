@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import { linkType, ScreenWrapper } from "../../components/ScreenWrapper";
 import { ScreeAreaTxt } from "../../components/screenAreaTxt";
-import { storeStateType } from "../../store/store";
 import { CollaBoratorCard } from "../../components/cards/collaboratorCard";
 import { CommandSearch } from "../../components/searchBar/searchbar";
 import { useCallback, useEffect, useRef, useState } from "react";
