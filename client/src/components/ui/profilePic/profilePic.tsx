@@ -60,11 +60,36 @@ export const ProfilePic = ({
 
     return (<div className="">
         {imageSrc ?
-            <Avatar
-                className={`w-${pH} w-10 group-hover:opacity-55 h-${pH}`}
-                src={imageSrc}
-                sx={{ width: `${sxH}rem`, height: `${sxH}rem` }}
-            /> :
+            <div className="rounded-full relative cursor-pointer" >
+                <Avatar
+
+                    onClick={(e) => {
+                        if (loading) return
+                        e.stopPropagation()
+                        setShowMenu(prev => !prev)
+                    }}
+                    className={`w-${pH} w-10 group-hover:opacity-55 h-${pH}`}
+                    src={imageSrc}
+                    sx={{ width: `${sxH}rem`, height: `${sxH}rem` }}
+                />
+                {role &&
+                    <AnimatePresence>
+                        {showMenu && <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.2 }}
+                            ref={menuRef} className="absolute bottom-100 right-[10%]">
+                            <ul className="menu border-2 shadow-sm shadow-secondary border-primary bg-base-200 rounded-box w-32 gap-2 ">
+                                <List role={role} username={userName} link="home" paraTxt="Home" Icon={<HomeIcon size={18} />} />
+                                <List role={role} username={userName} link="settings" paraTxt="Settings" Icon={<SettingsIcon size={18} />} />
+                                <List role={role} username={userName} link="logout" paraTxt="Logout" Icon={<LogOutIcon size={18} />} />
+
+                            </ul>
+                        </motion.div>}
+                    </AnimatePresence>}
+            </div>
+            :
             <>
                 <div className="relative">
                     <div

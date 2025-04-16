@@ -31,14 +31,20 @@ export const useFetch = <T>(fnc: (...args: any) => Promise<any>) => {
                         const userRoleValue = (res.data as any).user.role === "collaborator"
                             ? userRole.COLLABORATOR
                             : userRole.YOUTUBER;
-                        dispatch(userRoleActions.setRole(userRoleValue));
+                        const tp = res.thirdPerson;
+                        console.log("tp: ", tp)
+                        if (!tp)
+                            dispatch(userRoleActions.setRole(userRoleValue));
                     }
 
                     if ("role" in (res.data as any) && (res.data as any).role) {
                         const userRoleValue = (res.data as any).role === "collaborator"
                             ? userRole.COLLABORATOR
                             : userRole.YOUTUBER;
-                        dispatch(userRoleActions.setRole(userRoleValue));
+                        const tp = res.thirdPerson;
+                        console.log("tp: ", tp)
+                        if (!tp)
+                            dispatch(userRoleActions.setRole(userRoleValue));
                     }
                 }
 

@@ -37,9 +37,6 @@ export const WorkSpacesScreen: React.FC = () => {
     const fetchFnc = useCallback(() => fetchWorkspaceScreenData(username ? username : null), [username])
 
 
-
-
-
     // const navigate = useNavigate();
 
     const [fetching, setFetching] = useState<boolean>(true);
@@ -81,12 +78,12 @@ export const WorkSpacesScreen: React.FC = () => {
 }
 
 
-
 const OfficeArea = ({ workspaceInfo }: { loading: boolean, workspaceInfo: workspaceInterface | null }) => {
     const { workspaceName } = useParams()
     const [value, setValue] = useState<string>('one');
     const arrowRef = useRef<HTMLDivElement>(null)
     const onLaptopScreen = useSelector((state: storeStateType) => state.sidebar).onLaptopScreen;
+
     let TabSection = <></>
     switch (value) {
         case "one":

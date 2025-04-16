@@ -20,6 +20,8 @@ import { ErrorPage } from './components/MidErrorPages/errorPage'
 import { NotFoundPage } from './components/MidErrorPages/notFound'
 import { LogoutPage } from './Screens/logoutPage'
 import { createRouteLoader, workspaceRouteLoader } from './routeMiddlewares/loader'
+import { AdminParent } from './Screens/AdminScreens/Adminparent'
+import { CollabParent } from './Screens/collabParent'
 
 
 const router = createBrowserRouter([
@@ -44,6 +46,7 @@ const router = createBrowserRouter([
 
       {
         path: "y/:username/",
+        element: <AdminParent />,
         children: [
           {
             path: "home", element: <HomeScreen />,
@@ -87,6 +90,7 @@ const router = createBrowserRouter([
 
       {
         path: "c/:username/",
+        element: <CollabParent />,
         children: [
           {
             path: "home", element: <HomeScreenCol />,
@@ -107,7 +111,7 @@ const router = createBrowserRouter([
           },
 
           {
-            path: "settings", element: <SettingScreenCol />
+            path: "settings", element: <SettingScreenCol type={2} />
           },
           {
             path: "Youtubers", element: <YoutuberScreen />

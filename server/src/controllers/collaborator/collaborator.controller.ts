@@ -7,13 +7,13 @@ import { NextFunction } from "express";
 
 const fetchHome = asyncHandler(async (req: RequestType, res) => {
     const user = req.user;
-    console.log(user);
-    if (user.role !== "collaborator") {
-        return res.status(403).json({ message: "You are not allowed to access this resource" });
-    }
+    const { userName } = req.body;
+
+    const thirdPerson = user.username === userName;
+
     const updatedUser = await client.user.findUnique({
         where: {
-            id: user.id,
+            username: userName,
         },
         include: {
             Collaborator: {
@@ -44,6 +44,7 @@ const fetchHome = asyncHandler(async (req: RequestType, res) => {
             true,
             { user: fixedDataToSend },
             "Collaborator data home page data fetched successfully!",
+            !thirdPerson
         ),
     );
 });

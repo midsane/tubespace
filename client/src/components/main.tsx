@@ -21,7 +21,7 @@ import { collaboratorUserInterface, starsValue, TASKSTATUS, youtuberUserInterfac
 import { fetchYoutuberData } from "../fetch/fetchForYoutuber";
 import { storeDispatchType, storeStateType } from "../store/store";
 import { youtuberActions } from "../store/youtuberStore/youtuber.slice";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { youtberAssignedTaskActions } from "../store/youtuberStore/youtuberAssignedTask.slice";
 import { youtuberWorkspacesAction } from "../store/youtuberStore/youtuberWorspaces.slice";
 import { youtuberDraftActions } from "../store/youtuberStore/youtuberDraftVideos.slice";
@@ -30,6 +30,7 @@ import { fetchCollaboratorData } from "../fetch/fetchForCollaborators";
 import { collaboratorActions } from "../store/collaboratorStore/collaborator.slice";
 import { otherUserYoutuberActions } from "../store/otherUser/youtuber/otherUserYoutuber.slice";
 import { otherUserYoutberAssignedTaskActions, otherUserYoutuberDraftActions, otherUserYoutuberWorkspacesAction } from "../store/otherUser/youtuber/restOtherYoutuber.slice";
+import { OtherUserCollaboratorActions } from "../store/otherUser/collaborator/otherUserCollaborator.slice";
 
 
 export const Main = ({ username, otherUser }: { username: string, otherUser: boolean }) => {
@@ -179,11 +180,9 @@ export const Main = ({ username, otherUser }: { username: string, otherUser: boo
     </div >)
 }
 
-export const MainCol = () => {
+export const MainCol = ({ username, otherUser }: { username: string, otherUser: boolean }) => {
     const onLaptopScreen = useSelector((state: { sidebar: { onLaptopScreen: boolean } }) => state.sidebar).onLaptopScreen;
     const [value, setValue] = useState<string>('one');
-
-    const { username } = useParams();
 
     const fetchFnc = useCallback(() => fetchCollaboratorData(username ? username : null), [username])
 
@@ -195,7 +194,6 @@ export const MainCol = () => {
 
     const navigate = useNavigate();
 
-
     useEffect(() => {
         if (collaboratorData && collaboratorData.user?.collaborator) {
             const collaboratorDataToUpdate: collaboratorUserInterface = {
@@ -204,7 +202,13 @@ export const MainCol = () => {
 
                 }
             }
-            dispatch(collaboratorActions.setUserInfo(collaboratorDataToUpdate))
+            if (otherUser) {
+                dispatch(OtherUserCollaboratorActions.setUserInfo(collaboratorDataToUpdate))
+            }
+            else {
+                dispatch(collaboratorActions.setUserInfo(collaboratorDataToUpdate))
+            }
+
         }
 
     }, [collaboratorData])
