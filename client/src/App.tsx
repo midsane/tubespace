@@ -22,6 +22,7 @@ import { LogoutPage } from './Screens/logoutPage'
 import { createRouteLoader, workspaceRouteLoader } from './routeMiddlewares/loader'
 import { AdminParent } from './Screens/AdminScreens/Adminparent'
 import { CollabParent } from './Screens/collabParent'
+import { ChatParent } from './Screens/chatParent'
 
 
 const router = createBrowserRouter([
@@ -63,7 +64,10 @@ const router = createBrowserRouter([
             ]
           },
           {
-            path: "chat", element: <ChatScreen linkType={linkType.one} />
+            path: "chat", element: <ChatParent />
+          },
+          {
+            path: "chat/:username", element: <ChatScreen linkType={linkType.one} />
           },
           {
             path: "create",
@@ -97,7 +101,10 @@ const router = createBrowserRouter([
           },
 
           {
-            path: "chat", element: <ChatScreen linkType={linkType.two} />
+            path: "chat", element: <ChatParent />
+          },
+          {
+            path: "chat/:username", element: <ChatScreen linkType={linkType.two} />
           },
           {
             path: "create",

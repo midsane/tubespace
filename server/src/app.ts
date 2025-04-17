@@ -1,10 +1,10 @@
-import express from "express";
-
+import express, { application } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRouter from "./routes/auth.routes";
 import collaboratorRouter from "./routes/collaborator.routes";
 import youtuberRouter from "./routes/youtuber.routes";
+import chatRouter from "./routes/chat.routes"
 import { ApiResponse } from "./utils/apiResponse";
 const app = express();
 
@@ -23,7 +23,7 @@ app.use(
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/collaborator", collaboratorRouter);
 app.use("/api/v1/youtuber", youtuberRouter);
-
+app.use("/api/v1/chat", chatRouter)
 app.get("/", (_, res) => {
     res.send("backend is running 😺");
 });

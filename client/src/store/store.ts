@@ -8,6 +8,7 @@ import youtuberSettingsReducer from "./youtuberStore/youtuber.settings.slice"
 import thirdPersonReducer from "./thirdperson.slice"
 
 import userRoleReducer from "./role.slice"
+import userSocketIdReducer from "./socket.slice"
 
 import otherUserYoutuberReducer from "./otherUser/youtuber/otherUserYoutuber.slice"
 import OtherUsercollaboratorReducer from "./otherUser/collaborator/otherUserCollaborator.slice"
@@ -20,6 +21,8 @@ import {
     otherUserYoutuberDraftReducer,
     otherUserYoutuberWorkspaceReducer
 } from "./otherUser/youtuber/restOtherYoutuber.slice"
+
+import chatDataReducer from "./chatdata.slice"
 
 export const store = configureStore({
     reducer: {
@@ -34,12 +37,20 @@ export const store = configureStore({
         collaboratorInfo: collaboratorReducer,
         userRole: userRoleReducer,
 
+        userSocket: userSocketIdReducer,
+
         otherUserYoutuber: otherUserYoutuberReducer,
         otherUserCollaborator: OtherUsercollaboratorReducer,
         otherUserYoutuberAssignedTask: otherUserYoutberAssignedTaskReducer,
         otherUserYoutuberDraft: otherUserYoutuberDraftReducer,
-        otherUserYoutuberWorkspaces: otherUserYoutuberWorkspaceReducer
-    }
+        otherUserYoutuberWorkspaces: otherUserYoutuberWorkspaceReducer,
+
+        chatData: chatDataReducer
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false
+        }),
 })
 
 

@@ -10,9 +10,7 @@ export function HomeScreen() {
     const CUD = useSelector((state: storeStateType) => state.youtuberInfo).user
     const currentUsername = CUD?.username;
     const userRole = useSelector((state: storeStateType) => state.userRole).role
-    console.log('currentUsername: ', currentUsername)
-    console.log('userRole: ', userRole)
-    console.log('username: ', username)
+
     const currentUser = currentUsername === username && username ? true : false;
     if (!currentUsername && !userRole) return <RefreshLogin />
     if (username)

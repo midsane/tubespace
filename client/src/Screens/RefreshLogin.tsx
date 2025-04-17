@@ -26,7 +26,7 @@ export const RefreshLogin = () => {
             const status = await checkLoggedIn()
             if (status?.data?.success) {
                 if (status.data.user?.role === "youtuber" && !youtuberInfo.user) {
-                    console.log(status.data.user)
+
                     dispatch(youtuberActions.setUserInfo({ user: status.data.user }))
                     dispatch(userRoleActions.setRole(userRole.YOUTUBER))
                 }

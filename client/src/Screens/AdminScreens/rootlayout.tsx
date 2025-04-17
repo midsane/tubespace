@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 
 
 
+
 export const RootLayout: React.FC = () => {
 
     const dispatch: storeDispatchType = useDispatch()
@@ -25,7 +26,9 @@ export const RootLayout: React.FC = () => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [sideBarState]);
+
     return (
+
         <main className="min-h-[100dvh] bg-black liter-regular  ">
             <Modal />
             <Toaster
@@ -41,6 +44,7 @@ export const RootLayout: React.FC = () => {
 
             <Outlet />
         </main>
+
     )
 }
 

@@ -18,7 +18,7 @@ import { MessageCircleIcon, StarsIcon } from "lucide-react";
 import { Button, Chip, Tooltip } from "@mui/material";
 import { useFetch } from "../hooks/fetchHooks";
 import { collaboratorUserInterface, starsValue, TASKSTATUS, youtuberUserInterface } from "../types/youtuberTypes";
-import { fetchYoutuberData } from "../fetch/fetchForYoutuber";
+import { fetchYoutuberData, responseData } from "../fetch/fetchForYoutuber";
 import { storeDispatchType, storeStateType } from "../store/store";
 import { youtuberActions } from "../store/youtuberStore/youtuber.slice";
 import { useNavigate } from "react-router-dom";
@@ -31,6 +31,8 @@ import { collaboratorActions } from "../store/collaboratorStore/collaborator.sli
 import { otherUserYoutuberActions } from "../store/otherUser/youtuber/otherUserYoutuber.slice";
 import { otherUserYoutberAssignedTaskActions, otherUserYoutuberDraftActions, otherUserYoutuberWorkspacesAction } from "../store/otherUser/youtuber/restOtherYoutuber.slice";
 import { OtherUserCollaboratorActions } from "../store/otherUser/collaborator/otherUserCollaborator.slice";
+import { addPersonToChatList } from "../fetch/fetchChat";
+
 
 
 export const Main = ({ username, otherUser }: { username: string, otherUser: boolean }) => {
@@ -106,6 +108,24 @@ export const Main = ({ username, otherUser }: { username: string, otherUser: boo
     }
 
 
+    const StartChatting = async () => {
+        const otherUserId = youtuberDataGlobal.user?.id
+        const otherUsername = youtuberDataGlobal.user?.username
+        const currentUsername = youtuberDataGlobal.user?.username
+        if (!otherUserId) return
+
+        const response: responseData = await addPersonToChatList(otherUserId);
+
+
+        if (response.success) {
+            navigate(`/y/${currentUsername}/Chat/${otherUsername}`)
+        }
+        else {
+            toast.error("Unable to start chat")
+        }
+
+    }
+
     let TabSection = <></>
     switch (value) {
         case "one":
@@ -155,6 +175,17 @@ export const Main = ({ username, otherUser }: { username: string, otherUser: boo
 
                     <p className={`text-center sm:text-lg text-sm  ${loading && "skeleton w-16 max-[400px]:w-14 sm:w-20 h-4 rounded"}`} >{!loading && youtuberDataGlobal?.user?.username}</p>
                 </div>
+                {1 &&
+                    <div className="fixed flex justify-center items-center gap-2 sm:gap-3 top-[-35px] left-[64%] sm:left-[60%] lg:left-[58%]  ">
+
+                        <Tooltip title="message">
+
+                            <div onClick={StartChatting} className="flex gap-1 border rounded  px-2 py-1 border-secondaryLight cursor-pointer active:scale-90 ease-linear duration-75">
+                                <MessageCircleIcon />
+                                <p>chat</p>
+                            </div>
+                        </Tooltip>
+                    </div>}
 
             </div>
         </div>
@@ -188,11 +219,15 @@ export const MainCol = ({ username, otherUser }: { username: string, otherUser: 
 
     const { data: collaboratorData, loading, error } = useFetch<collaboratorUserInterface>(fetchFnc)
 
-    const collaboratorDataGlobal = useSelector((state: storeStateType) => state.collaboratorInfo)
+    const collaboratorDataGlobalfix = useSelector((state: storeStateType) => state.collaboratorInfo)
+    const OthercollaboratorDataGlobal = useSelector((state: storeStateType) => state.otherUserCollaborator)
 
+
+    const collaboratorDataGlobal = otherUser ? OthercollaboratorDataGlobal : collaboratorDataGlobalfix
     const dispatch: storeDispatchType = useDispatch()
 
     const navigate = useNavigate();
+
 
     useEffect(() => {
         if (collaboratorData && collaboratorData.user?.collaborator) {
@@ -240,13 +275,30 @@ export const MainCol = ({ username, otherUser }: { username: string, otherUser: 
 
     const scrollDivRef = useRef<HTMLDivElement>(null);
 
+    const StartChatting = async () => {
+        const otherUserId = collaboratorDataGlobal.user?.id
+        const otherUsername = collaboratorDataGlobal.user?.username
+        const currentUsername = collaboratorDataGlobalfix.user?.username
+        if (!otherUserId) return
+
+        const response: responseData = await addPersonToChatList(otherUserId);
+
+
+        if (response.success) {
+            navigate(`/y/${currentUsername}/Chat/${otherUsername}`)
+        }
+        else {
+            toast.error("Unable to start chat")
+        }
+
+    }
+
 
 
     return (<div className={`h-full relative text-slate-300 flex flex-col  gap-4  ${onLaptopScreen ? "w-[82vw]" : "w-[90vw]  max-[520px]:w-[85vw]"}`}>
         <ScreeAreaTxt title="Home" border />
         <div className={` h-[30%] ${onLaptopScreen ? "mt-28" : "mt-44"} relative rounded`}>
             <div className={`w-[90%] rounded-3xl flex ${onLaptopScreen ? "py-12 px-2" : "flex-col  sm:gap-4 gap-3 pb-10 pt-12 px-1 sm:px-6"} justify-between translate-x-1/2 right-1/2 h-min-10 bg-black absolute bottom-0 border border-secondaryLight `} >
-
                 <div className={`${onLaptopScreen ? "flex " : "w-full flex-col flex gap-3 sm:gap-4"} `}>
 
                     <ProfileInfo loading={loading} Svg={<StarsIcon />} text1="Reviews" text2={collaboratorDataGlobal.user?.collaborator?.numberOfRatings || 0} />
@@ -285,14 +337,17 @@ export const MainCol = ({ username, otherUser }: { username: string, otherUser: 
                         <StarsSharp fontSize="small" color="warning" />
                     </div>
                 </div>
-                <div className="fixed flex justify-center items-center gap-2 sm:gap-3 top-[-35px] left-[64%] sm:left-[60%] lg:left-[58%]  ">
+                {1 &&
+                    <div className="fixed flex justify-center items-center gap-2 sm:gap-3 top-[-35px] left-[64%] sm:left-[60%] lg:left-[58%]  ">
 
-                    <Button size="small" variant="outlined">Invite</Button>
-                    <Tooltip title="message">
+                        <Tooltip title="message">
 
-                        <MessageCircleIcon className="cursor-pointer active:scale-90 ease-linear duration-75" />
-                    </Tooltip>
-                </div>
+                            <div onClick={StartChatting} className="flex gap-1 border rounded  px-2 py-1 border-secondaryLight cursor-pointer active:scale-90 ease-linear duration-75">
+                                <MessageCircleIcon />
+                                <p>chat</p>
+                            </div>
+                        </Tooltip>
+                    </div>}
 
             </div>
         </div>

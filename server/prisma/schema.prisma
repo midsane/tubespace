@@ -12,6 +12,13 @@ enum USER_ROLE {
   youtuber
 }
 
+enum MESSAGE_STATUS {
+  UNSENT
+  SENT
+  DELIVERED
+  READ
+}
+
 model User {
   id               Int           @id @default(autoincrement())
   name             String?
@@ -22,9 +29,12 @@ model User {
   createdAt        DateTime      @default(now())
   role             USER_ROLE
   Collaborator     Collaborator?
+  chatPersonList   User[]        @relation("chatPersonList")
   Youtuber         Youtuber?
   sentMessages     Chat[]        @relation(name: "personFrom")
   receivedMessages Chat[]        @relation(name: "personTo")
+
+  User User[] @relation("chatPersonList")
 }
 
 model Collaborator {
@@ -142,12 +152,13 @@ model DraftVideos {
 }
 
 model Chat {
-  chatId     Int      @id @default(autoincrement())
-  from       Int?
-  to         Int?
+  chatId     Int            @id @default(autoincrement())
+  from       String?
+  to         String?
   message    String
-  personFrom User?    @relation(name: "personFrom", fields: [from], references: [id], onDelete: SetNull)
-  personTo   User?    @relation(name: "personTo", fields: [to], references: [id], onDelete: SetNull)
-  createdAt  DateTime @default(now())
+  isRead     Boolean        @default(false)
+  personFrom User?          @relation(name: "personFrom", fields: [from], references: [username], onDelete: SetNull)
+  personTo   User?          @relation(name: "personTo", fields: [to], references: [username], onDelete: SetNull)
+  createdAt  DateTime       @default(now())
+  status     MESSAGE_STATUS @default(READ)
 }
-
