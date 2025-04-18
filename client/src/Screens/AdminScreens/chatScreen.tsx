@@ -1,7 +1,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux"
-import { Check, CheckCheck, MessageCircle, Paperclip, PlusIcon, Smile, Sticker, Users } from "lucide-react";
+import { Check, CheckCheck, FileText, FileVideo, Image, MessageCircle, Paperclip, PlusIcon, Smile, Sticker, Users } from "lucide-react";
 
 import { storeStateType } from "../../store/store";
 import { motion } from "framer-motion";
@@ -236,7 +236,7 @@ export const ChatScreen = ({ linkType: lType }: { linkType: linkType }) => {
 
                         <PlusIcon onClick={() => setShowAttachments(prev => !prev)} color="lightGreen" className="cursor-pointer active:scale-90 ease-linear duration-75" />
 
-                        {showAttachments && <AttachMent />}
+                        {showAttachments && <AttachMent setMessage={setMessage} />}
                         <input value={message} onChange={(e) => setMessage(e.target.value)} type="text" placeholder="Type here" className="input input-bordered w-[90%]" />
 
                         <SendButton onClick={sendMessage} />
@@ -251,10 +251,13 @@ export const ChatScreen = ({ linkType: lType }: { linkType: linkType }) => {
 }
 
 
-const AttachMent = () => {
+const AttachMent = ({ setMessage }: { setMessage: (prev: any) => void }) => {
     const [tab, setTab] = useState<number>(1)
-    return <div className="flex flex-col gap-2 w-32 h-48  overflow-y-scroll sm:w-48 absolute z-50 p-5 bg-secondary rounded bottom-10" >
-        <div className="flex gap-4">
+    const addEmojiToMsg = (emoji: string) => {
+        setMessage((prev: string) => prev + emoji);
+    }
+    return <div className="flex flex-col gap-2 w-32 h-48 sm:w-48 absolute z-50 p-5 bg-secondary rounded bottom-14 overflow-hidden" >
+        <div className="flex gap-4 border border-secondaryLight p-1 rounded">
             <div
                 onClick={() => setTab(1)}
                 className={`cursor-pointer active:scale-90 ease-linear duration-75 pb-1 border-b ${tab === 1 ? "border-accent" : "hover:border-primary  border-transparent"}`} ><Smile /></div>
@@ -262,20 +265,49 @@ const AttachMent = () => {
                 onClick={() => setTab(2)}
                 className={`cursor-pointer active:scale-90 ease-linear duration-75 pb-1 border-b ${tab === 2 ? "border-accent" : "hover:border-primary  border-transparent"}`} ><Paperclip /></div>
         </div>
-        <div className="flex flex-wrap " >
-            {tab === 1 ?
-                <div className="flex flex-wrap gap-2  h-full py-1">
-                    {
-                        ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '🥲', '🥲', '🥲', '😊', '😊', '😊', '😇', '🙂', '🙃', '😉', '😌', '🥰', '😘', '😒', '🥳', '😭', '🫡', '😧', '😡', '🤧', '😓'
-                        ].map((e, id) => <p className="cursor-pointer" key={id}>{e}</p>)
-                    }
-                </div> :
-                <div className="flex flex-col gap-2">
-                    <p>attach image</p>
-                    <p>attach video</p>
-                </div>}
-        </div>
+
+        {tab === 1 ?
+            <div className="flex flex-wrap gap-2 overflow-y-scroll py-1">
+                {
+                    ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '🥲', '🥲', '🥲', '😊', '😊', '😊', '😇', '🙂', '🙃', '😉', '😌', '🥰', '😘', '😒', '🥳', '😭', '🫡', '😧', '😡', '🤧', '😓'
+                    ].map((e, id) => <p
+                        onClick={() => addEmojiToMsg(e)}
+                        className="active:scale-95 duration-75 ease-linear cursor-pointer" key={id}>{e}</p>)
+                }
+            </div> :
+            <div className="flex flex-wrap gap-2 py-1">
+                {[FILE_SHARING_TYPE.image, FILE_SHARING_TYPE.video, FILE_SHARING_TYPE.document].map((e, id) => <FileSharingIcon fileSharingType={e} key={id} />)}
+            </div>}
+
     </div>
+}
+
+enum FILE_SHARING_TYPE {
+    image = "image",
+    video = "video",
+    document = "document",
+}
+
+const FileSharingIcon = ({ fileSharingType }: { fileSharingType: FILE_SHARING_TYPE }) => {
+    let icon = <></>
+    switch (fileSharingType) {
+        case FILE_SHARING_TYPE.image:
+            icon = <Image />
+            break;
+        case FILE_SHARING_TYPE.video:
+            icon = <FileVideo />
+            break;
+        case FILE_SHARING_TYPE.document:
+            icon = <FileText />
+            break;
+        default:
+            icon = <></>
+    }
+    return (<Tooltip arrow title={fileSharingType}>
+        <div className="p-1 bg-secondaryLight active:scale-95 duration-75 ease-linear rounded-lg cursor-pointer" >
+            {icon}
+        </div>
+    </Tooltip>)
 }
 
 const PersonsForChat = () => {
