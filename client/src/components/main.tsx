@@ -1,6 +1,7 @@
 import {
     AssignmentTurnedIn,
     PendingActions,
+    StarSharp,
     StarsSharp,
     Videocam,
     Workspaces
@@ -146,14 +147,14 @@ export const Main = ({ username, otherUser }: { username: string, otherUser: boo
             <div className={`w-[90%] rounded-3xl flex ${onLaptopScreen ? "py-12 px-2" : "flex-col  sm:gap-4 gap-3 pb-10 pt-12 px-1 sm:px-6"} justify-between translate-x-1/2 right-1/2 h-min-10 bg-black absolute bottom-0 border border-secondaryLight `} >
                 <div className={`${onLaptopScreen ? "flex " : "w-full flex-col flex gap-3 sm:gap-4"} `}>
 
-                    <ProfileInfo loading={loading} Svg={<Videocam />} text1="videos uploaded" text2={youtuberDataGlobal?.user?.Youtuber?.videosUploaded || 0} />
-                    <ProfileInfo loading={loading} Svg={<AssignmentTurnedIn />} text1="assigned tasks completed" text2={youtuberDataGlobal?.user?.Youtuber?.assignedTasksCompleted || 0} />
+                    <ProfileInfo loading={loading} Svg={<Videocam />} text1="Videos uploaded" text2={youtuberDataGlobal?.user?.Youtuber?.videosUploaded || 0} />
+                    <ProfileInfo loading={loading} Svg={<AssignmentTurnedIn />} text1="Assigned tasks completed" text2={youtuberDataGlobal?.user?.Youtuber?.assignedTasksCompleted || 0} />
 
                 </div>
                 <div className={`${onLaptopScreen ? "flex" : "w-full flex-col flex gap-3 sm:gap-4"} `} >
 
-                    <ProfileInfo loading={loading} Svg={<PendingActions />} text1="assigned tasks pending" text2={getTaskCntByType(tasksArr, TASKSTATUS.pending)} />
-                    <ProfileInfo loading={loading} Svg={<Workspaces />} text1="your workspaces" text2={workspaceData.length} />
+                    <ProfileInfo loading={loading} Svg={<PendingActions />} text1="Assigned tasks pending" text2={getTaskCntByType(tasksArr, TASKSTATUS.pending)} />
+                    <ProfileInfo loading={loading} Svg={<Workspaces />} text1="Workspaces" text2={workspaceData.length} />
 
                 </div>
 
@@ -302,14 +303,13 @@ export const MainCol = ({ username, otherUser }: { username: string, otherUser: 
                 <div className={`${onLaptopScreen ? "flex " : "w-full flex-col flex gap-3 sm:gap-4"} `}>
 
                     <ProfileInfo loading={loading} Svg={<StarsIcon />} text1="Reviews" text2={collaboratorDataGlobal.user?.collaborator?.numberOfRatings || 0} />
-                    <ProfileInfo loading={loading} Svg={<AssignmentTurnedIn />} text1="Completed Tasks" text2={23} />
 
+                    <ProfileInfo loading={loading} Svg={<StarSharp />} text1="Ratings" text2={2} />
                 </div>
                 <div className={`${onLaptopScreen ? "flex" : "w-full flex-col flex gap-3 sm:gap-4"} `} >
 
                     <ProfileInfo loading={loading} Svg={<PendingActions />} text1="Pending Tasks" text2={2} />
-                    <ProfileInfo loading={loading} Svg={<Workspaces />} text1="Joined WorkSpaces" text2={2} />
-
+                    <ProfileInfo loading={loading} Svg={<AssignmentTurnedIn />} text1="Completed Tasks" text2={23} />
                 </div>
 
                 <div className="fixed flex flex-col gap-2 top-[-45px] right-1/2 translate-x-1/2 rounded-3xl max-[400px]:w-14 max-[400px]:h-20 w-16 h-24 sm:w-20 sm:h-28 "> <div className="w-full h-[100%] bg-secondary mask mask-squircle" >
@@ -330,13 +330,13 @@ export const MainCol = ({ username, otherUser }: { username: string, otherUser: 
                 </div>
 
 
-                <div className="fixed flex justify-center items-center gap-2 sm:gap-3 top-[-35px] right-[62%] sm:right-[60%] lg:right-[58%]  ">
+                {/* <div className="fixed flex justify-center items-center gap-2 sm:gap-3 top-[-35px] right-[62%] sm:right-[60%] lg:right-[58%]  ">
                     <Chip label={collaboratorDataGlobal?.user?.collaborator?.accountType} size="small" color={collaboratorDataGlobal?.user?.collaborator?.accountType === "public" ? "primary" : "warning"} variant="outlined" />
                     <div className="flex gap-1 justify-center items-center">
                         <p className="text-center sm:text-lg text-sm" >{collaboratorDataGlobal?.user?.collaborator?.starsAvg === starsValue.unrated ? 0 : collaboratorDataGlobal?.user?.collaborator?.starsAvg}</p>
                         <StarsSharp fontSize="small" color="warning" />
                     </div>
-                </div>
+                </div> */}
                 {1 &&
                     <div className="fixed flex justify-center items-center gap-2 sm:gap-3 top-[-35px] left-[64%] sm:left-[60%] lg:left-[58%]  ">
 

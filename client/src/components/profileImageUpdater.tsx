@@ -42,13 +42,13 @@ export const ProfileImageUploader: React.FC<{
                         sx={{ width: "4rem", height: "4rem" }}
                     />}
 
-                <div className="absolute right-[-60%] bottom-0">
+                {/* <div className="absolute right-[-60%] bottom-0">
                     <Chip
                         icon={<FolderLock size={15} />}
                         className="z-40 p-1 rounded-lg"
                         label={accountType} size="small" variant="filled" color={accountType === ACCOUNT_TYPE.PUBLIC ? "info" : "secondary"} />
 
-                </div>
+                </div> */}
 
                 <Edit
                     className="absolute opacity-0 group-hover:opacity-100 transition bg-primary text-accent p-1 rounded-lg"

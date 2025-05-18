@@ -12,7 +12,7 @@ import { IOSSwitch } from "../../components/switches/switches";
 import { Button, Chip } from "@mui/material";
 import { modalActions } from "../../store/modal";
 import { ProfileImageUploader } from "../../components/profileImageUpdater";
-import { YouTube } from "@mui/icons-material";
+
 import { useFetch } from "../../hooks/fetchHooks";
 import { fetchYoutuberSettings, updateYoutuberSettings } from "../../fetch/fetchSettings";
 import { useNavigate, useParams } from "react-router-dom";
@@ -109,28 +109,36 @@ const GeneralSettings = ({ type, loading = false }: { type: number, loading?: bo
 
     const saveAllChanges = async () => {
         if (saving) return;
-        toast.success("Saving all changes...")
+
         if (userInfo?.user) {
             setSaving(true)
-            const fd = new FormData();
-            if (newProfilepicFile)
-                fd.append("profilepic", newProfilepicFile as File);
-            fd.append("username", userInfo.user.username as string);
-            if (newPassWord !== "")
-                fd.append("password", newPassWord);
-            fd.append("whatsAppNotifcation", String(userInfo.user?.Youtuber?.whatsAppNotifcation ? true : false));
-            fd.append("emailNotifcation", String(userInfo.user?.Youtuber?.emailNotifcation ? true : false));
-            fd.append("pushNotifcation", String(userInfo.user?.Youtuber?.pushNotifcation ? true : false));
-            fd.append("accountType", userInfo.user?.Youtuber?.accountType as string);
 
-            const resData: responseData = await updateYoutuberSettings(fd);
-            if (resData.success) {
-                toast.success(resData.message)
+            const finalSaveFnc = async () => {
+                const fd = new FormData();
+                if (newProfilepicFile)
+                    fd.append("profilepic", newProfilepicFile as File);
+                fd.append("username", userInfo.user!.username as string);
+                if (newPassWord !== "")
+                    fd.append("password", newPassWord);
+                fd.append("whatsAppNotifcation", String(userInfo.user?.Youtuber?.whatsAppNotifcation ? true : false));
+                fd.append("emailNotifcation", String(userInfo.user?.Youtuber?.emailNotifcation ? true : false));
+                fd.append("pushNotifcation", String(userInfo.user?.Youtuber?.pushNotifcation ? true : false));
+                fd.append("accountType", userInfo.user?.Youtuber?.accountType as string);
+
+                const resData: responseData = await updateYoutuberSettings(fd);
+                setSaving(false);
+                return resData;
             }
-            else {
-                toast.error(resData.message)
-            }
-            setSaving(false);
+
+            toast.promise(
+                finalSaveFnc,
+                {
+                    loading: 'Saving Changes...',
+                    success: <b>Settings saved!</b>,
+                    error: <b>Could not save.</b>,
+                }
+            );
+
         } else {
             toast.error("User information is missing.");
         }
@@ -141,7 +149,7 @@ const GeneralSettings = ({ type, loading = false }: { type: number, loading?: bo
             <ProfileImageUploader key={userInfo.user?.profilepic} setNewProfilepicFile={setNewProfilepicFile} accountType={userInfo.user?.Youtuber?.accountType} imgUrl={userInfo.user?.profilepic} />
             <SettingsFields currentName={userInfo.user?.username} type={settingsFiledsType.username} label="username" />
             <SettingsFields setNewPassword={setNewPassWord} currentName={userInfo.user?.username} type={settingsFiledsType.password} label="password" />
-            <SettingsToggle value={userInfo.user?.Youtuber?.whatsAppNotifcation} label="Whatsapp" type={SettingsToggleType.Whatsapp} />
+            {/* <SettingsToggle value={userInfo.user?.Youtuber?.whatsAppNotifcation} label="Whatsapp" type={SettingsToggleType.Whatsapp} /> */}
             <SettingsToggle value={userInfo.user?.Youtuber?.emailNotifcation} label="Email" type={SettingsToggleType.Email} />
 
             <SettingsToggle value={userInfo.user?.Youtuber?.pushNotifcation} label="Push Notification" type={SettingsToggleType.PushNotification} />
@@ -173,7 +181,7 @@ const GeneralSettings = ({ type, loading = false }: { type: number, loading?: bo
                     <span>Account Preference</span>
                 </div>
             </Button>
-            {type === 1 &&
+            {/* {type === 1 &&
                 <Button
                     sx={{ paddingX: "0px !important" }}
                     color="warning" className="w-full" variant="contained">
@@ -182,14 +190,15 @@ const GeneralSettings = ({ type, loading = false }: { type: number, loading?: bo
                         <span>Link your Youtube Account</span>
                     </div>
                 </Button>
-            }
+            } */}
             <Button
+                disabled={saving}
                 onClick={saveAllChanges}
                 sx={{ paddingX: "0px !important" }}
                 color="primary" className={`w-full ${saving && "opacity-55"} `} variant="contained">
                 <div className="w-full gap-2 sm:text-sm text-xs justify-center px-1 py-1 sm:py-2 flex items-center" >
                     <SaveIcon size={20} />
-                    <span>{saving ? "Saving all Changes..." : "Save all Changes"}</span>
+                    <span>{saving ? "Saving Changes..." : "Save all Changes"}</span>
                 </div>
             </Button>
         </div>

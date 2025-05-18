@@ -58,12 +58,12 @@ const GeneralSettings = ({ loading = false }: { type: number, loading?: boolean 
     const deactivateAccount = () => {
     }
 
-    const toggleAccountType = (label: ACCOUNT_TYPE) => {
-        if (label === ACCOUNT_TYPE.PRIVATE)
-            dispatch(collaboratorActions.updateCollaboratorInfo({ accountType: ACCOUNT_TYPE.PRIVATE }))
-        else if (label === ACCOUNT_TYPE.PUBLIC)
-            dispatch(collaboratorActions.updateCollaboratorInfo({ accountType: ACCOUNT_TYPE.PUBLIC }))
-    }
+    // const toggleAccountType = (label: ACCOUNT_TYPE) => {
+    //     if (label === ACCOUNT_TYPE.PRIVATE)
+    //         dispatch(collaboratorActions.updateCollaboratorInfo({ accountType: ACCOUNT_TYPE.PRIVATE }))
+    //     else if (label === ACCOUNT_TYPE.PUBLIC)
+    //         dispatch(collaboratorActions.updateCollaboratorInfo({ accountType: ACCOUNT_TYPE.PUBLIC }))
+    // }
 
     const saveAccountPreferenceChanges = () => {
         dispatch(modalActions.closeModal())
@@ -110,28 +110,37 @@ const GeneralSettings = ({ loading = false }: { type: number, loading?: boolean 
 
     const saveAllChanges = async () => {
         if (saving) return;
-        toast.success("Saving all changes...")
-        if (userInfo?.user) {
-            setSaving(true)
-            const fd = new FormData();
-            if (newProfilepicFile)
-                fd.append("profilepic", newProfilepicFile as File);
-            fd.append("username", userInfo.user.username as string);
-            if (newPassWord !== "")
-                fd.append("password", newPassWord);
-            fd.append("whatsAppNotifcation", String(userInfo.user?.Collaborator?.whatsAppNotifcation ? true : false));
-            fd.append("emailNotifcation", String(userInfo.user?.Collaborator?.emailNotifcation ? true : false));
-            fd.append("pushNotifcation", String(userInfo.user?.Collaborator?.pushNotifcation ? true : false));
-            fd.append("accountType", userInfo.user?.Collaborator?.accountType as string);
 
-            const resData: responseData = await updateCollaboratorSettings(fd);
-            if (resData.success) {
-                toast.success(resData.message)
+        if (userInfo?.user) {
+
+            const finalSaveFnc = async () => {
+                setSaving(true)
+                const fd = new FormData();
+                if (newProfilepicFile)
+                    fd.append("profilepic", newProfilepicFile as File);
+                fd.append("username", userInfo.user.username as string);
+                if (newPassWord !== "")
+                    fd.append("password", newPassWord);
+                fd.append("whatsAppNotifcation", String(userInfo.user?.Collaborator?.whatsAppNotifcation ? true : false));
+                fd.append("emailNotifcation", String(userInfo.user?.Collaborator?.emailNotifcation ? true : false));
+                fd.append("pushNotifcation", String(userInfo.user?.Collaborator?.pushNotifcation ? true : false));
+                fd.append("accountType", userInfo.user?.Collaborator?.accountType as string);
+
+                const resData: responseData = await updateCollaboratorSettings(fd);
+
+                setSaving(false);
+                return resData;
             }
-            else {
-                toast.error(resData.message)
-            }
-            setSaving(false);
+
+            toast.promise(
+                finalSaveFnc,
+                {
+                    loading: 'Saving Changes...',
+                    success: <b>Settings saved!</b>,
+                    error: <b>Could not save.</b>,
+                }
+            );
+
         } else {
             toast.error("User information is missing.");
         }
@@ -146,7 +155,7 @@ const GeneralSettings = ({ loading = false }: { type: number, loading?: boolean 
             <SettingsToggle value={userInfo.user?.Collaborator?.emailNotifcation} label="Email" type={SettingsToggleType.Email} />
 
             <SettingsToggle value={userInfo.user?.Collaborator?.pushNotifcation} label="Push Notification" type={SettingsToggleType.PushNotification} />
-
+            {/* 
             <div className="flex w-full flex-col">
                 <div className="form-control">
                     <label className="label cursor-pointer">
@@ -165,7 +174,7 @@ const GeneralSettings = ({ loading = false }: { type: number, loading?: boolean 
 
                     </label>
                 </div>
-            </div>
+            </div> */}
             <Button
                 sx={{ paddingX: "0px !important" }}
                 onClick={handleAccountPreferenceModal} color="primary" className="w-full" variant="outlined">
@@ -181,7 +190,7 @@ const GeneralSettings = ({ loading = false }: { type: number, loading?: boolean 
                 color="primary" className={`w-full ${saving && "opacity-55"} `} variant="contained">
                 <div className="w-full gap-2 sm:text-sm text-xs justify-center px-1 py-1 sm:py-2 flex items-center" >
                     <SaveIcon size={20} />
-                    <span>{saving ? "Saving all Changes..." : "Save all Changes"}</span>
+                    <span>{saving ? "Saving Changes..." : "Save all Changes"}</span>
                 </div>
             </Button>
         </div>

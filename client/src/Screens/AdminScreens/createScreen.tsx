@@ -152,12 +152,12 @@ const CreateArea = ({ loading, draftInfo }: { loading: boolean, draftInfo: Draft
                         setShowMenu={setShowMenu}
                         placeholder="description" />
 
-                    <FilePicker
+                    {/* <FilePicker
                         draftId={draftInfo && draftInfo?.draftVideoId}
                         placeholder="thumbnail"
                         file={draftInfo?.ytThumbnailLink as string}
                         showMenu={showMenu}
-                        setShowMenu={setShowMenu} />
+                        setShowMenu={setShowMenu} /> */}
 
                     <FilePicker
                         menuOpen="up"
