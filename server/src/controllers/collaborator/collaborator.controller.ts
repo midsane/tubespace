@@ -34,17 +34,17 @@ const fetchHome = asyncHandler(async (req: RequestType, res) => {
 
     const fixedDataToSend: any = {
         ...dataToSend,
-        collaborator: dataToSend.Collaborator
-    }
+        collaborator: dataToSend.Collaborator,
+    };
 
-    delete fixedDataToSend.Collaborator
+    delete fixedDataToSend.Collaborator;
 
     res.status(200).json(
         new ApiResponse(
             true,
             { user: fixedDataToSend },
             "Collaborator data home page data fetched successfully!",
-            !thirdPerson
+            !thirdPerson,
         ),
     );
 });
@@ -60,39 +60,41 @@ const fetchCollaborators = asyncHandler(async (req: RequestType, res) => {
     }
 
     const countOfCollaborators = await client.user.count({
-        where: searchQuery ? {
-            role: "collaborator",
-            username: {
-                contains: searchQuery as string,
-                mode: "insensitive",
-            },
-        } : {
-            role: "collaborator",
-        },
+        where: searchQuery
+            ? {
+                  role: "collaborator",
+                  username: {
+                      contains: searchQuery as string,
+                      mode: "insensitive",
+                  },
+              }
+            : {
+                  role: "collaborator",
+              },
     });
 
-
     const collaborators = await client.user.findMany({
-        where: searchQuery ? {
-            role: "collaborator",
-            username: {
-                contains: searchQuery as string,
-                mode: "insensitive",
-            },
-        } : {
-            role: "collaborator"
-        },
+        where: searchQuery
+            ? {
+                  role: "collaborator",
+                  username: {
+                      contains: searchQuery as string,
+                      mode: "insensitive",
+                  },
+              }
+            : {
+                  role: "collaborator",
+              },
         include: {
             Collaborator: {
                 include: {
-                    assignedTasks: true
-                }
-            }
+                    assignedTasks: true,
+                },
+            },
         },
         skip,
-        take
+        take,
     });
-
 
     if (!collaborators) {
         res.status(400).json(new ApiResponse(false, null, "could not fetch collaborators"));
@@ -103,10 +105,10 @@ const fetchCollaborators = asyncHandler(async (req: RequestType, res) => {
     const dataToSend = {
         ytData: sanitizedData,
         count: countOfCollaborators,
-    }
+    };
 
     res.status(200).json(new ApiResponse(true, dataToSend, "collaborators fetched successfully"));
-})
+});
 
 const fetchCollaboratorsShallow = asyncHandler(async (req: RequestType, res) => {
     const { searchQuery } = req.query;
@@ -124,21 +126,16 @@ const fetchCollaboratorsShallow = asyncHandler(async (req: RequestType, res) => 
                 username: {
                     contains: searchQuery as string,
                     mode: "insensitive",
-                }
+                },
             },
-
         });
-    }
-    else {
+    } else {
         collaborators = await client.user.findMany({
             where: {
-                role: "collaborator"
+                role: "collaborator",
             },
-
         });
     }
-
-
 
     if (!collaborators) {
         res.status(400).json(new ApiResponse(false, null, "could not fetch collaborators"));
@@ -146,11 +143,16 @@ const fetchCollaboratorsShallow = asyncHandler(async (req: RequestType, res) => 
 
     const dataToSend = collaborators.map(({ password, ...user }) => user);
 
-    res.status(200).json(new ApiResponse(true, {
-        ytData: dataToSend
-    }, "collaborators fetched successfully"));
-})
-
+    res.status(200).json(
+        new ApiResponse(
+            true,
+            {
+                ytData: dataToSend,
+            },
+            "collaborators fetched successfully",
+        ),
+    );
+});
 
 const verifyCollaboratorRole = (req: RequestType, res, next: NextFunction) => {
     const user = req.user;
@@ -160,9 +162,4 @@ const verifyCollaboratorRole = (req: RequestType, res, next: NextFunction) => {
     next();
 };
 
-export {
-    fetchHome,
-    fetchCollaborators,
-    fetchCollaboratorsShallow,
-    verifyCollaboratorRole
-};
+export { fetchHome, fetchCollaborators, fetchCollaboratorsShallow, verifyCollaboratorRole };

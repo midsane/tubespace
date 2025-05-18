@@ -11,40 +11,33 @@ const fetchAllAssignedTasks = asyncHandler(async (req: RequestType, res) => {
     let assignedTasks: any = null;
     const workspaceIdNum = parseInt(workspaceid);
     if (!workspaceIdNum || isNaN(workspaceIdNum)) {
-
         assignedTasks = await client.tasks.findMany({
             where: {
-
                 youtuberId: user.Youtuber.youtuberId,
-
+            },
+        });
+    } else {
+        assignedTasks = await client.tasks.findMany({
+            where: {
+                youtuberId: user.Youtuber.youtuberId,
+                workspaceId: workspaceIdNum,
             },
         });
     }
-    else {
-        assignedTasks = await client.tasks.findMany({
-            where: {
-                youtuberId: user.Youtuber.youtuberId,
-                workspaceId: workspaceIdNum
-            }
-        });
-    }
-
 
     if (!assignedTasks) {
-        res.status(400).json(new ApiResponse(false, null, "could not fetch assigned tasks successfully"));
+        res.status(400).json(
+            new ApiResponse(false, null, "could not fetch assigned tasks successfully"),
+        );
     }
-    res.status(200).json(new ApiResponse(true, assignedTasks, "assigned tasks fetched successfully"));
-})
+    res.status(200).json(
+        new ApiResponse(true, assignedTasks, "assigned tasks fetched successfully"),
+    );
+});
 
 const assignTask = asyncHandler(async (req: RequestType, res) => {
     const user = req.user;
-    const {
-        workspaceId,
-        collaboratorId,
-        draftVideoId,
-        taskType,
-        deadline
-    } = req.body;
+    const { workspaceId, collaboratorId, draftVideoId, taskType, deadline } = req.body;
 
     const alreadyAssignedTask = await client.tasks.findFirst({
         where: {
@@ -52,12 +45,13 @@ const assignTask = asyncHandler(async (req: RequestType, res) => {
             youtuberId: user.Youtuber.youtuberId,
             draftVideoId,
             taskType,
-        }
-    })
+        },
+    });
 
     if (alreadyAssignedTask) {
-        return res.status(400).json(new ApiResponse(false, null, "Task is already assigned to someone!"));
-
+        return res
+            .status(400)
+            .json(new ApiResponse(false, null, "Task is already assigned to someone!"));
     }
 
     const task = await client.tasks.create({
@@ -67,44 +61,40 @@ const assignTask = asyncHandler(async (req: RequestType, res) => {
             collaboratorId,
             draftVideoId,
             taskType,
-            deadline
-        }
+            deadline,
+        },
     });
 
     if (!task) {
         res.status(400).json(new ApiResponse(false, null, "could not assign task"));
     }
     res.status(200).json(new ApiResponse(true, task, "task assigned successfully"));
-})
+});
 
 const unassignTask = asyncHandler(async (req: RequestType, res) => {
-
-    const {
-        taskId
-    } = req.body;
+    const { taskId } = req.body;
 
     const assignedTask = await client.tasks.findFirst({
         where: {
-            taskId
-        }
-    })
+            taskId,
+        },
+    });
 
     if (!assignedTask) {
         return res.status(400).json(new ApiResponse(false, null, "Task doesn't exist"));
-
     }
 
     const unAssignedtask = await client.tasks.delete({
         where: {
-            taskId
-        }
+            taskId,
+        },
     });
 
     if (!unAssignedtask) {
         res.status(400).json(new ApiResponse(false, null, "could not unassign task"));
     }
     res.status(200).json(new ApiResponse(true, unAssignedtask, "task unassigned successfully"));
-})
+});
 
 const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
     let { searchQuery, limit, start } = req.query;
@@ -115,7 +105,9 @@ const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
     const notThirdPerson = user.username === userName;
 
     if (!notThirdPerson) {
-        return res.status(400).json(new ApiResponse(false, null, "You are unauthorized to visit this page"));
+        return res
+            .status(400)
+            .json(new ApiResponse(false, null, "You are unauthorized to visit this page"));
     }
 
     const take = limit ? parseInt(limit as string, 10) : 10;
@@ -126,27 +118,31 @@ const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
     }
 
     const countOfYoutubers = await client.user.count({
-        where: searchQuery ? {
-            role: "youtuber",
-            username: {
-                contains: searchQuery as string,
-                mode: "insensitive",
-            },
-        } : {
-            role: "youtuber"
-        },
+        where: searchQuery
+            ? {
+                  role: "youtuber",
+                  username: {
+                      contains: searchQuery as string,
+                      mode: "insensitive",
+                  },
+              }
+            : {
+                  role: "youtuber",
+              },
     });
 
     const youtubers = await client.user.findMany({
-        where: searchQuery ? {
-            role: "youtuber",
-            username: {
-                contains: searchQuery as string,
-                mode: "insensitive",
-            },
-        } : {
-            role: "youtuber"
-        },
+        where: searchQuery
+            ? {
+                  role: "youtuber",
+                  username: {
+                      contains: searchQuery as string,
+                      mode: "insensitive",
+                  },
+              }
+            : {
+                  role: "youtuber",
+              },
         include: {
             Youtuber: {
                 include: {
@@ -169,11 +165,10 @@ const fetchYoutubers = asyncHandler(async (req: RequestType, res) => {
     const dataToSend = {
         ytData: sanitizedData,
         count: countOfYoutubers,
-    }
+    };
 
     res.status(200).json(new ApiResponse(true, dataToSend, "youtubers fetched successfully"));
 });
-
 
 const fetchYoutubersShallow = asyncHandler(async (req: RequestType, res) => {
     const { searchQuery } = req.query;
@@ -191,21 +186,16 @@ const fetchYoutubersShallow = asyncHandler(async (req: RequestType, res) => {
                 username: {
                     contains: searchQuery as string,
                     mode: "insensitive",
-                }
+                },
             },
-
         });
-    }
-    else {
+    } else {
         youtubers = await client.user.findMany({
             where: {
-                role: "youtuber"
+                role: "youtuber",
             },
-
         });
     }
-
-
 
     if (!youtubers) {
         res.status(400).json(new ApiResponse(false, null, "could not fetch youtubers"));
@@ -213,23 +203,27 @@ const fetchYoutubersShallow = asyncHandler(async (req: RequestType, res) => {
 
     const dataToSend = youtubers.map(({ password, ...user }) => user);
 
-    res.status(200).json(new ApiResponse(true, {
-        ytData: dataToSend
-    }, "youtubers fetched successfully"));
-})
+    res.status(200).json(
+        new ApiResponse(
+            true,
+            {
+                ytData: dataToSend,
+            },
+            "youtubers fetched successfully",
+        ),
+    );
+});
 
 const updateTasks = asyncHandler(async (req: RequestType, res) => {
-
     const { taskId, ...updateFields } = req.body;
 
     const task = await client.tasks.update({
         where: {
-            taskId
+            taskId,
         },
         data: {
             ...updateFields,
-
-        }
+        },
     });
 
     if (!task) {
@@ -237,8 +231,7 @@ const updateTasks = asyncHandler(async (req: RequestType, res) => {
     }
 
     res.status(200).json(new ApiResponse(true, task, "task updated successfully"));
-
-})
+});
 
 export {
     fetchAllAssignedTasks,
@@ -247,4 +240,4 @@ export {
     fetchYoutubersShallow,
     updateTasks,
     unassignTask,
-}
+};

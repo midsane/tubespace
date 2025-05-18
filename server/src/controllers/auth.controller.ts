@@ -237,10 +237,10 @@ const verifyPassword = asyncHandler(async (req, res) => {
     const { password } = req.body;
     const userData = await client.user.findFirst({
         where: {
-            id: req.user.id
-        }
-    })
-    if (!userData) return res.status(500).json(new ApiResponse(false, {}, "something went wrong"))
+            id: req.user.id,
+        },
+    });
+    if (!userData) return res.status(500).json(new ApiResponse(false, {}, "something went wrong"));
 
     const isPasswordCorrect = await comparePassword(password, userData.password);
 
@@ -249,9 +249,13 @@ const verifyPassword = asyncHandler(async (req, res) => {
     }
 
     return res.status(200).json(new ApiResponse(true, {}, "password is correct"));
-
 });
 
-export { registerYoutuber, loginYoutuber, registerCollaborator, loginCollaborator, logoutUser, verifyPassword };
-
-
+export {
+    registerYoutuber,
+    loginYoutuber,
+    registerCollaborator,
+    loginCollaborator,
+    logoutUser,
+    verifyPassword,
+};

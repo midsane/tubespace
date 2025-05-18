@@ -61,7 +61,6 @@ const deleteWorkspace = asyncHandler(async (req: RequestType, res) => {
         },
     });
 
-
     if (!workspace) {
         res.status(400).json(new ApiResponse(false, null, "Workspace does not exist!"));
     }
@@ -89,10 +88,14 @@ const deleteWorkspace = asyncHandler(async (req: RequestType, res) => {
     }
 
     res.status(200).json(
-        new ApiResponse(true, {
-            deletedWorkspace,
-            updatedDrafts
-        }, "Workspace deleted successfully!"),
+        new ApiResponse(
+            true,
+            {
+                deletedWorkspace,
+                updatedDrafts,
+            },
+            "Workspace deleted successfully!",
+        ),
     );
 });
 
@@ -100,8 +103,7 @@ const fetchAllworkspaces = asyncHandler(async (req: RequestType, res) => {
     const user = req.user;
     let { searchQuery } = req.query;
 
-    if (!searchQuery || searchQuery === "undefined"
-    ) searchQuery = "";
+    if (!searchQuery || searchQuery === "undefined") searchQuery = "";
 
     if (typeof searchQuery !== "string") {
         res.status(400).json(new ApiResponse(false, null, "invalid search query"));
@@ -113,65 +115,76 @@ const fetchAllworkspaces = asyncHandler(async (req: RequestType, res) => {
             name: {
                 contains: searchQuery as string,
                 mode: "insensitive",
-            }
+            },
         },
     });
 
     if (!workspaces) {
-        res.status(400).json(new ApiResponse(false, null, "could not fetch workspaces successfully"));
+        res.status(400).json(
+            new ApiResponse(false, null, "could not fetch workspaces successfully"),
+        );
     }
     res.status(200).json(new ApiResponse(true, workspaces, "workspaces fetched successfully"));
-})
-
+});
 
 const workspacePageFetch = asyncHandler(async (req: RequestType, res) => {
-
     const user = req.user;
     const { userName } = req.body;
 
     if (userName !== user.username) {
-        return res.status(400).json(new ApiResponse(false, null, "unauthorized access"))
+        return res.status(400).json(new ApiResponse(false, null, "unauthorized access"));
     }
 
     const thirdPerson = user.username === userName;
 
     const workspacePageData = await client.workspace.findMany({
         where: {
-            youtuberId: user.Youtuber.youtuberId
+            youtuberId: user.Youtuber.youtuberId,
         },
         include: {
             draftVideos: {
                 orderBy: {
-                    createdAt: "desc"
-                }
+                    createdAt: "desc",
+                },
             },
             tasks: {
                 orderBy: {
-                    createdAt: "desc"
-                }
+                    createdAt: "desc",
+                },
             },
             collaborators: {
                 include: {
-                    userInfo: true
-                }
-            }
-        }
-    })
+                    userInfo: true,
+                },
+            },
+        },
+    });
 
     if (!workspacePageData) {
-        return res.status(400).json(new ApiResponse(false, null, "could not fetch create page data"));
+        return res
+            .status(400)
+            .json(new ApiResponse(false, null, "could not fetch create page data"));
     }
 
-    const dataToSend = workspacePageData.map(wpd => {
-        const newColData = wpd.collaborators.map(cd => {
+    const dataToSend = workspacePageData.map((wpd) => {
+        const newColData = wpd.collaborators.map((cd) => {
             const { password, ...newUserInfo } = cd.userInfo;
-            return { ...cd, userInfo: newUserInfo }
-        })
+            return { ...cd, userInfo: newUserInfo };
+        });
 
-        return { ...wpd, collaborators: newColData }
-    })
+        return { ...wpd, collaborators: newColData };
+    });
 
-    return res.status(200).json(new ApiResponse(true, dataToSend, "create page data fetched successfully", !thirdPerson));
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                true,
+                dataToSend,
+                "create page data fetched successfully",
+                !thirdPerson,
+            ),
+        );
 });
 
 export {
@@ -179,5 +192,5 @@ export {
     updateWorkspace,
     deleteWorkspace,
     fetchAllworkspaces,
-    workspacePageFetch
+    workspacePageFetch,
 };

@@ -19,7 +19,7 @@ router.route("/login-collaborator").post(loginCollaborator);
 
 router.use(verifyJWT);
 
-router.route("/verifyPassword").post(verifyPassword)
+router.route("/verifyPassword").post(verifyPassword);
 
 router.route("/check-loggedInStatus").post((req: RequestType, res) => {
     res.status(200).json(

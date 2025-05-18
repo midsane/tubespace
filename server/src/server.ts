@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { createServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import app from "./app";
-import { setupSocket } from "./socket"
+import { setupSocket } from "./socket";
 
 dotenv.config({
     path: ".env",

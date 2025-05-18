@@ -23,9 +23,8 @@ const fetchHome = asyncHandler(async (req: RequestType, res) => {
                         include: {
                             collaborators: true,
                             tasks: true,
-
                         },
-                    }
+                    },
                 },
             },
         },
@@ -44,7 +43,7 @@ const fetchHome = asyncHandler(async (req: RequestType, res) => {
                 user: dataToSend,
             },
             "Youtuber data home page data fetched successfully!",
-            !thirdPerson
+            !thirdPerson,
         ),
     );
 });

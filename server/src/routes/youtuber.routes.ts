@@ -3,9 +3,7 @@ import { verifyJWT } from "../middlewares/auth.middleware";
 import { fetchHome } from "../controllers/youtuber/youtuber.controller";
 import {
     addDraft,
-
     createPageFetch,
-
     deleteDraft,
     deleteFileinDraft,
     fetchAllDraftVideos,
@@ -18,10 +16,19 @@ import {
     updateWorkspace,
     workspacePageFetch,
 } from "../controllers/youtuber/youtuberWorkspaces.controller";
-import { assignTask, fetchAllAssignedTasks, fetchYoutubers, fetchYoutubersShallow, unassignTask, updateTasks } from "../controllers/youtuber/youtuberTasks.controller";
+import {
+    assignTask,
+    fetchAllAssignedTasks,
+    fetchYoutubers,
+    fetchYoutubersShallow,
+    unassignTask,
+    updateTasks,
+} from "../controllers/youtuber/youtuberTasks.controller";
 import { upload } from "../middlewares/multer.middleware";
-import { settingPageFetch, updateSettings } from "../controllers/youtuber/youtuber.settings.controller";
-
+import {
+    settingPageFetch,
+    updateSettings,
+} from "../controllers/youtuber/youtuber.settings.controller";
 
 const router = Router();
 
@@ -33,16 +40,19 @@ router.route("/fetch-home").post(fetchHome);
 
 router.route("/fetch-all-draftVideos").get(fetchAllDraftVideos);
 router.route("/add-draft").post(addDraft);
-router.route("/update-draft").put(upload.fields([
-    {
-        name: "thumbnail",
-        maxCount: 1
-    },
-    {
-        name: "video",
-        maxCount: 1
-    }
-]), updateDraft);
+router.route("/update-draft").put(
+    upload.fields([
+        {
+            name: "thumbnail",
+            maxCount: 1,
+        },
+        {
+            name: "video",
+            maxCount: 1,
+        },
+    ]),
+    updateDraft,
+);
 router.route("/delete-draft").delete(deleteDraft);
 router.route("/delete-file-in-draft").delete(deleteFileinDraft);
 
@@ -56,10 +66,9 @@ router.route("/assign-task").post(assignTask);
 router.route("/unassign-task").delete(unassignTask);
 router.route("/update-tasks").put(updateTasks);
 
-router.route('/createpage-fetch').post(createPageFetch)
-router.route('/workspacePage-fetch').post(workspacePageFetch);
+router.route("/createpage-fetch").post(createPageFetch);
+router.route("/workspacePage-fetch").post(workspacePageFetch);
 
-
-router.route("/settingPage").post(settingPageFetch)
-router.route("/update-settings").put(upload.single("profilepic"), updateSettings)
+router.route("/settingPage").post(settingPageFetch);
+router.route("/update-settings").put(upload.single("profilepic"), updateSettings);
 export default router;

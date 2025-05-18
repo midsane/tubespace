@@ -8,6 +8,6 @@ export class ApiResponse extends Response {
         this.success = success;
         this.data = data;
         this.message = message;
-        this.thirdPerson = thirdPerson ? thirdPerson: false
+        this.thirdPerson = thirdPerson ? thirdPerson : false;
     }
 }

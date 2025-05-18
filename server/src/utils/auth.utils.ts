@@ -9,7 +9,6 @@ const hashPassword = async (password: string): Promise<string> => {
                 if (err) reject(err);
                 resolve(hash);
             });
-
         });
     });
 };

@@ -14,12 +14,11 @@ export enum SOCKET_EVENTS {
     UPDATE_MESSAGE_STATUS = "update_message_status",
 }
 
-
 export enum MESSAGE_STATUS {
     UNSENT = "UNSENT",
     SENT = "SENT",
     DELIVERED = "DELIVERED",
-    READ = "READ"
+    READ = "READ",
 }
 
 const seeConnectedUser = () => {
@@ -54,14 +53,18 @@ export const setupSocket = (io: Server) => {
                         isRead: false,
                         status: MESSAGE_STATUS.DELIVERED,
                     },
-                })
+                });
                 if (!msg) {
                     console.log(`❌ Failed to create message in DB`);
-                    socket.emit(SOCKET_EVENTS.MESSAGE_DELIVERED, { status: "fail", msg: "Message could not be sent", chatId });
+                    socket.emit(SOCKET_EVENTS.MESSAGE_DELIVERED, {
+                        status: "fail",
+                        msg: "Message could not be sent",
+                        chatId,
+                    });
                     return;
                 }
                 socket.emit(SOCKET_EVENTS.MESSAGE_DELIVERED, { status: "ok", msg, chatId });
-                console.log("msg:", msg)
+                console.log("msg:", msg);
                 io.to(targetSocketId).emit("private_message", msg);
                 socket.emit(SOCKET_EVENTS.MESSAGE_READ, { status: "ok", msg });
                 await client.chat.update({
@@ -70,9 +73,9 @@ export const setupSocket = (io: Server) => {
                     },
                     data: {
                         status: MESSAGE_STATUS.READ,
-                        isRead: true
+                        isRead: true,
                     },
-                })
+                });
                 console.log(`📤 Sent message to ${toUserName}`);
             } else {
                 const msg = await client.chat.create({
@@ -83,10 +86,14 @@ export const setupSocket = (io: Server) => {
                         isRead: false,
                         status: MESSAGE_STATUS.DELIVERED,
                     },
-                })
+                });
                 if (!msg) {
                     console.log(`❌ Failed to create message in DB`);
-                    socket.emit(SOCKET_EVENTS.MESSAGE_DELIVERED, { status: "fail", msg: "Message could not be sent", chatId });
+                    socket.emit(SOCKET_EVENTS.MESSAGE_DELIVERED, {
+                        status: "fail",
+                        msg: "Message could not be sent",
+                        chatId,
+                    });
                     return;
                 }
                 console.log(`❌ User ${toUserName} not connected, so message is not seen yet.`);
@@ -95,7 +102,7 @@ export const setupSocket = (io: Server) => {
         });
 
         socket.on(SOCKET_EVENTS.UPDATE_MESSAGE_STATUS, async (messageArr) => {
-            console.log("messageArr", messageArr)
+            console.log("messageArr", messageArr);
             for (const message of messageArr) {
                 const updatedMsg = await client.chat.update({
                     where: {
@@ -103,20 +110,18 @@ export const setupSocket = (io: Server) => {
                     },
                     data: {
                         status: MESSAGE_STATUS.READ,
-                        isRead: true
+                        isRead: true,
                     },
-                })
-                console.log("updatedMsg", updatedMsg)
+                });
+                console.log("updatedMsg", updatedMsg);
                 const targetSocketId = userSocketMap.get(message.from);
 
-                if (updatedMsg && targetSocketId) io.to(targetSocketId).emit(SOCKET_EVENTS.UPDATE_MESSAGE_STATUS, message.chatId)
-
+                if (updatedMsg && targetSocketId)
+                    io.to(targetSocketId).emit(SOCKET_EVENTS.UPDATE_MESSAGE_STATUS, message.chatId);
             }
-
-        })
+        });
 
         socket.on(SOCKET_EVENTS.DISCONNECT, () => {
-
             for (const [userId, id] of userSocketMap.entries()) {
                 if (id === socket.id) {
                     userSocketMap.delete(userId);
