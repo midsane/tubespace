@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { EditIcon, Expand, FileIcon, PlusCircle, Save, Trash, X } from "lucide-react";
+import { EditIcon, Expand, FileIcon, PlusCircle, Save, Trash, X, YoutubeIcon } from "lucide-react";
 import { Assignment } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import { DraftVideosCardSection2 } from "../../components/homeTabSection/draftVideosCardSection";
 import React, { useCallback, useEffect, useState } from "react";
 import { BasicMenu } from "../../components/menus/basicmenu";
@@ -20,8 +20,7 @@ import { youtuberActions } from "../../store/youtuberStore/youtuber.slice";
 import { Uploadbutton } from "../../components/buttons/uploadbutton";
 import { VideoPlayer } from "../../components/videoPlayer/videoplayer";
 
-import { motion } from "framer-motion"
-
+import { motion } from "framer-motion";
 
 
 const getCurrentDraftInfo = (draftTitle: string | undefined, draftArr: DraftVideosInterface[]) => {
@@ -109,9 +108,29 @@ const CreateAreaLoader = () => {
 
 const CreateArea = ({ loading, draftInfo }: { loading: boolean, draftInfo: DraftVideosInterface | null }) => {
     const [showMenu, setShowMenu] = useState<MenuType>(MenuType.close)
-
+    const [readyToUpload, setReadyToUpload] = useState<boolean>(false)
     const noDraftFound = !draftInfo && !loading
     if (noDraftFound) toast.error("no draft found!")
+
+    useEffect(() => {
+        console.log("draftdsfadsInfo: ", draftInfo)
+        if (draftInfo) {
+            const { ytTitle, ytDescription, ytVideoLink } = draftInfo
+            console.log("ytVideolink ", ytVideoLink)
+            if (ytTitle && ytDescription && ytVideoLink) {
+                setReadyToUpload(true)
+            }
+            else {
+                setReadyToUpload(false)
+            }
+        }
+    }, [draftInfo])
+
+    const uploadOnYt = async () => {
+        if (!readyToUpload) return;
+        // authorizeAndGenerateUrl();
+    }
+
     return (<div className="w-[90%] sm:w-[70%] text-xs sm:text-sm justify-center items-center h-[80%] relative flex flex-col gap-2 sm:gap-2 " >
 
         <HeadSection loading={loading || noDraftFound} title={draftInfo ? draftInfo.DraftTitle : ""} />
@@ -166,9 +185,18 @@ const CreateArea = ({ loading, draftInfo }: { loading: boolean, draftInfo: Draft
                         file={draftInfo?.ytVideoLink as string}
                         showMenu={showMenu}
                         setShowMenu={setShowMenu} />
+
                 </>
+
             }
+
         </motion.div>
+        <br />
+        <Button onClick={uploadOnYt} variant={readyToUpload ? "contained" : "outlined"} >{
+            readyToUpload ? <div className="flex gap-2">
+                <p>Upload on Youtube!</p>
+                <YoutubeIcon color="black" fill="red" />
+            </div> : "Fill all details to upload on youtube"}</Button>
     </div >)
 }
 
