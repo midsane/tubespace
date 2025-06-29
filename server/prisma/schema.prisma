@@ -13,14 +13,43 @@ datasource db {
   url      = env("DB_URL")
 }
 
-model User {
-  id             Int     @id @default(autoincrement())
-  name           String?
-  email          String     @unique
-  password       String?
-  profileImgUrl  String?
-  salt           String?
-  Oauth          Boolean    @default(false)
+enum Role {
+  YOUTUBER
+  EDITOR
 }
 
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String?  @unique
+  email         String   @unique
+  password      String?
+  profileImgUrl String?
+  salt          String?
+  Oauth         Boolean  @default(false)
+  role          Role
+  createdAt     DateTime @default(now())
+  bio           String?
+  attachedLinks String?
+}
 
+enum Rating_val {
+  unrated
+  one
+  two
+  three
+  four
+  five
+}
+
+model Task {
+  id          Int        @id @default(autoincrement())
+  youtuberId  Int
+  editorId    Int
+  deadline    DateTime
+  title       String
+  description String
+  attachment  String[]
+  isCompleted Boolean    @default(false)
+  rating      Rating_val @default(unrated)
+  review      String?
+}

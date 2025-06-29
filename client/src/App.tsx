@@ -1,29 +1,39 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { LandingPage } from './components/landingpage/landingpage'
+import { RootLayout } from './pages/rootlayout'
+import { ProfilePage } from './pages/profilePage'
+import { TaskPage } from './pages/taskPage'
+import { NotificationPage } from './pages/notificationPage'
+import { MessagesPage } from './pages/messagePage'
 const router = createBrowserRouter([
   {
     path: "/",
-    element:  <LandingPage />,
+    element: <LandingPage />,
+  },
+  {
+    path: "/",
+    element: <RootLayout />,
     children: [
       {
-        index: true,
-        element: <LandingPage />
+        path: "tasks",
+        element: <TaskPage />
       },
       {
-        path: "profile/:userid",
-        element: <>profilepage</>
+        path: "profile/:userId",
+        element: <ProfilePage />
       },
       {
-        path: "task",
-        element: <>tasks</>
+        path: "messages",
+        element: <MessagesPage />
       },
       {
         path: "notifications",
-        element: <>notifications</>
+        element: <NotificationPage />
       },
-    ]
+    ],
   }
 ])
+
 
 function App() {
 
