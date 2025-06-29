@@ -24,7 +24,7 @@ const login = asyncHandler(async (req: any, res: Response) => {
     if (!jwtSecret)
         return res.status(500).json(new ApiResponse(null, "internal server err"))
 
-    const token = jwt.sign({ id: userExist.id }, jwtSecret, { expiresIn: "2d" })
+    const token = jwt.sign({ id: userExist.id, name: userExist.name, email: userExist.email }, jwtSecret, { expiresIn: "2d" })
 
     if (!token)
         return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
@@ -34,8 +34,8 @@ const login = asyncHandler(async (req: any, res: Response) => {
         httpOnly: true,
         sameSite: "lax"
     })
-
-    res.status(200).json(new ApiResponse(userExist, "user logged in successfully!"));
+    const { password: psw, salt, ...filteredData } = userExist;
+    res.status(200).json(new ApiResponse(filteredData, "user logged in successfully!"));
 
 })
 
@@ -43,7 +43,7 @@ const login = asyncHandler(async (req: any, res: Response) => {
 
 const signup = asyncHandler(async (req: any, res: Response) => {
     const { email, password, role } = req.body;
-    if (typeof email !== "string" || typeof password !== "string" || typeof role !== "string")
+    if (typeof email !== "string" || !email.includes("@") || typeof password !== "string" || typeof role !== "string")
         return res.status(400).json(new ApiResponse(null, "invalid data type"));
 
     const emailExist = await client.user.findFirst({ where: { email } });
@@ -61,11 +61,18 @@ const signup = asyncHandler(async (req: any, res: Response) => {
         }
     })
 
+    await client.user.update({
+        where: { id: user.id },
+        data: {
+            name: user.email.trim().split("@")[0] + user.id,
+        }
+    })
+
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret)
         return res.status(500).json(new ApiResponse(null, "internal server err"))
 
-    const token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: "2d" })
+    const token = jwt.sign({ id: user.id, name: user.name, email: user.email }, jwtSecret, { expiresIn: "2d" })
 
     if (!token)
         return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
@@ -76,7 +83,8 @@ const signup = asyncHandler(async (req: any, res: Response) => {
         sameSite: "lax"
     })
 
-    return res.status(200).json(new ApiResponse(user, "user created successfully"));
+    const { password: psw, salt: sl, ...filteredData } = user
+    return res.status(200).json(new ApiResponse(filteredData, "user created successfully"));
 
 })
 

@@ -2,14 +2,16 @@ import { Bell, LogOutIcon, MessageCircle, StickyNote, UserRoundPen, } from "luci
 import { useEffect, useState, type ReactNode } from "react"
 import logoImage from "/favicon.png"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useScreenSizeStore } from "@/store/screenSizestate"
+import { useScreenSizeStore } from "@/store/screenSizestate.store"
 import { LogoutBox } from "../dialogbox/logout"
+import { useUserStore } from "@/store/user.store"
 
 
 export const Sidebar = () => {
     const { mobileView, changeMobileView } = useScreenSizeStore()
     const [ICON_SIZE, setIconSize] = useState<number>(25);
     const [logoSize, setLogoSize] = useState<number>(40);
+    const username = useUserStore((state) => state.name);
     const UppersidebarItems = [
         {
             text: "Tubespace",
@@ -65,6 +67,8 @@ export const Sidebar = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    if (!username || username?.trim() === "") return <></>
+
     return (<nav className={`flex flex-col h-full w-fit pb-2 ${mobileView ? "sm:px-1 pt-4" : "pt-1 px-4  xl:px-6"} rounded-br-2xl  rounded-tr-2xl border border-sidebar-border justify-between bg-popover text-popover-foreground`} >
         <ul className="flex justify-center flex-col gap-4 p-2" >
             {UppersidebarItems.map(item => <NavItem mobileView={mobileView} key={item.text} {...item} />)}
@@ -82,7 +86,8 @@ const NavItem = ({ mobileView, text, icon }: { mobileView: boolean, text: string
     const navigation = useNavigate()
     const selected = navRoute === text.toLowerCase();
     const handleNavigate = () => {
-        const redirectRoute = text.toLowerCase() === "tubespace" ? "/" : text.toLowerCase()
+        let redirectRoute = text.toLowerCase() === "tubespace" ? "/" : text.toLowerCase();
+        redirectRoute = text.toLowerCase() === "profile" ? `/profile/${useUserStore.getState().name}` : redirectRoute;
         navigation(redirectRoute)
     }
 

@@ -19,7 +19,7 @@ const router = createBrowserRouter([
         element: <TaskPage />
       },
       {
-        path: "profile/:userId",
+        path: "profile/:username",
         element: <ProfilePage />
       },
       {

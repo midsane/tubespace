@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { ModeToggle } from "../toggleTheme/toggletheme"
-import { useScreenSizeStore } from "@/store/screenSizestate"
+import { useScreenSizeStore } from "@/store/screenSizestate.store"
 
 export const PageWrapper = ({ HeaderJSX = <></>, leftContent, rightContent, headerText, }:
     { HeaderJSX?: ReactNode, rightContent: ReactNode, leftContent: ReactNode, headerText: string }) => {

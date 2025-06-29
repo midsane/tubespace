@@ -22,16 +22,44 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { UserRole, type AuthDataType, type httpRequstType } from "@/types/types"
+import { LoginUser, RegisterUser } from "@/httpfnc/auth"
+import { useNavigate } from "react-router-dom"
 
 export function LoginBox() {
   const [loginBox, setLoginBox] = useState<boolean>(false)
+  const [data, setData] = useState({ email: "", password: "", role: UserRole.YOUTUBER })
+  const [loading, setLoading] = useState<boolean>(false)
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true)
+    try {
+      if (loginBox) {
+
+        const userData: AuthDataType = await LoginUser(data.email, data.password)
+        setLoading(false)
+        navigate(`/profile/${userData.name}`);
+      } else {
+        const userData: AuthDataType = await RegisterUser(data.email, data.password, data.role);
+        setLoading(false)
+        navigate(`/profile/${userData.name}`);
+      }
+
+    } catch (error) {
+      setLoading(false)
+      console.error("Error during submission:", error);
+    }
+  }
+
   return (
     <Dialog>
-      <form>
-        <DialogTrigger asChild>
-          <Button variant="outline">{loginBox ? "Login" : "Signup"}</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+      <DialogTrigger asChild>
+        <Button variant="outline">{loginBox ? "Login" : "Signup"}</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>{loginBox ? "Login" : "Signup"}</DialogTitle>
             <DialogDescription>
@@ -42,40 +70,72 @@ export function LoginBox() {
                 {loginBox ? "Signup" : "Login"}
               </a>
             </DialogDescription>
-
           </DialogHeader>
-          <div className="grid gap-4">
-            {!loginBox && <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a Role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Role</SelectLabel>
-                  <SelectItem value="Youtuber">Youtuber</SelectItem>
-                  <SelectItem value="Editor">Editor</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>}
+
+          <div className="grid gap-4 mt-4">
+            {!loginBox && (
+              <Select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select a Role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Role</SelectLabel>
+                    <SelectItem
+                      onClick={() => setData(prev => ({ ...prev, role: UserRole.YOUTUBER }))}
+                      value="Youtuber"
+                    >
+                      Youtuber
+                    </SelectItem>
+                    <SelectItem
+                      onClick={() => setData(prev => ({ ...prev, role: UserRole.EDITOR }))}
+                      value="Editor"
+                    >
+                      Editor
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
 
             <div className="grid gap-3">
-              <Label htmlFor="name-1">email</Label>
-              <Input id="name-1" name="email" placeholder="enter your email" />
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                disabled={loading}
+                value={data.email}
+                onChange={(e) => setData(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="Enter your email"
+              />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="username-1">password</Label>
-              <Input type="password" id="username-1" name="password" placeholder="enter your password" />
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                disabled={loading}
+                value={data.password}
+                onChange={(e) => setData(prev => ({ ...prev, password: e.target.value }))}
+                placeholder="Enter your password"
+              />
             </div>
-            <Button variant="outline" className="w-full">
+
+            <Button disabled={loading} variant="outline" className="w-full">
               <ChromeIcon />
               <p>{loginBox ? "Login with Google" : "Signup with Google"}</p>
             </Button>
           </div>
+
           <DialogFooter>
-            <Button type="submit">{loginBox ? "Login" : "Signup"}</Button>
+            <Button disabled={loading} type="submit">
+              {loginBox ? (loading ? "Logging you in..." : "Login") : (loading ? "Signing you up..." : "Signup")}
+            </Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
+
   )
 }

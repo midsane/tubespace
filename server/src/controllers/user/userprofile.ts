@@ -5,17 +5,18 @@ import { client } from "../../db/connectToDb";
 
 
 const fetchProfile = asyncHandler(async (req: any, res: Response) => {
-    const reqUserid = req.user?.id;
-    const userid = +req.query.userId;
+    const reqUsername = req.user?.name;
+    const username = req.query.username;
 
-    if (!userid)
+    if (!reqUsername)
         return res.status(403).json(new ApiResponse(null, "user not authenticated"));
 
-    const user = await client.user.findFirst({ where: { id: userid } })
+    const user = await client.user.findFirst({ where: { name: username } })
     if (!user)
         return res.status(403).json(new ApiResponse(null, "user does not exist!"));
 
-    let finalData: any = { ...user };
+    const { password: psw, salt, ...filteredData } = user;
+    let finalData: any = filteredData
     if (user.role === "YOUTUBER") {
 
         const videosUploaded = await client.task.count({
@@ -61,7 +62,8 @@ const fetchProfile = asyncHandler(async (req: any, res: Response) => {
 
     }
 
-    finalData.editable = userid === reqUserid;
+    finalData.editable = username === reqUsername;
+
     return res.status(200).status(200).json(new ApiResponse(finalData, "successfully fetched user's data!"));
 
 })
