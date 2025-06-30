@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { EditIcon, LinkIcon, MessageCircleIcon, StickyNote, VideoIcon } from "lucide-react"
+import {  LinkIcon, MessageCircleIcon, StickyNote, VideoIcon } from "lucide-react"
 import { FullTextDialogView } from "../common/fullTextDialogView";
 import { useQuery } from "@tanstack/react-query";
 import { getProfileData } from "@/httpfnc/user";
@@ -10,6 +10,7 @@ import { useUserStore } from "@/store/user.store";
 import { UserRole, type profileDataType } from "@/types/types";
 import { fallback_profileImg } from "@/constast";
 import { Skeleton } from "@/components/ui/skeleton";
+import  { EditProfileDialog } from "@/components/dialogbox/editProfileDialog";
 
 const CHAR_LIMIT = 200;
 const fallback_bannerImg = "https://images.unsplash.com/photo-1506765515384-028b60a970df?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -65,10 +66,7 @@ export const LeftContent = () => {
             <div className="absolute h-fit -bottom-2 translate-y-[100%] right-5  flex gap-2 items-center" >
                 {loading ? <Skeleton className="h-6 w-6 sm:w-24 rounded" /> :
                     data?.editable ?
-                        <Button className="flex gap-2 w-full" >
-                            <EditIcon />
-                            <h1 className="max-[600px]:hidden" >Edit Profile</h1>
-                        </Button>
+                        <EditProfileDialog />
                         :
 
                         <Button className="flex gap-2 w-full" >

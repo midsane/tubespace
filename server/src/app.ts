@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { ApiResponse } from "./utils/apiresponse";
 import { userRouter } from "./router/user/user.router";
+import {taskRouter} from "./router/task/task.router"
 
 
 const app = express();
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 
 
 app.use("/api/v1/user", userRouter)
+app.use("/api/v1/task", taskRouter)
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.error(err.stack);
     res.status(500).json(new ApiResponse(null, "Something went wrong!"));

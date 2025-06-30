@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
-import { animate, motion } from "framer-motion"
+import {  motion } from "framer-motion"
 import { TaskCard } from "./taskcard"
 
 const assignedTasks = [
@@ -134,8 +134,6 @@ const Tab = ({ text, isActive, onClick }: { text: string, isActive: boolean, onC
             >
                 {text}
             </motion.div>
-
-
         </>
     )
 }
