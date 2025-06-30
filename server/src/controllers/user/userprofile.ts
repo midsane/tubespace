@@ -8,12 +8,9 @@ const fetchProfile = asyncHandler(async (req: any, res: Response) => {
     const reqUsername = req.user?.name;
     const username = req.query.username;
 
-    if (!reqUsername)
-        return res.status(403).json(new ApiResponse(null, "user not authenticated"));
-
     const user = await client.user.findFirst({ where: { name: username } })
     if (!user)
-        return res.status(403).json(new ApiResponse(null, "user does not exist!"));
+        return res.status(404).json(new ApiResponse(null, "user does not exist!"));
 
     const { password: psw, salt, ...filteredData } = user;
     let finalData: any = filteredData

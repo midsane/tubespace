@@ -32,3 +32,13 @@ export type AuthDataType = {
     role: UserRole,
     bannerImgUrl?: string
 }
+
+export interface TopEditorsData {
+    name: string;
+    bio?: string | null;
+    profileImgUrl?: string | null;
+    tasksCompleted: number;
+    ratings: number;
+    id: number;
+    score: number;
+}

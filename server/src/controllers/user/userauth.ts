@@ -52,7 +52,7 @@ const signup = asyncHandler(async (req: any, res: Response) => {
     const salt = await bcrypt.genSalt(saltRounds);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await client.user.create({
+    const userDetail = await client.user.create({
         data: {
             email,
             password: hashedPassword,
@@ -61,10 +61,10 @@ const signup = asyncHandler(async (req: any, res: Response) => {
         }
     })
 
-    await client.user.update({
-        where: { id: user.id },
+    const user = await client.user.update({
+        where: { id: userDetail.id },
         data: {
-            name: user.email.trim().split("@")[0] + user.id,
+            name: userDetail.email.trim().split("@")[0] + userDetail.id,
         }
     })
 
@@ -88,7 +88,29 @@ const signup = asyncHandler(async (req: any, res: Response) => {
 
 })
 
+const checkAuth = asyncHandler(async (req: any, res: Response) => {
+    const userid = req.user?.id;
+    if (!userid) return res.status(403).json(new ApiResponse(null, "user not authenticated"));
+
+    const user = await client.user.findUnique({ where: { id: userid } });
+    if (!user) return res.status(404).json(new ApiResponse(null, "user does not exist"));
+
+    const { password: psw, salt, ...filteredData } = user;
+    res.status(200).json(new ApiResponse(filteredData, "user is authenticated"));
+})
+
+const logout = asyncHandler(async (req: any, res: Response) => {
+    res.clearCookie("token", {
+        secure: process.env.MODE !== "development",
+        httpOnly: true,
+        sameSite: "lax"
+    });
+    res.status(200).json(new ApiResponse(null, "user logged out successfully!"));
+})
+
 export {
     login,
-    signup
+    signup,
+    checkAuth,
+    logout
 }

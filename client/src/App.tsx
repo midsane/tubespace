@@ -5,29 +5,51 @@ import { ProfilePage } from './pages/profilePage'
 import { TaskPage } from './pages/taskPage'
 import { NotificationPage } from './pages/notificationPage'
 import { MessagesPage } from './pages/messagePage'
+import { AuthPage } from './components/pagesUi/authPage/authPage'
 const router = createBrowserRouter([
   {
     path: "/",
     element: <LandingPage />,
+    children: [
+      {
+        path: "auth",
+        element: <AuthPage />
+      }
+    ]
   },
   {
     path: "/",
     element: <RootLayout />,
     children: [
       {
-        path: "tasks",
+        path: "y/tasks",
         element: <TaskPage />
       },
       {
-        path: "profile/:username",
+        path: "y/profile/:username",
         element: <ProfilePage />
       },
       {
-        path: "messages",
+        path: "y/messages",
         element: <MessagesPage />
       },
       {
-        path: "notifications",
+        path: "y/notifications",
+        element: <NotificationPage />
+      }, {
+        path: "c/tasks",
+        element: <TaskPage />
+      },
+      {
+        path: "c/profile/:username",
+        element: <ProfilePage />
+      },
+      {
+        path: "c/messages",
+        element: <MessagesPage />
+      },
+      {
+        path: "c/notifications",
         element: <NotificationPage />
       },
     ],

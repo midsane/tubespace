@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
-import { asyncHandler } from "./asyncHandler";
-import { ApiResponse } from "./apiresponse";
+import { asyncHandler } from "../utils/asyncHandler";
+import { ApiResponse } from "../utils/apiresponse";
 import jwt from "jsonwebtoken"
 
 export const authMiddleware = asyncHandler(async (req: any, res: Response, next: NextFunction) => {

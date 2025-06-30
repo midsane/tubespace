@@ -5,13 +5,14 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useScreenSizeStore } from "@/store/screenSizestate.store"
 import { LogoutBox } from "../dialogbox/logout"
 import { useUserStore } from "@/store/user.store"
+import { Skeleton } from "../ui/skeleton"
+import { UserRole } from "@/types/types"
 
 
 export const Sidebar = () => {
     const { mobileView, changeMobileView } = useScreenSizeStore()
     const [ICON_SIZE, setIconSize] = useState<number>(25);
     const [logoSize, setLogoSize] = useState<number>(40);
-    const username = useUserStore((state) => state.name);
     const UppersidebarItems = [
         {
             text: "Tubespace",
@@ -67,7 +68,6 @@ export const Sidebar = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    if (!username || username?.trim() === "") return <></>
 
     return (<nav className={`flex flex-col h-full w-fit pb-2 ${mobileView ? "sm:px-1 pt-4" : "pt-1 px-4  xl:px-6"} rounded-br-2xl  rounded-tr-2xl border border-sidebar-border justify-between bg-popover text-popover-foreground`} >
         <ul className="flex justify-center flex-col gap-4 p-2" >
@@ -82,12 +82,24 @@ export const Sidebar = () => {
 }
 
 const NavItem = ({ mobileView, text, icon }: { mobileView: boolean, text: string, icon: ReactNode }) => {
-    const navRoute = useLocation().pathname.split('/')[1].toLowerCase()
+    const navRoute = useLocation().pathname.split('/');
     const navigation = useNavigate()
-    const selected = navRoute === text.toLowerCase();
+    const username = useUserStore((state) => state.name);
+    const role = useUserStore((state) => state.role);
+    const prefix = role === UserRole.YOUTUBER ? "y" : "c";
+
+    let selected = false;
+    if (text.toLowerCase() === "profile" && navRoute.length === 4) {
+        selected = true;
+    }
+    else {
+        selected = text.toLowerCase() === navRoute[navRoute.length - 1]
+    }
+
     const handleNavigate = () => {
-        let redirectRoute = text.toLowerCase() === "tubespace" ? "/" : text.toLowerCase();
-        redirectRoute = text.toLowerCase() === "profile" ? `/profile/${useUserStore.getState().name}` : redirectRoute;
+        if (!username) return;
+        let redirectRoute = text.toLowerCase() === "tubespace" ? "/" : `/${prefix}/${text.toLowerCase()}`;
+        redirectRoute = text.toLowerCase() === "profile" ? `/${prefix}/profile/${username}` : redirectRoute;
         navigation(redirectRoute)
     }
 
@@ -105,11 +117,13 @@ const NavItem = ({ mobileView, text, icon }: { mobileView: boolean, text: string
 
     return (<span
         onClick={handleNavigate}
-        className={`${selected ? "bg-sidebar-accent text-sidebar-accent-foreground border-sidebar-border"
+        className={`${selected && username ? "bg-sidebar-accent text-sidebar-accent-foreground border-sidebar-border"
             : "border-transparent text-foreground"} items-center border rounded-sm flex py-2 cursor-pointer ${text === "Tubespace" ?
                 `mb-6 gap-2 ${!mobileView ? "pl-3 pr-2" : ""}` : `gap-4 ${mobileView ? "px-2" : "px-5"} hover:border-sidebar-border `}" `} >
-        <span>{icon}</span>
-        {!mobileView && <h2 className={`${text === "Tubespace" && "mt-1 ml-1"}`} >{text}</h2>}
+        {!username && text.toLowerCase() !== "tubespace" && <Skeleton className="h-[25px] w-[25px] rounded-full" />}
+        {!username && !mobileView && text.toLowerCase() !== "tubespace" && <Skeleton className="h-[25px] w-[100px] rounded-sm" />}
+        {(username || text.toLowerCase() === "tubespace") && <span>{icon}</span>}
+        {(username || text.toLowerCase() === "tubespace") && !mobileView && <h2 className={`${text === "Tubespace" && "mt-1 ml-1"}`} >{text}</h2>}
 
     </span>)
 }

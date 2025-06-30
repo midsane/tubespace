@@ -31,6 +31,8 @@ model User {
   bio           String?
   attachedLinks String?
   bannerImgUrl  String?
+  editorTasks   Task[]   @relation("EditorTasks", fields: [], references: [])
+  youtuberTasks Task[]   @relation("YoutuberTasks", fields: [], references: [])
 }
 
 enum Rating_val {
@@ -53,4 +55,6 @@ model Task {
   isCompleted Boolean    @default(false)
   rating      Rating_val @default(unrated)
   review      String?
+  youtuber    User       @relation("YoutuberTasks", fields: [youtuberId], references: [id])
+  editor      User       @relation("EditorTasks", fields: [editorId], references: [id])
 }

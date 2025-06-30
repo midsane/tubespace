@@ -13,7 +13,7 @@ const LoginUser = async (email: string, password: string) => {
 
     const resData: httpRequstType = await response.json();
     if (!response.ok || response.status >= 300) {
-        throw new Error(resData.message || "Failed to fetch profile data");
+        throw new Error(resData.message || "Failed to login user");
     };
     return resData.data;
 }
@@ -30,11 +30,48 @@ const RegisterUser = async (email: string, password: string, role: UserRole) => 
 
     const resData: httpRequstType = await response.json();
     if (!response.ok || response.status >= 300) {
-        throw new Error(resData.message || "Failed to fetch profile data");
+        throw new Error(resData.message || "Failed to register user");
     };
     return resData.data;
 }
+
+const checkAuth = async () => {
+    const response = await fetch(baseUrl + `user/check-auth`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+
+    });
+
+    const resData: httpRequstType = await response.json();
+    if (!response.ok || response.status >= 300) {
+        throw new Error(resData.message || "user not authenticated, go to login");
+    };
+    return resData.data;
+}
+
+const logout = async () => {
+    const response = await fetch(baseUrl + `user/logout`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+
+    });
+
+    const resData: httpRequstType = await response.json();
+    if (!response.ok || response.status >= 300) {
+        throw new Error(resData.message || "failed to logout user");
+    };
+    return resData.data;
+}
+
 export {
     LoginUser,
-    RegisterUser
+    RegisterUser,
+    checkAuth,
+    logout
 }

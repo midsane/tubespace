@@ -8,14 +8,27 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { logout } from "@/httpfnc/auth"
+import { useUserStore } from "@/store/user.store"
 import { LogOutIcon } from "lucide-react"
-import type { ReactNode } from "react"
+import { useState, type ReactNode } from "react"
+import { useNavigate } from "react-router-dom"
 
 export function LogoutBox({ TriggerJsx }: { TriggerJsx: ReactNode }) {
+    const navigate = useNavigate()
+    const clearState = useUserStore((state) => state.resetState)
+    const [loading, setLoading] = useState(false)
+    const handleLogout = async() => {
+        setLoading(true)
+        await logout()
+        clearState()
+        setLoading(false)
+        navigate("/")
+    }
 
     return (
-        <Dialog >
-            <form>
+        <Dialog>
+            <form> 
                 <DialogTrigger asChild>
                     {TriggerJsx}
                 </DialogTrigger>
@@ -25,9 +38,9 @@ export function LogoutBox({ TriggerJsx }: { TriggerJsx: ReactNode }) {
                         <LogOutIcon size={30} />
                     </DialogHeader>
                     <DialogFooter className="flex flex-col gap-2" >
-                        <Button className="bg-primary text-primary-foreground" type="submit">Logout</Button>
+                        <Button disabled={loading} onClick={handleLogout} className="bg-primary text-primary-foreground" type="submit">Logout</Button>
                         <DialogClose asChild>
-                            <Button className="bg-secondary text-secondary-foreground" type="button">cancel</Button>
+                            <Button disabled={loading} className="bg-secondary text-secondary-foreground" type="button">cancel</Button>
                         </DialogClose>
                     </DialogFooter>
                 </DialogContent>
