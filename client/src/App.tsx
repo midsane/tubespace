@@ -1,16 +1,22 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { LandingPage } from './components/landingpage/landingpage'
 import { RootLayout } from './pages/rootlayout'
 import { ProfilePage } from './pages/profilePage'
 import { TaskPage } from './pages/taskPage'
 import { NotificationPage } from './pages/notificationPage'
 import { MessagesPage } from './pages/messagePage'
 import { AuthPage } from './components/pagesUi/authPage/authPage'
+import { RootPageLayout } from './components/landingpage/rootPageLayout'
+import { LandingPage } from './components/landingpage/landingpage'
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage />,
+    element: <RootPageLayout />,
     children: [
+      {
+        index: true,
+        element: <LandingPage />
+      },
+
       {
         path: "auth",
         element: <AuthPage />

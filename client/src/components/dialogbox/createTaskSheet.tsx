@@ -11,7 +11,7 @@ export function CreateTaskSheet() {
     return (
         <Sheet open={submitting ? true : undefined} >
             <SheetTrigger asChild>
-                <Button variant="outline" disabled={submitting} size="sm">
+                <Button className="text-chart-3" variant="outline" disabled={submitting} size="sm">
                     <FilePlus /> Create Task
                 </Button>
             </SheetTrigger>

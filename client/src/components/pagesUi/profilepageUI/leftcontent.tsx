@@ -68,8 +68,7 @@ export const LeftContent = () => {
                     data?.editable ?
                         <EditProfileDialog />
                         :
-
-                        <Button className="flex gap-2 w-full" >
+                        <Button variant={"outline"} className="flex gap-2 text-chart-3 w-full" >
                             <MessageCircleIcon />
                             <h1 className="max-[600px]:hidden" >chat</h1>
                         </Button>

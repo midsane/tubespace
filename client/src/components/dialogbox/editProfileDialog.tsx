@@ -19,7 +19,7 @@ export function EditProfileDialog() {
         <Dialog>
             <form>
                 <DialogTrigger asChild>
-                    <Button className="flex gap-2 w-full" >
+                    <Button variant={"outline"} className="flex text-chart-3 gap-2 w-full" >
                         <EditIcon />
                         <h1 className="max-[600px]:hidden" >Edit Profile</h1>
                     </Button>

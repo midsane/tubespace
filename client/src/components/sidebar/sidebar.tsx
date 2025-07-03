@@ -16,7 +16,7 @@ export const Sidebar = () => {
     const UppersidebarItems = [
         {
             text: "Tubespace",
-            icon: <img src={logoImage} height={logoSize} width={logoSize} />
+            icon: <img src={logoImage} className={`h-${logoSize} aspect-square`} />
         },
         {
             text: "Profile",
@@ -49,17 +49,17 @@ export const Sidebar = () => {
             if (window.innerWidth < 1100) {
                 changeMobileView(true);
                 setIconSize(20);
-                setLogoSize(35);
+                setLogoSize(8);
             }
             else if (window.innerWidth < 400) {
                 changeMobileView(true);
                 setIconSize(18);
-                setLogoSize(30);
+                setLogoSize(6);
             }
             else {
                 changeMobileView(false);
                 setIconSize(25);
-                setLogoSize(40);
+                setLogoSize(10);
             }
 
         }

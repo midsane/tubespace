@@ -2,14 +2,18 @@ import type { ReactNode } from "react"
 import { ModeToggle } from "../toggleTheme/toggletheme"
 import { useScreenSizeStore } from "@/store/screenSizestate.store"
 
-export const PageWrapper = ({ HeaderJSX = <></>, leftContent, rightContent, headerText, }:
-    { HeaderJSX?: ReactNode, rightContent: ReactNode, leftContent: ReactNode, headerText: string }) => {
+export const PageWrapper = ({ HeaderJSX = <></>, HeaderIcon = <></>, leftContent, rightContent, headerText, }:
+    { HeaderJSX?: ReactNode, HeaderIcon?: ReactNode, rightContent: ReactNode, leftContent: ReactNode, headerText: string }) => {
 
     const { mobileView } = useScreenSizeStore()
     return (<section className="h-dvh w-full flex" >
         <div className={`flex flex-col pt-2 pb-5 border-r h-full border-border ${mobileView ? "w-full" : "w-[65%]"}`} >
             <div className="items-center h-[12%] flex justify-between border-b border-border px-4 ">
-                <h1>{headerText}</h1>
+                <div className="flex gap-2 items-center ">
+                    {HeaderIcon}
+                    <h1>{headerText}</h1>
+
+                </div>
                 <div className="flex justify-end items-center gap-2">
                     {HeaderJSX}
                     <ModeToggle />
