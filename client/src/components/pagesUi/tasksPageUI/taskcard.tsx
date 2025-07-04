@@ -11,6 +11,7 @@ export const TaskCard = ({ id, title, assignedByPfp, assignedToPfp, assignedBy, 
         assignedToPfp?: string, deadline: number, description: string, attachment: string, completed?: boolean
     })) => {
 
+        console.log(assignedByPfp, assignedToPfp, assignedBy, assignedTo, title, description, deadline, attachment, completed, id);
     const isDescriptionLong = description && description.length > CHAR_LIMIT;
     const truncatedDescription = isDescriptionLong ? description.slice(0, CHAR_LIMIT) + "..." : description;
 

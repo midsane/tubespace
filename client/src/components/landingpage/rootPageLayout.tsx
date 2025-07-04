@@ -10,7 +10,7 @@ import { checkAuth } from "@/httpfnc/auth";
 import { Skeleton } from "../ui/skeleton";
 
 export const RootPageLayout: React.FC = () => {
-    const { data, isLoading, error } = useQuery<AuthDataType>({
+    const { data, isLoading } = useQuery<AuthDataType>({
         queryKey: ["check-auth"],
         queryFn: checkAuth,
         enabled: useUserStore.getState().email !== "",

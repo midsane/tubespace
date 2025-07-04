@@ -1,7 +1,7 @@
 // components/Footer.tsx
 import { motion } from "framer-motion"
 import { Separator } from "@/components/ui/separator"
-import { Github, Mail, ShieldCheck, Sparkles } from "lucide-react"
+import { Github } from "lucide-react"
 import { Link } from "react-router-dom"
 
 export default function Footer() {

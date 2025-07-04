@@ -6,14 +6,14 @@ import {
 import { ProfileEditCard } from "../pagesUi/profilepageUI/editProfile"
 import { EditIcon } from "lucide-react"
 import { Button } from "../ui/button"
-import { useUserStore } from "@/store/user.store"
+// import { useUserStore } from "@/store/user.store"
 
 export function EditProfileDialog() {
-    const name = useUserStore((state) => state.name)
-    const bio = useUserStore((state) => state.bio)
-    const link = useUserStore((state) => state.attachedLinks)
-    const profileImgUrl = useUserStore((state) => state.profileImgUrl)
-    const bannerImgUrl = useUserStore((state) => state.bannerImgUrl)
+    // const name = useUserStore((state) => state.name)
+    // const bio = useUserStore((state) => state.bio)
+    // const link = useUserStore((state) => state.attachedLinks)
+    // const profileImgUrl = useUserStore((state) => state.profileImgUrl)
+    // const bannerImgUrl = useUserStore((state) => state.bannerImgUrl)
 
     return (
         <Dialog>
