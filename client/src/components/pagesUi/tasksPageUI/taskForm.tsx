@@ -20,13 +20,13 @@ import { Separator } from "@/components/ui/separator"
 
 type FormValues = {
     taskTitle: string;
+    workDescription: string;
+    deadline: string;
+
     title: string;
     description: string;
-    deadline: string;
     assignedTo: string;
-    videos: FileList;
     madeForKids: boolean;
-    tags: string[];
     thumbnail: FileList;
 };
 
@@ -36,7 +36,7 @@ type VideoTaskFormProps = {
 };
 
 export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps) => {
-    const { register, handleSubmit, control, reset, watch, formState: { errors } } = useForm<FormValues>({
+    const { register, handleSubmit, control, reset, formState: { errors } } = useForm<FormValues>({
         defaultValues: {
             assignedTo: "",
         },
@@ -50,27 +50,27 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-
-    const watchedVideos = watch("videos");
     const onSubmit = async (data: FormValues) => {
         try {
             setSubmitting(true);
 
             const formData = new FormData();
             formData.append("taskTitle", data.taskTitle);
+            formData.append("workDescription", data.workDescription);
             formData.append("deadline", data.deadline);
             formData.append("assignedTo", data.assignedTo);
-
-            formData.append("madeForKids", String(data.madeForKids));
-            formData.append("tags", JSON.stringify(tags));
-
-            if (data.thumbnail?.[0]) {
-                formData.append("thumbnail", data.thumbnail[0]);
-            }
+            selectedFiles.forEach((file) => formData.append("files", file));
 
             if (data.title) formData.append("title", data.title);
             if (data.description) formData.append("description", data.description);
-            selectedFiles.forEach((file) => formData.append("files", file));
+            formData.append("tags", JSON.stringify(tags));
+           
+
+            formData.append("madeForKids", String(data.madeForKids));
+            console.log(data.thumbnail)
+            if (data.thumbnail?.[0]) {
+                formData.append("thumbnail", data.thumbnail[0]);
+            }
 
             const res = await fetch(`${baseUrl}task/create-task`, {
                 method: "POST",
@@ -83,7 +83,7 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                 throw new Error(result.message || "Task creation failed");
             }
 
-            console.log("✅ Task created:", result.task);
+            console.log("Task created:", result.task);
             reset();
         } catch (err: any) {
             console.error(err);
@@ -102,7 +102,9 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
 
 
                 <label>Work description</label>
-                <Textarea {...register("description")} />
+                <Textarea {...register("workDescription", { required: "Workd description is required" })} />
+                {errors.workDescription && <span className="text-red-500 text-sm">{errors.workDescription.message}</span>}
+
                 <h2 className="text-muted-foreground ">Add video/img for editor's reference: (multiple files can be added)</h2>
 
                 <label>Videos/Images</label>
@@ -116,8 +118,6 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                     }}
                 />
 
-
-                {/* Show preview thumbnails */}
                 {selectedFiles.length > 0 && (
                     <div className="mt-4 flex flex-wrap gap-3">
                         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -132,7 +132,7 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                                             const isVideo = file.type.startsWith("video");
                                             return (
                                                 <CarouselItem key={idx} className="flex flex-col items-center gap-2">
-                                                    {/* Top bar with Trash + Close */}
+
                                                     <div className="flex w-full justify-between py-1">
                                                         <Button
                                                             variant="destructive"
@@ -167,45 +167,6 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                         </Dialog>
                     </div>
                 )}
-                {watchedVideos && watchedVideos.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-3">
-                        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" type="button">Preview/Delete Uploaded Files</Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-3xl">
-
-                                <Carousel className="w-full relative max-w-full">
-                                    <CarouselContent>
-                                        {Array.from(watchedVideos).map((file, idx) => {
-                                            const url = URL.createObjectURL(file);
-                                            const isVideo = file.type.startsWith("video");
-                                            return (
-                                                <CarouselItem key={idx} className="flex justify-center items-center">
-                                                    {isVideo ? (
-                                                        <video
-                                                            src={url}
-                                                            controls
-                                                            className="max-h-[70vh] w-auto rounded-lg"
-                                                        />
-                                                    ) : (
-                                                        <img src={url} className="max-h-[70vh] w-auto rounded-lg" />
-                                                    )}
-                                                </CarouselItem>
-                                            );
-                                        })}
-                                    </CarouselContent>
-
-                                    {/* Navigation buttons */}
-                                    <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10" />
-                                    <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10" />
-                                </Carousel>
-
-                            </DialogContent>
-                        </Dialog>
-                    </div>
-                )}
-
 
                 <label>Deadline</label>
                 <Input type="date" {...register("deadline", { required: "Deadline is required" })} />
@@ -242,7 +203,6 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                 <label>Description</label>
                 <Textarea {...register("description")} />
 
-
                 <label className="font-semibold">Add Tags + :</label>
                 <div className="flex gap-2 flex-wrap">
                     {tags.map((tag, idx) => (
@@ -271,8 +231,6 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                         className="w-auto"
                     />
                 </div>
-
-
 
                 <label className="font-semibold">For Kids</label>
                 <Controller

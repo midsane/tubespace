@@ -24,7 +24,7 @@ const login = asyncHandler(async (req: any, res: Response) => {
     if (!jwtSecret)
         return res.status(500).json(new ApiResponse(null, "internal server err"))
 
-    const token = jwt.sign({ id: userExist.id, name: userExist.name, email: userExist.email }, jwtSecret, { expiresIn: "2d" })
+    const token = jwt.sign({ id: userExist.id, name: userExist.name, email: userExist.email, role: userExist.role }, jwtSecret, { expiresIn: "2d" })
 
     if (!token)
         return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
@@ -38,7 +38,6 @@ const login = asyncHandler(async (req: any, res: Response) => {
     res.status(200).json(new ApiResponse(filteredData, "user logged in successfully!"));
 
 })
-
 
 
 const signup = asyncHandler(async (req: any, res: Response) => {
@@ -72,7 +71,7 @@ const signup = asyncHandler(async (req: any, res: Response) => {
     if (!jwtSecret)
         return res.status(500).json(new ApiResponse(null, "internal server err"))
 
-    const token = jwt.sign({ id: user.id, name: user.name, email: user.email }, jwtSecret, { expiresIn: "2d" })
+    const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, jwtSecret, { expiresIn: "2d" })
 
     if (!token)
         return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))

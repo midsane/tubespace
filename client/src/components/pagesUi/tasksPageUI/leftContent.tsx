@@ -1,7 +1,10 @@
 import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
-import {  motion } from "framer-motion"
+import { motion } from "framer-motion"
 import { TaskCard } from "./taskcard"
+import { useQuery } from "@tanstack/react-query"
+import type { TaskDataType } from "@/types/types"
+import { fetchTasks } from "@/httpfnc/task"
 
 const assignedTasks = [
     {
@@ -59,9 +62,22 @@ const completedTasks = [
 
 export const LeftContent = () => {
     const [activeTab, setActiveTab] = useState<number>(1)
+    const { data, isLoading, error } = useQuery<TaskDataType[]>({
+        queryKey: ["fetchTask", activeTab],
+        queryFn: () => fetchTasks(),
+        enabled: true,
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+
+    let assignedTasks: TaskDataType[] = [];
+    let completedTasks: TaskDataType[] = [];
+
+    if (data) {
+        assignedTasks = data.filter(task => !task.isCompleted);
+        completedTasks = data.filter(task => task.isCompleted);
+    }
 
     return (<div className="h-full  w-full flex flex-col justify-center items-center " >
-
         <div className="w-full" >
             <div className="flex relative h-12 sm:h-10 w-full items-center text-xs sm:text-sm">
 
@@ -81,12 +97,14 @@ export const LeftContent = () => {
         <div className="flex h-full py-5 items-center w-full flex-col gap-5 overflow-y-scroll">
             {activeTab === 1 && assignedTasks.map((task) => (
                 <TaskCard
+                    loading={isLoading}
                     key={task.id}
                     {...task}
                 />
             ))}
             {activeTab === 2 && completedTasks.map((task) => (
                 <TaskCard
+                    loading={isLoading}
                     key={task.id}
                     {...task}
                 />

@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { checkAuth, login, logout, signup } from "../../controllers/user/userauth";
-import { fetchProfile } from "../../controllers/user/userprofile";
+import { checkAuth, login, logout, signup } from "../../controllers/user/userauth.controller";
+import { fetchProfile } from "../../controllers/user/userprofile.controller";
 import { authMiddleware } from "../../middleware/authMiddleware";
-import { fetchTopEditors } from "../../controllers/editors/editors";
+import { fetchTopEditors } from "../../controllers/editors/editors.controller";
 
 const userRouter = Router();
 

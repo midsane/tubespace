@@ -39,7 +39,7 @@ import { Check, Search } from "lucide-react";
 import { VideoTaskForm } from "../pagesUi/tasksPageUI/taskForm";
 
 const mockEditors = [
-    { id: "editor1", name: "c9" },
+    { id: "editor1", name: "midbroyoyo1" },
     { id: "editor2", name: "Ravi" },
     { id: "editor3", name: "Nandini" },
 ];

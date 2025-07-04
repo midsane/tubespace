@@ -1,39 +1,84 @@
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FullTextDialogView } from "../common/fullTextDialogView"
+import { UserRole, type TaskDataType } from "@/types/types";
+import { FilePenLine, Paperclip, UploadCloudIcon } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 
 const CHAR_LIMIT = 80;
 
+type TaskCardProps = Partial<TaskDataType> & {
+    loading?: boolean;
+}
 
-export const TaskCard = ({ id, title, assignedByPfp, assignedToPfp, assignedBy, assignedTo, deadline, description, attachment, completed = false }:
-    ({
-        id: number, title: string, assignedBy?: string, assignedTo?: string, assignedByPfp?: string,
-        assignedToPfp?: string, deadline: number, description: string, attachment: string, completed?: boolean
-    })) => {
+export const TaskCard = (
+    {
+        loading = false,
+        id,
+        taskTitle,
+        deadline,
+        workDescription,
+        attachments,
+        isCompleted = false,
+        editor,
+        youtuber
+    }: TaskCardProps) => {
 
-        console.log(assignedByPfp, assignedToPfp, assignedBy, assignedTo, title, description, deadline, attachment, completed, id);
-    const isDescriptionLong = description && description.length > CHAR_LIMIT;
-    const truncatedDescription = isDescriptionLong ? description.slice(0, CHAR_LIMIT) + "..." : description;
+    const taskPage = youtuber ? UserRole.EDITOR : UserRole.YOUTUBER;
+    const pfp = editor?.profileImgUrl || youtuber?.profileImgUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s";
+    const isDescriptionLong = workDescription && workDescription.length > CHAR_LIMIT;
+    const truncatedDescription = isDescriptionLong ? workDescription.slice(0, CHAR_LIMIT) + "..." : workDescription;
 
     return (<Card className="w-[90%] text-popover-foreground">
         <CardHeader className="flex flex-col gap-3" >
             <div className="flex gap-2 items-end">
-                {assignedByPfp && <img src={assignedByPfp} alt="user profile" className="object-cover border border-popover-foreground w-10 h-10 rounded-full" />}
-                <span className="text-popover-foreground font-medium">{assignedBy}</span>
+                {pfp && <img src={pfp} alt="user profile" className="object-cover border border-popover-foreground w-10 h-10 rounded-full" />}
+                <span className="text-popover-foreground font-medium flex flex-col ">
+                    <p className="text-xs opacity-80" >{taskPage === UserRole.EDITOR ? "assigned by" : "assigned to"}</p>
+                    <h3>{taskPage === UserRole.EDITOR ? youtuber?.name : editor?.name}</h3>
+                </span>
             </div>
-            {title?.trim() !== "" && <CardTitle>{title}</CardTitle>}
-            {description?.trim() !== "" && <CardDescription className="flex text-popover-foreground flex-col gap-1" >
+            {taskTitle?.trim() !== "" && <CardTitle>{taskTitle}</CardTitle>}
+            {workDescription?.trim() !== "" && <CardDescription className="flex text-popover-foreground flex-col gap-1" >
                 <p>{truncatedDescription}</p>
-                {isDescriptionLong && <FullTextDialogView text={description} />}
+                {isDescriptionLong && <FullTextDialogView text={workDescription} />}
             </CardDescription>}
         </CardHeader>
-        <CardFooter className="flex sm:flex-row-reverse flex-col sm:items-stretch items-end gap-2" >
+        <CardFooter className="flex flex-col items-end gap-2 sm:gap-4" >
+            <div className="text-xs w-full whitespace-nowrap text-chart-3" >
+                <h3>{taskPage === UserRole.EDITOR ?
+                    <div className="w-full">{attachments && attachments.length > 0 ?
+                        <div className="flex items-center sm:items-end justify-between w-full" >
+                            <div className="p-1 hover:opacity-100 active:scale-90 ease-in duration-75
+                            rounded-sm opacity-80 text-chart-4 border-2" >
+                                <UploadCloudIcon size={20} />
+                            </div>
+                            <Paperclip className="opacity-60" size={20} />
+                        </div> :
+                        <div className="flex items-center sm:items-end justify-between w-full" >
+                            <div className="p-1 hover:opacity-100 active:scale-90 ease-in duration-75
+                            rounded-sm opacity-80 text-chart-4 border-2" >
+                                <UploadCloudIcon size={20} />
+                            </div>
+                            <p className="opacity-60 text-sm" >no attachments</p>
+                        </div>
+                    }</div>
+                    :
+                    <>
+                        <div className="p-1 w-fit hover:opacity-100 active:scale-90 ease-in duration-75
+                            rounded-sm opacity-80 text-chart-4 border-2" >
+                            <FilePenLine size={20} />
+                        </div>
+                    </>}</h3>
+            </div>
 
+            <Separator/>
             <div className="text-xs opacity-60 whitespace-nowrap" >
-                {!completed ? new Date(deadline).toLocaleDateString("en-US", {
+                {!isCompleted && deadline ? new Date(deadline).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                     hour: "2-digit",
+                    year: "numeric",
                     minute: "2-digit"
                 }) : "Completed"}
             </div>

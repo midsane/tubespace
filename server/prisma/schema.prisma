@@ -45,14 +45,21 @@ enum Rating_val {
 }
 
 model Task {
-  id          Int        @id @default(autoincrement())
-  taskTitle   String
-  youtuberId  Int
-  editorId    Int
-  deadline    DateTime
-  title       String
-  description String
-  Files       String[]
+  id              Int      @id @default(autoincrement())
+  taskTitle       String
+  workDescription String
+  deadline        DateTime
+  attachments     String[]
+  youtuberId      Int
+  editorId        Int
+
+  title       String?
+  description String?
+  tags        String[]
+  madeForKids Boolean  @default(false)
+  thumbnail   String?
+
+  createdAt   DateTime   @default(now())
   isCompleted Boolean    @default(false)
   rating      Rating_val @default(unrated)
   review      String?
