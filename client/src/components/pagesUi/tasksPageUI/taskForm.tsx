@@ -16,6 +16,7 @@ import { EditorSelectDialog } from "@/components/dialogbox/createTaskSheet";
 import { Button } from "@/components/ui/button";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator"
 
 type FormValues = {
     taskTitle: string;
@@ -94,110 +95,17 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-6 border h-[100dvh] overflow-y-scroll rounded-lg w-full max-w-full mx-auto">
+                <h2 className="text-muted-foreground ">Task Details (required)</h2>
                 <label className="font-semibold">TaskTitle</label>
                 <Input {...register("taskTitle", { required: "Task title is required" })} />
                 {errors.taskTitle && <span className="text-red-500 text-sm">{errors.taskTitle.message}</span>}
 
-                <p className="text-muted-foreground text-sm">Fill this video details right now or before uploading... Scroll & click on Save button to save changes</p>
 
-                <label>title</label>
-                <Input {...register("title")} />
-
-                <label>description</label>
+                <label>Work description</label>
                 <Textarea {...register("description")} />
+                <h2 className="text-muted-foreground ">Add video/img for editor's reference: (multiple files can be added)</h2>
 
-                <label className="font-semibold">Add Tags + :</label>
-                <div className="flex gap-2 flex-wrap">
-                    {tags.map((tag, idx) => (
-                        <div key={idx} className="border rounded-full px-3 py-1 flex items-center gap-2">
-                            <span>{tag}</span>
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => setTags(tags.filter((_, i) => i !== idx))}
-                            >
-                                ×
-                            </Button>
-                        </div>
-                    ))}
-                    <Input
-                        placeholder="Add tag"
-                        value={newTag}
-                        onChange={(e) => setNewTag(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter" && newTag.trim()) {
-                                e.preventDefault();
-                                setTags((prev) => [...prev, newTag.trim()]);
-                                setNewTag("");
-                            }
-                        }}
-                        className="w-auto"
-                    />
-                </div>
-
-
-                <label>deadline</label>
-                <Input type="date" {...register("deadline", { required: "Deadline is required" })} />
-                {errors.deadline && <span className="text-red-500 text-sm">{errors.deadline.message}</span>}
-
-                <label>assign to:</label>
-                <Controller
-                    control={control}
-                    name="assignedTo"
-                    rules={{ required: "Please select an editor" }}
-                    render={({ field }) => (
-                        <>
-                            <EditorSelectDialog
-                                value={field.value}
-                                onChange={field.onChange}
-                            />
-                            {errors.assignedTo && (
-                                <p className="text-red-500 text-sm">{errors.assignedTo.message}</p>
-                            )}
-                        </>
-
-                    )}
-                />
-
-
-                <label className="font-semibold">For Kids</label>
-                <Controller
-                    control={control}
-                    name="madeForKids"
-                    defaultValue={false}
-                    render={({ field }) => (
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                    )}
-                />
-
-                <label className="font-semibold">Upload Thumbnail</label>
-                <Input
-                    type="file"
-                    accept="image/*"
-                    {...register("thumbnail")}
-                    onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                            setThumbnailPreviewUrl(URL.createObjectURL(file));
-                        } else {
-                            setThumbnailPreviewUrl(null);
-                        }
-                    }}
-                />
-                {thumbnailPreviewUrl && (
-                    <div className="mt-2">
-                        <p className="text-muted-foreground text-sm mb-1">Thumbnail Preview:</p>
-                        <img
-                            src={thumbnailPreviewUrl}
-                            alt="Thumbnail Preview"
-                            className="max-h-[200px] rounded-lg border"
-                        />
-                    </div>
-                )}
-
-
-
-                <label>add video: (multiple videos can be added)</label>
+                <label>Videos/Images</label>
                 <Input
                     type="file"
                     multiple
@@ -295,6 +203,109 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
 
                             </DialogContent>
                         </Dialog>
+                    </div>
+                )}
+
+
+                <label>Deadline</label>
+                <Input type="date" {...register("deadline", { required: "Deadline is required" })} />
+                {errors.deadline && <span className="text-red-500 text-sm">{errors.deadline.message}</span>}
+
+                <label>Assign to:</label>
+                <Controller
+                    control={control}
+                    name="assignedTo"
+                    rules={{ required: "Please select an editor" }}
+                    render={({ field }) => (
+                        <>
+                            <EditorSelectDialog
+                                value={field.value}
+                                onChange={field.onChange}
+                            />
+                            {errors.assignedTo && (
+                                <p className="text-red-500 text-sm">{errors.assignedTo.message}</p>
+                            )}
+                        </>
+
+                    )}
+                />
+
+
+                <Separator />
+                <h2 className="text-muted-foreground ">Youtube Video Details</h2>
+
+                <p className="text-muted-foreground text-sm">Fill the below video details right now or before uploading... Scroll & click on Save button to save changes</p>
+
+                <label>Title</label>
+                <Input {...register("title")} />
+
+                <label>Description</label>
+                <Textarea {...register("description")} />
+
+
+                <label className="font-semibold">Add Tags + :</label>
+                <div className="flex gap-2 flex-wrap">
+                    {tags.map((tag, idx) => (
+                        <div key={idx} className="border rounded-full px-3 py-1 flex items-center gap-2">
+                            <span>{tag}</span>
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => setTags(tags.filter((_, i) => i !== idx))}
+                            >
+                                ×
+                            </Button>
+                        </div>
+                    ))}
+                    <Input
+                        placeholder="Add tag"
+                        value={newTag}
+                        onChange={(e) => setNewTag(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && newTag.trim()) {
+                                e.preventDefault();
+                                setTags((prev) => [...prev, newTag.trim()]);
+                                setNewTag("");
+                            }
+                        }}
+                        className="w-auto"
+                    />
+                </div>
+
+
+
+                <label className="font-semibold">For Kids</label>
+                <Controller
+                    control={control}
+                    name="madeForKids"
+                    defaultValue={false}
+                    render={({ field }) => (
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    )}
+                />
+
+                <label className="font-semibold">Upload Thumbnail</label>
+                <Input
+                    type="file"
+                    accept="image/*"
+                    {...register("thumbnail")}
+                    onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                            setThumbnailPreviewUrl(URL.createObjectURL(file));
+                        } else {
+                            setThumbnailPreviewUrl(null);
+                        }
+                    }}
+                />
+                {thumbnailPreviewUrl && (
+                    <div className="mt-2">
+                        <p className="text-muted-foreground text-sm mb-1">Thumbnail Preview:</p>
+                        <img
+                            src={thumbnailPreviewUrl}
+                            alt="Thumbnail Preview"
+                            className="max-h-[200px] rounded-lg border"
+                        />
                     </div>
                 )}
 
