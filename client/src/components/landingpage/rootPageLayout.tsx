@@ -3,7 +3,7 @@ import { ModeToggle } from "../toggleTheme/toggletheme";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useUserStore } from "@/store/user.store";
-import { fallback_profileImg } from "@/constast";
+import { fallback_profileImg, logo } from "@/constast";
 import { UserRole, type AuthDataType } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { checkAuth } from "@/httpfnc/auth";
@@ -28,8 +28,8 @@ export const RootPageLayout: React.FC = () => {
         <nav className="flex h-[8dvh] md:h-[10dvh] border text-sidebar-foreground border-sidebar-border z-50 
         fixed top-0 left-0 right-0  px-6 py-3  items-center justify-between" >
             <div className="flex gap-6 items-center" >
-                <Link to="/" ><img className="h-8" src="favicon.png" /></Link>
-                
+                <Link to="/" ><img className="h-8" src={logo} /></Link>
+
             </div>
             <li className="flex gap-4 items-center" >
                 <ModeToggle />

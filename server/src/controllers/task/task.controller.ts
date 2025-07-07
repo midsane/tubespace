@@ -156,7 +156,9 @@ const uploadEditedVideoToServer = asyncHandler(async (req: any, res: Response) =
         return res.status(403).json({ message: "Only editors can upload edited videos" });
     }
 
-    const { taskId } = req.body;
+    const { taskId : taskid } = req.body;
+    const taskId = parseInt(taskid);
+
     const task = await client.task.findUnique({ where: { id: taskId } });
 
     if (!task) {
@@ -186,8 +188,10 @@ const uploadEditedVideoToServer = asyncHandler(async (req: any, res: Response) =
 })
 
 const getVideoPreview = asyncHandler(async (req: any, res: Response) => {
-    const { taskId } = req.params;
+    const { taskId: taskid } = req.params;
+    const taskId = parseInt(taskid);
     const { id } = req.user;
+    console.log("taskId: ", typeof taskId, "id: ", id);
     if (!taskId) {
         return res.status(400).json({ message: "task ID is required" });
     }
@@ -199,6 +203,13 @@ const getVideoPreview = asyncHandler(async (req: any, res: Response) => {
             taskTitle: true,
             youtuberId: true,
             id: true,
+            editor: {
+                select: {
+                    id: true,
+                    name: true,
+                    profileImgUrl: true,
+                }
+            }
         }
     });
 

@@ -27,6 +27,11 @@ export const TaskCard = (
         youtuber
     }: TaskCardProps) => {
 
+    if (!id) {
+        console.error("Task ID is undefined or null");
+        return <></>
+    }
+
     const taskPage = youtuber ? UserRole.EDITOR : UserRole.YOUTUBER;
     const pfp = editor?.profileImgUrl || youtuber?.profileImgUrl || noPfpImg;
     const isDescriptionLong = workDescription && workDescription.length > CHAR_LIMIT;
@@ -39,6 +44,7 @@ export const TaskCard = (
             return;
         }
     }
+
 
     return (<Card className="w-[90%] text-popover-foreground">
         <CardHeader className="flex flex-col gap-3" >
@@ -68,7 +74,9 @@ export const TaskCard = (
                         <div className="flex items-center sm:items-end justify-between w-full" >
                             {!loading && <div className="p-1 hover:opacity-100 active:scale-90 ease-in duration-75
                             rounded-sm opacity-80 text-chart-4 border-2" >
-                                <UploadEditedVideoDialog TriggerJsx={<UploadCloudIcon size={20} />} />
+                                <UploadEditedVideoDialog
+                                    taskId={id}
+                                    TriggerJsx={<UploadCloudIcon size={20} />} />
                             </div>}
                             {loading && <Skeleton />}
                             {!loading && <Paperclip className="opacity-60" size={20} />}
@@ -76,7 +84,9 @@ export const TaskCard = (
                         <div className="flex items-center sm:items-end justify-between w-full" >
                             {!loading && <div className="p-1 hover:opacity-100 active:scale-90 ease-in duration-75
                             rounded-sm opacity-80 text-chart-4 border-2" >
-                                <UploadEditedVideoDialog TriggerJsx={<UploadCloudIcon size={20} />} />
+                                <UploadEditedVideoDialog
+                                    taskId={id}
+                                    TriggerJsx={<UploadCloudIcon size={20} />} />
                             </div>}
                             {loading && <Skeleton />}
                             {!loading && <p className="opacity-60 text-sm" >no attachments</p>}

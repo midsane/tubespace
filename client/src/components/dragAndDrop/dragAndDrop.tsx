@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
+import { baseUrl } from "@/constast"
 
 interface VideoFile {
     file: File
@@ -12,7 +13,7 @@ interface VideoFile {
     duration: number
 }
 
-export function DragAndDropVideo() {
+export function DragAndDropVideo({ taskId }: { taskId: number }) {
     const [dragActive, setDragActive] = useState(false)
     const [videoFile, setVideoFile] = useState<VideoFile | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
@@ -25,6 +26,54 @@ export function DragAndDropVideo() {
     const videoRef = useRef<HTMLVideoElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
+
+    const handleUpload = async () => {
+        if (!videoFile) {
+            alert("Please upload a video file first")
+            return
+        }
+        const formData = new FormData()
+        formData.append("video", videoFile.file)
+        formData.append("taskId", taskId.toString())
+        const response = await fetch(`${baseUrl}task/upload-video-to-server`, {
+            method: "POST",
+            body: formData,
+            credentials: "include",
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json()
+            alert(`Upload failed: ${errorData.message}`)
+            return
+        }
+
+        const data = await response.json()
+        alert("Video uploaded successfully!")
+        console.log(data)
+        // Reset state after successful upload
+        setVideoFile(null)
+        setCurrentTime(0)
+        setDuration(0)
+        setIsPlaying(false)
+        if (videoRef.current) {
+            videoRef.current.pause()
+            videoRef.current.src = ""
+        }
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ""
+        }
+        setIsFullscreen(false)
+        setIsMuted(false)
+        setVolume(1)
+        setDragActive(false)
+        if (containerRef.current) {
+            containerRef.current.classList.remove("bg-primary/5", "border-primary")
+        }
+        if (videoRef.current) {
+            videoRef.current.load()
+        }
+        console.log("Video uploaded and state reset")
+    }
 
     const handleDrag = useCallback((e: React.DragEvent) => {
         e.preventDefault()
@@ -299,7 +348,7 @@ export function DragAndDropVideo() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button>
+                            <Button onClick={handleUpload} >
                                 <UploadIcon size={20} />
                                 Upload to our Server
                             </Button>
