@@ -9,3 +9,11 @@ export interface TopEditorsData {
       id: number; 
       score: number;
 }
+
+export interface TopYoutubersData {
+      name: string ;
+      bio?: string | null;
+      profileImgUrl?: string | null;
+      id: number;
+      videosUploaded: number
+}

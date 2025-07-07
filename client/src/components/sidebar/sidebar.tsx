@@ -84,8 +84,8 @@ export const Sidebar = () => {
 const NavItem = ({ mobileView, text, icon }: { mobileView: boolean, text: string, icon: ReactNode }) => {
     const navRoute = useLocation().pathname.split('/');
     const navigation = useNavigate()
-    const username = useUserStore((state) => state.name);
-    const role = useUserStore((state) => state.role);
+    const username = useUserStore((state) => state.user.name);
+    const role = useUserStore((state) => state.user.role);
     const prefix = role === UserRole.YOUTUBER ? "y" : "c";
 
     let selected = false;

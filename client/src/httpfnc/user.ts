@@ -9,7 +9,7 @@ const getProfileData = async (username: string) => {
         },
         credentials: "include",
     });
-   
+
     const resData: httpRequstType = await response.json();
 
     if (!response.ok || response.status >= 300) {
@@ -26,16 +26,34 @@ const getTopEditors = async () => {
         },
         credentials: "include",
     });
-   
+
     const resData: httpRequstType = await response.json();
 
     if (!response.ok || response.status >= 300) {
-        throw new Error(resData.message || "Failed to fetch profile data");
+        throw new Error(resData.message || "Failed to fetch top editors data");
+    };
+    return resData.data;
+}
+
+const getTopYoutubers = async () => {
+    const response = await fetch(baseUrl + `user/top-youtubers`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+
+    const resData: httpRequstType = await response.json();
+
+    if (!response.ok || response.status >= 300) {
+        throw new Error(resData.message || "Failed to fetch top youtubers data");
     };
     return resData.data;
 }
 
 export {
     getProfileData,
-    getTopEditors
+    getTopEditors,
+    getTopYoutubers
 }

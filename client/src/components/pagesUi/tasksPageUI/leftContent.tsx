@@ -1,64 +1,12 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Separator } from "@/components/ui/separator"
 import { motion } from "framer-motion"
 import { TaskCard } from "./taskcard"
 import { useQuery } from "@tanstack/react-query"
 import type { TaskDataType } from "@/types/types"
 import { fetchTasks } from "@/httpfnc/task"
-
-const assignedTasks = [
-    {
-        id: 1,
-        title: "Design Review",
-        assignedBy: "adi",
-        assignedTo: "John Doe",
-        deadline: + new Date("2024-01-15"),
-        description: "Review UI mockups, make sure to follow brand guidelines and color scheme. pick the right fonts and sizes.",
-        attachment: "design-files.zip",
-        completed: false,
-        assignedByPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-        assignedToPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-    },
-    {
-        id: 2,
-        title: "API Integration",
-        assignedBy: "adi",
-        assignedTo: "Jane Smith",
-        deadline: + new Date("2024-01-15"),
-        description: "Connect frontend to backend",
-        attachment: "api-docs.pdf",
-        completed: false,
-        assignedByPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-        assignedToPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-    },
-]
-
-const completedTasks = [
-    {
-        id: 3,
-        title: "Database Setup",
-        assignedBy: "adi",
-        assignedTo: "Mike Johnson",
-        deadline: + new Date("2024-01-15"),
-        description: "Configure production database",
-        attachment: "db-schema.sql",
-        assignedByPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-        assignedToPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-        completed: true,
-    },
-    {
-        id: 4,
-        title: "User Authentication",
-        assignedBy: "adi",
-        assignedTo: "Sarah Wilson",
-        assignedByPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-        assignedToPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-        deadline: + new Date("2024-01-15"),
-        description: "Implement login system",
-        attachment: "auth-flow.png",
-        completed: true,
-    },
-]
+import { useTaskStore } from "@/store/task.store"
+import { BrushCleaning } from "lucide-react"
 
 export const LeftContent = () => {
     const [activeTab, setActiveTab] = useState<number>(1)
@@ -69,12 +17,21 @@ export const LeftContent = () => {
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
-    let assignedTasks: TaskDataType[] = [];
-    let completedTasks: TaskDataType[] = [];
+    const tasksData = useTaskStore((state) => state.tasks)
+    const setTasksData = useTaskStore((state) => state.setState)
 
-    if (data) {
-        assignedTasks = data.filter(task => !task.isCompleted);
-        completedTasks = data.filter(task => task.isCompleted);
+    let assignedTasks: Partial<TaskDataType>[] = [];
+    let completedTasks: Partial<TaskDataType>[] = [];
+
+    useEffect(() => {
+        if (data) {
+            setTasksData(data);
+        }
+    }, [data]);
+
+    if (!isLoading && tasksData) {
+        assignedTasks = tasksData.filter(task => !task.isCompleted);
+        completedTasks = tasksData.filter(task => task.isCompleted);
     }
 
     return (<div className="h-full  w-full flex flex-col justify-center items-center " >
@@ -95,20 +52,39 @@ export const LeftContent = () => {
             <Separator orientation="horizontal" className="w-full" />
         </div>
         <div className="flex h-full py-5 items-center w-full flex-col gap-5 overflow-y-scroll">
-            {activeTab === 1 && assignedTasks.map((task) => (
+            {!isLoading && activeTab === 1 && assignedTasks.map((task) => (
                 <TaskCard
                     loading={isLoading}
                     key={task.id}
                     {...task}
                 />
             ))}
-            {activeTab === 2 && completedTasks.map((task) => (
+            {!isLoading && assignedTasks.length === 0 && (
+                <div className="text-muted-foreground text-sm">
+                    <p>No tasks currently assigned yet.</p>
+                    <BrushCleaning />
+
+                </div>
+            )}
+            {!isLoading && completedTasks.length === 0 && (
+                <div className="text-muted-foreground h-full text-sm flex flex-col gap-5 items-center justify-center">
+                    <h1 className="text-lg" >No completed tasks yet.</h1>
+                    <BrushCleaning size={30} />
+
+                </div>
+            )}
+            {isLoading && <TaskCard loading={isLoading} />}
+            {isLoading && <TaskCard loading={isLoading} />}
+            {!isLoading && activeTab === 2 && completedTasks.map((task) => (
                 <TaskCard
                     loading={isLoading}
                     key={task.id}
                     {...task}
                 />
             ))}
+            {isLoading && <TaskCard loading={isLoading} />}
+            {isLoading && <TaskCard loading={isLoading} />}
+
         </div>
         <div className="w-full h-10" >
             <Separator orientation="horizontal" className="w-full" />

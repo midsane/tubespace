@@ -22,7 +22,7 @@ export type AuthDataType = {
     profileImgUrl: string | null,
     Oauth: boolean,
     bio: string | null,
-    attachedLinks: string[] | null,
+    attachedLinks: string
     videosUploaded?: number,
     editable: boolean,
     createdAt: string,

@@ -22,8 +22,8 @@ export const ProfilePage = () => {
 
 const GetBackToYourProfile = () => {
     const { username } = useParams()
-    const role = useUserStore((state) => state.role);
-    const name = useUserStore((state) => state.name);
+    const role = useUserStore((state) => state.user.role);
+    const name = useUserStore((state) => state.user.name);
 
     if (!name || !username) return <></>;
 

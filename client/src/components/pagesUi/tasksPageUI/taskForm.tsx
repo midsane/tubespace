@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
-import { Trash2 } from "lucide-react";
+import { Loader2Icon, Trash2 } from "lucide-react";
 import {
     Dialog, DialogContent, DialogTrigger
 } from "@/components/ui/dialog";
@@ -268,7 +268,10 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                 )}
 
                 <div className="flex gap-4 justify-end pt-4">
-                    <Button disabled={submitting} type="submit">Save</Button>
+                    <Button disabled={submitting} type="submit">
+                        {submitting && <Loader2Icon className="animate-spin" />}
+                        {submitting ? "Saving..." : "Save Task"}
+                    </Button>
                     <SheetTrigger asChild>
                         <Button disabled={submitting} type="button" variant="outline" onClick={() => reset()}>Cancel</Button>
                     </SheetTrigger>

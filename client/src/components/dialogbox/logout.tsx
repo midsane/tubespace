@@ -9,14 +9,14 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { logout } from "@/httpfnc/auth"
-import { useUserStore } from "@/store/user.store"
+import { resetAllStores } from "@/store/resetAll"
 import { LogOutIcon } from "lucide-react"
 import { useState, type ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
 
 export function LogoutBox({ TriggerJsx }: { TriggerJsx: ReactNode }) {
     const navigate = useNavigate()
-    const clearState = useUserStore((state) => state.resetState)
+    const clearState = resetAllStores;
     const [loading, setLoading] = useState(false)
     const handleLogout = async() => {
         setLoading(true)

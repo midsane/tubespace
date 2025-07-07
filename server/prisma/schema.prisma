@@ -53,16 +53,18 @@ model Task {
   youtuberId      Int
   editorId        Int
 
-  title       String?
-  description String?
-  tags        String[]
-  madeForKids Boolean  @default(false)
-  thumbnail   String?
+  title          String?
+  description    String?
+  tags           String[]
+  madeForKids    Boolean    @default(false)
+  thumbnail      String?
 
-  createdAt   DateTime   @default(now())
-  isCompleted Boolean    @default(false)
-  rating      Rating_val @default(unrated)
-  review      String?
-  youtuber    User       @relation("YoutuberTasks", fields: [youtuberId], references: [id])
-  editor      User       @relation("EditorTasks", fields: [editorId], references: [id])
+  createdAt      DateTime   @default(now())
+  isCompleted    Boolean    @default(false)
+  onServer       Boolean    @default(false)
+  editedVideoUrl String?
+  rating         Rating_val @default(unrated)
+  review         String?
+  youtuber       User       @relation("YoutuberTasks", fields: [youtuberId], references: [id])
+  editor         User       @relation("EditorTasks", fields: [editorId], references: [id])
 }

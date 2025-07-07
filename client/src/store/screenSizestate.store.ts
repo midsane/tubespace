@@ -5,10 +5,12 @@ type State = {
 }
 
 type Actions = {
-    changeMobileView: (newState: boolean) => void
+    changeMobileView: (newState: boolean) => void,
+    resetState: () => void
 }
 
 export const useScreenSizeStore = create<State & Actions>((set) => ({
     mobileView: false,
-    changeMobileView: (newState: boolean) => set(() => ({ mobileView: newState }))
+    changeMobileView: (newState: boolean) => set(() => ({ mobileView: newState })),
+    resetState: () => set(() => ({ mobileView: false })),
 }))

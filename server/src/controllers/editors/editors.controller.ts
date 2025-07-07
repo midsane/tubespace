@@ -7,7 +7,6 @@ import { TopEditorsData } from "../../types/types";
 
 
 const fetchTopEditors = asyncHandler(async (req: any, res: Response) => {
-    const reqUsername = req.user?.name;
 
     const allEditors = await client.user.findMany({
         where: {

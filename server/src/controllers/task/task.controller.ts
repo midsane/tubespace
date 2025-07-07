@@ -7,8 +7,7 @@ import { Response } from "express";
 import { ApiResponse } from "../../utils/apiresponse";
 
 const createTask = asyncHandler(async (req: any, res: Response) => {
-    const { id, role } = req.user;
-    console.log(req.user)
+    const { id } = req.user;
 
     const user = await client.user.findUnique({ where: { id } });
     if (!user) {
@@ -146,4 +145,72 @@ const fetchTasks = asyncHandler(async (req: any, res: Response) => {
 
 });
 
-export { createTask, fetchTasks };
+const uploadEditedVideoToServer = asyncHandler(async (req: any, res: Response) => {
+    const { id } = req.user;
+    const user = await client.user.findUnique({ where: { id } });
+    if (!user) {
+        return res.status(404).json({ message: "user not authenticated, go to login" });
+    }
+
+    if (user.role !== Role.EDITOR) {
+        return res.status(403).json({ message: "Only editors can upload edited videos" });
+    }
+
+    const { taskId } = req.body;
+    const task = await client.task.findUnique({ where: { id: taskId } });
+
+    if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+    }
+
+    if (task.editorId !== user.id) {
+        return res.status(403).json({ message: "You are not assigned to this task" });
+    }
+
+    if (!req.files || !req.files.video) {
+        return res.status(400).json({ message: "Video file is required" });
+    }
+
+    const videoFile = req.files.video[0];
+    const videoUrl = await uploadToCloudinary(videoFile.buffer, videoFile.originalname, videoFile.mimetype);
+
+    await client.task.update({
+        where: { id: taskId },
+        data: {
+            editedVideoUrl: videoUrl,
+            onServer: true,
+        },
+    });
+
+    res.status(200).json(new ApiResponse(null, "Edited video uploaded to server successfully"));
+})
+
+const getVideoPreview = asyncHandler(async (req: any, res: Response) => {
+    const { taskId } = req.params;
+    const { id } = req.user;
+    if (!taskId) {
+        return res.status(400).json({ message: "task ID is required" });
+    }
+
+    const task = await client.task.findFirst({
+        where: { id: taskId, onServer: true },
+        select: {
+            editedVideoUrl: true,
+            taskTitle: true,
+            youtuberId: true,
+            id: true,
+        }
+    });
+
+    if (!task) {
+        return res.status(404).json(new ApiResponse(null, "Task not found or video not uploaded to server"));
+    }
+
+    if (id !== task?.youtuberId) {
+        return res.status(403).json(new ApiResponse(null, "You do not have permission to view this task's video preview"));
+    }
+
+    res.status(200).json(new ApiResponse(task, "Video preview fetched successfully"));
+})
+
+export { createTask, fetchTasks, uploadEditedVideoToServer, getVideoPreview };

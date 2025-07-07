@@ -3,15 +3,24 @@ import { UserCard } from "./userCard"
 import { UserRole, type TopEditorsData } from "@/types/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
-import { getTopEditors } from "@/httpfnc/user";
+import { getTopEditors, getTopYoutubers } from "@/httpfnc/user";
+import { useCallback } from "react";
 
 
 export const RightContent = () => {
-    const role = useUserStore((state) => state.role);
+    const role = useUserStore((state) => state.user.role);
+    const fetchFnc = useCallback(() => {
+        if (role === UserRole.YOUTUBER)
+            return getTopEditors();
+        else if (role === UserRole.EDITOR)
+            return getTopYoutubers();
+        return Promise.reject(new Error("Invalid role for fetching top users"));
+    }, [role])
 
     const { data, isLoading, error } = useQuery<TopEditorsData[]>({
-        queryKey: ["top-editors"],
-        queryFn: () => getTopEditors(),
+        queryKey: ["top-editors", role],
+        queryFn: fetchFnc,
+        enabled: role === UserRole.YOUTUBER || role === UserRole.EDITOR,
         staleTime: 1000 * 60 * 10, // 10 minutes
     });
 
