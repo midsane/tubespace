@@ -47,7 +47,7 @@ export const LandingPage = () => {
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
         />
        
-         <HowToUseSections
+         {/* <HowToUseSections
             title="Get Notified When Task is Completed"
             imgPath={gif}
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
@@ -57,7 +57,7 @@ export const LandingPage = () => {
             title="Preview and Publish"
             imgPath={gif}
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
-        />
+        /> */}
 
         <div className="flex flex-col gap-4 border items-center justify-center h-dvh" >
             <div className="hidden md:flex h-3/4  flex-col justify-center items-center gap-10" >
