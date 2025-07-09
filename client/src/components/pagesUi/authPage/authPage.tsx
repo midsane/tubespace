@@ -74,6 +74,11 @@ export function AuthPage() {
     }
 
     const handleOauthWindow = async () => {
+        if (data.role === UserRole.NORMAL && !loginBox) {
+            alert("Please select a role")
+            return;
+        }
+        useUserStore.getState().updateState({role: data.role}) 
         setOauthLoading(true)
         try {
             const data: { url: string } = await getOauthWindow()
