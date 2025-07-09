@@ -7,7 +7,7 @@ import {taskRouter} from "./router/task/task.router"
 
 
 const app = express();
-
+console.log("cors origin:", process.env.CORS_ORIGIN, "mode:", process.env.MODE, )
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({

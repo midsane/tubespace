@@ -37,7 +37,7 @@ const login = asyncHandler(async (req: any, res: Response) => {
     res.cookie("token", "Bearer " + token, {
         secure: process.env.MODE !== "development",
         httpOnly: true,
-        sameSite: process.env.MODE !== "development" ? "lax" : "none"
+        sameSite: process.env.MODE === "development" ? "lax" : "none"
     })
     const { password: psw, salt, ...filteredData } = userExist;
     res.status(200).json(new ApiResponse(filteredData, "user logged in successfully!"));
@@ -58,24 +58,19 @@ const signup = asyncHandler(async (req: any, res: Response) => {
     const userDetail = await client.user.create({
         data: {
             email,
+            name: email,
             password: hashedPassword,
             salt: salt,
             role: role.trim().toLowerCase() === "editor" ? "EDITOR" : "YOUTUBER"
         }
     })
 
-    const user = await client.user.update({
-        where: { id: userDetail.id },
-        data: {
-            name: userDetail.email.trim().split("@")[0] + userDetail.id,
-        }
-    })
 
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret)
         return res.status(500).json(new ApiResponse(null, "internal server err"))
 
-    const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, jwtSecret, { expiresIn: "2d" })
+    const token = jwt.sign({ id: userDetail.id, name: userDetail.name, email: userDetail.email, role: userDetail.role }, jwtSecret, { expiresIn: "2d" })
 
     if (!token)
         return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
@@ -83,10 +78,10 @@ const signup = asyncHandler(async (req: any, res: Response) => {
     res.cookie("token", "Bearer " + token, {
         secure: process.env.MODE !== "development",
         httpOnly: true,
-        sameSite: process.env.MODE !== "development" ? "lax" : "none"
+        sameSite: process.env.MODE === "development" ? "lax" : "none"
     })
 
-    const { password: psw, salt: sl, ...filteredData } = user
+    const { password: psw, salt: sl, ...filteredData } = userDetail
     return res.status(200).json(new ApiResponse(filteredData, "user created successfully"));
 
 })
@@ -106,7 +101,7 @@ const logout = asyncHandler(async (req: any, res: Response) => {
     res.clearCookie("token", {
         secure: process.env.MODE !== "development",
         httpOnly: true,
-        sameSite: process.env.MODE !== "development" ? "lax" : "none"
+        sameSite: process.env.MODE === "development" ? "lax" : "none"
     });
     res.status(200).json(new ApiResponse(null, "user logged out successfully!"));
 })
@@ -154,18 +149,14 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
             user = await client.user.create({
                 data: {
                     email,
+                    name: email,
                     profileImgUrl: picture,
                     Oauth: true,
                     role: role.trim().toLowerCase() === "editor" ? "EDITOR" : "YOUTUBER"
                 }
             })
 
-            user = await client.user.update({
-                where: { id: user.id },
-                data: {
-                    name: user.email.trim().split("@")[0] + user.id,
-                }
-            })
+           
         }
 
         const jwtSecret = process.env.JWT_SECRET;
@@ -180,7 +171,7 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
         res.cookie("token", "Bearer " + token, {
             secure: process.env.MODE !== "development",
             httpOnly: true,
-            sameSite: process.env.MODE !== "development" ? "lax" : "none"
+            sameSite: process.env.MODE === "development" ? "lax" : "none"
         })
 
         const { password: psw, salt: sl, ...filteredData } = user
