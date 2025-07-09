@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ChromeIcon } from "lucide-react"
 import { useState } from "react"
 
 import {
@@ -26,7 +25,7 @@ import { UserRole, type AuthDataType } from "@/types/types"
 import { getOauthWindow, LoginUser, RegisterUser } from "@/httpfnc/auth"
 import { useNavigate } from "react-router-dom"
 import { useUserStore } from "@/store/user.store"
-import { baseUrl, googleIcon } from "@/constast"
+import { googleIcon } from "@/constast"
 
 export function AuthPage() {
     const [loginBox, setLoginBox] = useState<boolean>(false)

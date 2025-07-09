@@ -10,6 +10,7 @@ import { DragAndDropVideo } from "../dragAndDrop/dragAndDrop"
 export function UploadEditedVideoDialog({ TriggerJsx, taskId }: { TriggerJsx: React.ReactNode, taskId: number }) {
     const [open, setOpen] = useState(false)
     const [submitting, setSubmitting] = useState(false)
+    console.log(setSubmitting)
 
     const handleOpenChange = (value: boolean) => {
         if (!submitting) {
