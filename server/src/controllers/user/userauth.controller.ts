@@ -3,9 +3,14 @@ import { ApiResponse } from "../../utils/apiresponse";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { client } from "../../db/connectToDb";
 import bcrypt from "bcrypt"
+import axios from "axios";
 import jwt from "jsonwebtoken"
 
 const saltRounds = 10;
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const YOUR_REDIRECT_URI = process.env.YOUR_REDIRECT_URI;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
 
 const login = asyncHandler(async (req: any, res: Response) => {
     const { email, password } = req.body;
@@ -38,7 +43,6 @@ const login = asyncHandler(async (req: any, res: Response) => {
     res.status(200).json(new ApiResponse(filteredData, "user logged in successfully!"));
 
 })
-
 
 const signup = asyncHandler(async (req: any, res: Response) => {
     const { email, password, role } = req.body;
@@ -107,9 +111,90 @@ const logout = asyncHandler(async (req: any, res: Response) => {
     res.status(200).json(new ApiResponse(null, "user logged out successfully!"));
 })
 
+
+const getOauthWindow = asyncHandler(async (req: any, res: Response) => {
+    if (!GOOGLE_CLIENT_ID || !YOUR_REDIRECT_URI || !GOOGLE_CLIENT_SECRET)
+        return res.status(500).json({ message: "could not load google client id" })
+
+    const redirectUri = "https://accounts.google.com/o/oauth2/v2/auth";
+    const params = new URLSearchParams({
+        client_id: GOOGLE_CLIENT_ID,
+        redirect_uri: YOUR_REDIRECT_URI,
+        response_type: "code",
+        scope: "email profile",
+        access_type: "offline",
+        prompt: "consent",
+    });
+    res.json({ url: `${redirectUri}?${params.toString()}` })
+})
+
+
+
+const Oauth = asyncHandler(async (req: any, res: Response) => {
+    {
+        const { code, role } = req.query;
+
+        const tokenRes = await axios.post("https://oauth2.googleapis.com/token", {
+            code,
+            client_id: GOOGLE_CLIENT_ID,
+            client_secret: GOOGLE_CLIENT_SECRET,
+            redirect_uri: YOUR_REDIRECT_URI,
+            grant_type: "authorization_code"
+        });
+
+        const { id_token } = tokenRes.data;
+
+        const decoded = jwt.decode(id_token);
+        console.log("decoded:", decoded)
+
+        const { email, picture } = decoded as { email: string, name: string, picture: string };
+
+        let user = await client.user.findUnique({ where: { email } });
+        if (!user) {
+            user = await client.user.create({
+                data: {
+                    email,
+                    profileImgUrl: picture,
+                    Oauth: true,
+                    role: role.trim().toLowerCase() === "editor" ? "EDITOR" : "YOUTUBER"
+                }
+            })
+
+            user = await client.user.update({
+                where: { id: user.id },
+                data: {
+                    name: user.email.trim().split("@")[0] + user.id,
+                }
+            })
+        }
+
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret)
+            return res.status(500).json(new ApiResponse(null, "internal server err"))
+
+        const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, jwtSecret, { expiresIn: "2d" })
+
+        if (!token)
+            return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
+
+        res.cookie("token", "Bearer " + token, {
+            secure: process.env.MODE !== "development",
+            httpOnly: true,
+            sameSite: "lax"
+        })
+
+        const { password: psw, salt: sl, ...filteredData } = user
+        return res.status(200).json(new ApiResponse(filteredData, "user logged in/registered successfully"))
+
+    }
+})
+
+
 export {
     login,
     signup,
     checkAuth,
-    logout
+    logout,
+    getOauthWindow,
+    Oauth
 }

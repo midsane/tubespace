@@ -23,9 +23,10 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { UserRole, type AuthDataType } from "@/types/types"
-import { LoginUser, RegisterUser } from "@/httpfnc/auth"
+import { getOauthWindow, LoginUser, RegisterUser } from "@/httpfnc/auth"
 import { useNavigate } from "react-router-dom"
 import { useUserStore } from "@/store/user.store"
+import { baseUrl, googleIcon } from "@/constast"
 
 export function AuthPage() {
     const [loginBox, setLoginBox] = useState<boolean>(false)
@@ -69,6 +70,18 @@ export function AuthPage() {
             setLoading(false)
             console.error("Error during submission:", error);
         }
+    }
+
+    const handleOauthWindow = async () => {
+        setLoading(true)
+        try {
+            await getOauthWindow()
+        } catch (error) {
+            console.error("Error during OAuth window handling:", error);
+            alert("Failed to open OAuth window. Please try again.");
+        }
+        setLoading(false)
+
     }
 
     return (
@@ -148,8 +161,8 @@ export function AuthPage() {
                     <Button onClick={handleSubmit} disabled={loading} type="submit" className="w-full">
                         {loginBox ? (loading ? "Logging you in..." : "Login") : (loading ? "Signing you up..." : "Signup")}
                     </Button>
-                    <Button disabled={loading} variant="outline" className="w-full">
-                        <ChromeIcon />
+                    <Button onClick={handleOauthWindow} disabled={loading} variant="outline" className="w-full">
+                        <img className="h-6 aspect-square" src={googleIcon} />
                         <p>{loginBox ? "Login with Google" : "Signup with Google"}</p>
                     </Button>
                 </CardFooter>

@@ -69,9 +69,26 @@ const logout = async () => {
     return resData.data;
 }
 
+const getOauthWindow = async () => {
+    const response = await fetch(baseUrl + `user/oauth/get-consent-window`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+
+    const resData: httpRequstType = await response.json();
+    if (!response.ok || response.status >= 300) {
+        throw new Error(resData.message || "failed to get OAuth window");
+    };
+    return resData.data;
+}
+
 export {
     LoginUser,
     RegisterUser,
     checkAuth,
-    logout
+    logout,
+    getOauthWindow
 }

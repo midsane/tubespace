@@ -23,6 +23,10 @@ const router = createBrowserRouter([
         element: <AuthPage />
       },
       {
+        path: "oauth",
+        element: <>OAuth</>
+      },
+      {
         path: "video-preview/:taskId",
         element: <VideoPreviewPage />
       }

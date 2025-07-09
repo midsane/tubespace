@@ -3,11 +3,13 @@ const fallback_bannerImg = "https://images.unsplash.com/photo-1506765515384-028b
 import fallback_profileImg from "@/assets/pfp.png"
 const noPfpImg = "http://localhost:5173/src/assets/pfp.png"
 import logo from "/favicon.png"
+import googleIcon from "@/assets/google.svg"
 
 export {
     fallback_profileImg,
     baseUrl,
     noPfpImg,
     fallback_bannerImg,
-    logo
+    logo,
+    googleIcon
 }
