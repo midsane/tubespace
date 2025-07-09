@@ -37,7 +37,7 @@ const login = asyncHandler(async (req: any, res: Response) => {
     res.cookie("token", "Bearer " + token, {
         secure: process.env.MODE !== "development",
         httpOnly: true,
-        sameSite: "lax"
+        sameSite: process.env.MODE !== "development" ? "lax" : "none"
     })
     const { password: psw, salt, ...filteredData } = userExist;
     res.status(200).json(new ApiResponse(filteredData, "user logged in successfully!"));
@@ -83,7 +83,7 @@ const signup = asyncHandler(async (req: any, res: Response) => {
     res.cookie("token", "Bearer " + token, {
         secure: process.env.MODE !== "development",
         httpOnly: true,
-        sameSite: "lax"
+        sameSite: process.env.MODE !== "development" ? "lax" : "none"
     })
 
     const { password: psw, salt: sl, ...filteredData } = user
@@ -106,7 +106,7 @@ const logout = asyncHandler(async (req: any, res: Response) => {
     res.clearCookie("token", {
         secure: process.env.MODE !== "development",
         httpOnly: true,
-        sameSite: "lax"
+        sameSite: process.env.MODE !== "development" ? "lax" : "none"
     });
     res.status(200).json(new ApiResponse(null, "user logged out successfully!"));
 })
@@ -180,7 +180,7 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
         res.cookie("token", "Bearer " + token, {
             secure: process.env.MODE !== "development",
             httpOnly: true,
-            sameSite: "lax"
+            sameSite: process.env.MODE !== "development" ? "lax" : "none"
         })
 
         const { password: psw, salt: sl, ...filteredData } = user

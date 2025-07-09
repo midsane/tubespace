@@ -4,7 +4,7 @@ import { UserRole, type AuthDataType } from "@/types/types";
 import { useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { motion } from "framer-motion";
-import { googleIcon } from "@/constast";
+import { googleIcon, logo } from "@/constast";
 
 export function OAuthPage() {
     const [searchParams] = useSearchParams();
@@ -51,7 +51,7 @@ export function OAuthPage() {
                         animate={{ opacity: 1, rotate: 0 }}
                         transition={{ duration: 0.6, ease: "easeOut" }}
                         alt="TubeSpace Logo"
-                        className="h-20" src="favicon.png" />
+                        className="h-20" src={logo} />
                     <motion.h1
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}

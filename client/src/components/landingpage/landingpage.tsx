@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import "./style.css"
 import { Globe } from "lucide-react";
 import { GetStartedButton } from "./getStartedButton";
+import { logo } from "@/constast";
 export const LandingPage = () => {
 
     return (<div className="flex overflow-hidden flex-col bg mix-blend-hard bg-background
@@ -24,7 +25,7 @@ export const LandingPage = () => {
                     animate={{ opacity: 1, rotate: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     alt="TubeSpace Logo"
-                    className="h-20" src="favicon.png" />
+                    className="h-20" src={logo} />
                 <motion.h1
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -46,8 +47,8 @@ export const LandingPage = () => {
             imgPath={gif}
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
         />
-       
-         {/* <HowToUseSections
+
+        {/* <HowToUseSections
             title="Get Notified When Task is Completed"
             imgPath={gif}
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
