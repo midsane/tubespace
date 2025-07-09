@@ -50,31 +50,31 @@ export function AuthPage() {
             alert("invalid email format")
             return;
         }
-        setOauthLoading(false)
+        setLoading(true)
         try {
             if (loginBox) {
 
                 const userData: AuthDataType = await LoginUser(data.email, data.password)
-                setLoading(false)
+
                 setState(userData)
                 const prefix = userData.role === UserRole.YOUTUBER ? "y" : "c";
                 navigate(`/${prefix}/profile/${userData.name}`);
             } else {
                 const userData: AuthDataType = await RegisterUser(data.email, data.password, data.role);
-                setOauthLoading(false)
+
                 setState(userData)
                 const prefix = userData.role === UserRole.YOUTUBER ? "y" : "c";
                 navigate(`/${prefix}/profile/${userData.name}`);
             }
 
         } catch (error) {
-            setOauthLoading(false)
             console.error("Error during submission:", error);
         }
+        setLoading(false)
     }
 
     const handleOauthWindow = async () => {
-        setLoading(true)
+        setOauthLoading(true)
         try {
             const data: { url: string } = await getOauthWindow()
             if (!data || !data.url) {
@@ -85,7 +85,7 @@ export function AuthPage() {
             console.error("Error during OAuth window handling:", error);
             alert("Failed to open OAuth window. Please try again.");
         }
-        setLoading(false)
+        setOauthLoading(false)
 
     }
 
