@@ -125,7 +125,7 @@ const getOauthWindow = asyncHandler(async (req: any, res: Response) => {
         access_type: "offline",
         prompt: "consent",
     });
-    res.json({ url: `${redirectUri}?${params.toString()}` })
+    res.json(new ApiResponse({ url: `${redirectUri}?${params.toString()}` }, "Oauth consent window url generated successfully"));
 })
 
 

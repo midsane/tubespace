@@ -26,14 +26,16 @@ import { getOauthWindow, LoginUser, RegisterUser } from "@/httpfnc/auth"
 import { useNavigate } from "react-router-dom"
 import { useUserStore } from "@/store/user.store"
 import { googleIcon } from "@/constast"
+import { Loader2Icon } from "lucide-react"
 
 export function AuthPage() {
     const [loginBox, setLoginBox] = useState<boolean>(false)
     const [data, setData] = useState({ email: "", password: "", role: UserRole.NORMAL })
     const [loading, setLoading] = useState<boolean>(false)
+    const [oauthLoading, setOauthLoading] = useState<boolean>(false)
     const navigate = useNavigate()
     const setState = useUserStore((state) => state.setState)
-
+    console.log("loading:", loading)
     console.log(data)
     const handleSubmit = async () => {
         if (data.role === UserRole.NORMAL && !loginBox) {
@@ -48,7 +50,7 @@ export function AuthPage() {
             alert("invalid email format")
             return;
         }
-        setLoading(true)
+        setOauthLoading(false)
         try {
             if (loginBox) {
 
@@ -59,14 +61,14 @@ export function AuthPage() {
                 navigate(`/${prefix}/profile/${userData.name}`);
             } else {
                 const userData: AuthDataType = await RegisterUser(data.email, data.password, data.role);
-                setLoading(false)
+                setOauthLoading(false)
                 setState(userData)
                 const prefix = userData.role === UserRole.YOUTUBER ? "y" : "c";
                 navigate(`/${prefix}/profile/${userData.name}`);
             }
 
         } catch (error) {
-            setLoading(false)
+            setOauthLoading(false)
             console.error("Error during submission:", error);
         }
     }
@@ -74,7 +76,11 @@ export function AuthPage() {
     const handleOauthWindow = async () => {
         setLoading(true)
         try {
-            await getOauthWindow()
+            const data: { url: string } = await getOauthWindow()
+            if (!data || !data.url) {
+                throw new Error("Failed to get OAuth window URL");
+            }
+            window.location.href = data.url;
         } catch (error) {
             console.error("Error during OAuth window handling:", error);
             alert("Failed to open OAuth window. Please try again.");
@@ -157,13 +163,31 @@ export function AuthPage() {
                     </form>
                 </CardContent>
                 <CardFooter className="flex-col gap-2">
-                    <Button onClick={handleSubmit} disabled={loading} type="submit" className="w-full">
-                        {loginBox ? (loading ? "Logging you in..." : "Login") : (loading ? "Signing you up..." : "Signup")}
-                    </Button>
-                    <Button onClick={handleOauthWindow} disabled={loading} variant="outline" className="w-full">
+                    {loading ? <Button className="w-full" size="lg">
+                        <p>{loginBox ? "Loggin you in" : "Signing you up"} </p>
+                        <Loader2Icon />
+                    </Button> :
+                        <Button className="w-full" size="lg"
+                            disabled={loading || oauthLoading}
+                            onClick={handleSubmit} >
+                            <p>{loginBox ? "Login" : "Sign up"} </p>
+                        </Button>
+                    }
+
+                    {oauthLoading ? <Button variant="outline" className="w-full" size="lg" >
                         <img className="h-6 aspect-square" src={googleIcon} />
-                        <p>{loginBox ? "Login with Google" : "Signup with Google"}</p>
-                    </Button>
+                        <p>{loginBox ? "Loggin you in" : "Signing you up"}  </p>
+                        <Loader2Icon />
+                    </Button> :
+
+                        <Button variant="outline" className="w-full" size="lg"
+                            disabled={loading || oauthLoading}
+                            onClick={handleOauthWindow}  >
+                            <img className="h-6 aspect-square" src={googleIcon} />
+                            <p>{loginBox ? "Login with google" : "Sign up with google"} </p>
+                        </Button>
+                    }
+
                 </CardFooter>
             </Card>
         </div>

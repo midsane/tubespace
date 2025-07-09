@@ -8,6 +8,7 @@ import { AuthPage } from './components/pagesUi/authPage/authPage'
 import { RootPageLayout } from './components/landingpage/rootPageLayout'
 import { LandingPage } from './components/landingpage/landingpage'
 import { VideoPreviewPage } from './pages/videoPreviewPage'
+import { OAuthPage } from './components/pagesUi/authPage/OAuthPage'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
       },
       {
         path: "oauth",
-        element: <>OAuth</>
+        element: <OAuthPage />
       },
       {
         path: "video-preview/:taskId",
