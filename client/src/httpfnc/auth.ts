@@ -85,10 +85,27 @@ const getOauthWindow = async () => {
     return resData.data;
 }
 
+const getOauthLoginRegister = async (code: string, role: UserRole) => {
+    const response = await fetch(baseUrl + `user/oauth/login-register?code=${code}&role=${role}`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+
+    const resData: httpRequstType = await response.json();
+    if (!response.ok || response.status >= 300) {
+        throw new Error(resData.message || "failed to get OAuth window");
+    };
+    return resData.data;
+}
+
 export {
     LoginUser,
     RegisterUser,
     checkAuth,
     logout,
-    getOauthWindow
+    getOauthWindow,
+    getOauthLoginRegister
 }
