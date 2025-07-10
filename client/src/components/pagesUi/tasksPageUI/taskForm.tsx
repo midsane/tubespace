@@ -1,14 +1,18 @@
-import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, Controller, set } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2Icon, Trash2 } from "lucide-react";
+import { Loader2Icon, ServerCrash, Trash2 } from "lucide-react";
 import {
-    Dialog, DialogContent, DialogTrigger
+    Dialog,
+    DialogContent,
+    DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-    Carousel, CarouselContent, CarouselItem,
+    Carousel,
+    CarouselContent,
+    CarouselItem,
     CarouselNext,
-    CarouselPrevious
+    CarouselPrevious,
 } from "@/components/ui/carousel";
 import { baseUrl } from "@/constast";
 import { Input } from "@/components/ui/input";
@@ -16,19 +20,19 @@ import { EditorSelectDialog } from "@/components/dialogbox/createTaskSheet";
 import { Button } from "@/components/ui/button";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/components/ui/separator";
 import { useOpenTaskUpdate } from "@/store/updateTaskSheet";
-
 import { useQuery } from "@tanstack/react-query";
-import { fetchTaskById, fetchTasks } from "@/httpfnc/task";
+import { fetchTaskById } from "@/httpfnc/task";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { TaskDataType } from "@/types/types";
+import { toast } from "sonner";
+import { useTaskStore } from "@/store/task.store";
 
 type FormValues = {
     taskTitle: string;
     workDescription: string;
     deadline: string;
-
     title: string;
     description: string;
     assignedTo: string;
@@ -37,15 +41,16 @@ type FormValues = {
 };
 
 type VideoTaskFormProps = {
+    setIsCompleted: (val: boolean) => void;
     submitting: boolean;
     setSubmitting: (v: boolean) => void;
-    id?: number
+    id?: number;
 };
 
-export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps) => {
-
-    const taskId = useOpenTaskUpdate(state => state.taskId)
-
+export const VideoTaskForm = ({ setIsCompleted, submitting, setSubmitting }: VideoTaskFormProps) => {
+    const taskId = useOpenTaskUpdate((state) => state.taskId);
+    const appendState = useTaskStore((state) => state.appendState);
+    const updateState = useTaskStore((state) => state.updateStateById);
     const { data, isLoading, error } = useQuery<Partial<TaskDataType>>({
         queryKey: ["taskData", taskId],
         enabled: !!taskId,
@@ -53,86 +58,160 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
         staleTime: 0,
     });
 
-    const { register, handleSubmit, control, reset, formState: { errors } } = useForm<FormValues>({
-        defaultValues: {
-            assignedTo: "",
-        },
+    if (error) {
+        console.error("Error fetching task data:", error);
+        toast.error(error.message || "Failed to fetch task data");
+        return <div className="p-6 flex flex-col gap-2 "><ServerCrash /> Failed to load task data</div>;
+    }
+
+    const {
+        register,
+        handleSubmit,
+        control,
+        reset,
+        formState: { errors },
+    } = useForm<FormValues>({
+        defaultValues: { assignedTo: "" },
     });
 
     const [tags, setTags] = useState<string[]>([]);
     const [newTag, setNewTag] = useState("");
     const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<string | null>(null);
-
-
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [selectedFiles, setSelectedFiles] = useState<(File & { url?: string })[]>([]);
 
-    const onSubmit = async (data: FormValues) => {
+
+    useEffect(() => {
+        if (data) {
+            reset({
+                taskTitle: data.taskTitle || "",
+                workDescription: data.workDescription || "",
+                deadline: data.deadline?.split("T")[0] || "",
+                assignedTo: data.editor?.name || "",
+                title: data.title || "",
+                description: data.description || "",
+                madeForKids: data.madeForKids ?? false,
+            });
+
+            setTags(data.tags || []);
+            if (data.thumbnail) setThumbnailPreviewUrl(data.thumbnail);
+
+            if (data.attachments?.length) {
+                const fakeFiles = data.attachments.map((url, idx) => ({
+                    name: `file-${idx}`,
+                    type: url.includes(".mp4") ? "video/mp4" : "image/jpeg",
+                    size: 0,
+                    url,
+                })) as (File & { url: string })[];
+
+                setSelectedFiles(fakeFiles);
+            }
+        }
+    }, [data, reset]);
+
+    console.log("assigned to:", data?.editor?.name);
+    const onSubmit = async (form: FormValues) => {
+        const formData = new FormData();
+        formData.append("taskTitle", form.taskTitle);
+        formData.append("workDescription", form.workDescription);
+        formData.append("deadline", form.deadline);
+        formData.append("assignedTo", form.assignedTo);
+        formData.append("title", form.title);
+        formData.append("description", form.description);
+        formData.append("madeForKids", String(form.madeForKids));
+        formData.append("tags", JSON.stringify(tags));
+
+
+        // Attach new files only
+        selectedFiles
+            .filter((f) => !("url" in f))
+            .forEach((file) => formData.append("files", file));
+
+        // Append old attachment URLs
+        const oldAttachmentUrls = selectedFiles
+            .filter((f) => "url" in f)
+            .map((f) => (f as any).url);
+        formData.append("oldAttachments", JSON.stringify(oldAttachmentUrls));
+
+        // Thumbnail file
+        if (form.thumbnail?.[0]) {
+            formData.append("thumbnail", form.thumbnail[0]);
+        }
+
+        const url = taskId ? `${baseUrl}task/update-task/${taskId}` : `${baseUrl}task/create-task`;
+        const method = taskId ? "PATCH" : "POST";
+
         try {
             setSubmitting(true);
-
-            const formData = new FormData();
-            formData.append("taskTitle", data.taskTitle);
-            formData.append("workDescription", data.workDescription);
-            formData.append("deadline", data.deadline);
-            formData.append("assignedTo", data.assignedTo);
-            selectedFiles.forEach((file) => formData.append("files", file));
-
-            if (data.title) formData.append("title", data.title);
-            if (data.description) formData.append("description", data.description);
-            formData.append("tags", JSON.stringify(tags));
-
-
-            formData.append("madeForKids", String(data.madeForKids));
-            console.log(data.thumbnail)
-            if (data.thumbnail?.[0]) {
-                formData.append("thumbnail", data.thumbnail[0]);
-            }
-
-            const res = await fetch(`${baseUrl}task/create-task`, {
-                method: "POST",
+            const res = await fetch(url, {
+                method,
                 credentials: "include",
                 body: formData,
             });
-
             const result = await res.json();
-            if (!res.ok) {
-                throw new Error(result.message || "Task creation failed");
+
+            if (!res.ok) throw new Error(result.message || "Failed");
+
+            console.log("Task success:", result.task);
+            toast.success("Task saved successfully!");
+            if (taskId) {
+                updateState(taskId, result.task);
+            }
+            else {
+                appendState(result.task);
             }
 
-            console.log("Task created:", result.task);
-            reset();
-        } catch (err: any) {
+        } catch (err) {
             console.error(err);
+            toast.error("Failed to save task");
         } finally {
             setSubmitting(false);
+            setIsCompleted(true);
         }
     };
 
+
     return (
         <>
-            {isLoading ? <Skeleton className="w-full h-8 mb-4" /> :
+            {isLoading ? (
+                <div className="flex flex-col gap-4 p-6 border h-[100dvh] overflow-y-scroll rounded-lg w-full max-w-full mx-auto">
+                    <Skeleton className="w-full h-8 mb-4" />
+                    <Skeleton className="w-full h-12 mb-4" />
+                    <Skeleton className="w-full h-8 mb-4" />
+                    <Skeleton className="w-full h-8 mb-4" />
+                    <Skeleton className="w-full h-4 mb-4" />
+                    <Skeleton className="w-full h-8 mb-4" />
+                    <Skeleton className="w-full h-8 mb-4" />
+                    <Skeleton className="w-full h-8 mb-4" />
+                    <Skeleton className="w-full h-8 mb-4" />
+                    <Skeleton className="w-full h-8 mb-4" />
+                    <Skeleton className="w-full h-8 mb-4" />
+                    <Skeleton className="w-full h-8 mb-4" />
 
-                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-6 border h-[100dvh] overflow-y-scroll rounded-lg w-full max-w-full mx-auto">
-                    <h2 className="text-muted-foreground ">Task Details (required)</h2>
+                </div>
+            ) : (
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="flex flex-col gap-4 p-6 border h-[100dvh] overflow-y-scroll rounded-lg w-full max-w-full mx-auto"
+                >
+                    <h2 className="text-muted-foreground">Task Details (required)</h2>
+
                     <label className="font-semibold">TaskTitle</label>
                     <Input {...register("taskTitle", { required: "Task title is required" })} />
                     {errors.taskTitle && <span className="text-red-500 text-sm">{errors.taskTitle.message}</span>}
 
                     <label>Work description</label>
-                    <Textarea {...register("workDescription", { required: "Workd description is required" })} />
+                    <Textarea {...register("workDescription", { required: "Work description is required" })} />
                     {errors.workDescription && <span className="text-red-500 text-sm">{errors.workDescription.message}</span>}
 
-                    <h2 className="text-muted-foreground ">Add video/img for editor's reference: (multiple files can be added)</h2>
-
-                    <label>Videos/Images</label>
+                    <h2 className="text-muted-foreground">Add video/img for editor's reference:</h2>
                     <Input
                         type="file"
                         multiple
                         accept="video/*,image/*"
                         onChange={(e) => {
                             const files = Array.from(e.target.files || []);
-                            setSelectedFiles(prev => [...prev, ...files]);
+                            setSelectedFiles((prev) => [...prev, ...files]);
                         }}
                     />
 
@@ -140,41 +219,37 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                         <div className="mt-4 flex flex-wrap gap-3">
                             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                                 <DialogTrigger asChild>
-                                    <Button variant="outline" type="button">Preview Uploaded Files</Button>
+                                    <Button variant="outline" type="button">
+                                        Preview Uploaded Files
+                                    </Button>
                                 </DialogTrigger>
-                                <DialogContent className="max-w-3xl ">
+                                <DialogContent className="max-w-3xl">
                                     <Carousel className="w-full relative max-w-full">
                                         <CarouselContent>
                                             {selectedFiles.map((file, idx) => {
-                                                const url = URL.createObjectURL(file);
                                                 const isVideo = file.type.startsWith("video");
+                                                const previewUrl = "url" in file ? file.url : URL.createObjectURL(file);
                                                 return (
                                                     <CarouselItem key={idx} className="flex flex-col items-center gap-2">
-
                                                         <div className="flex w-full justify-between py-1">
                                                             <Button
                                                                 variant="destructive"
                                                                 size="sm"
                                                                 className="text-sm"
-                                                                onClick={() =>
-                                                                    setSelectedFiles((prev) => prev.filter((_, i) => i !== idx))
-                                                                }
+                                                                onClick={() => setSelectedFiles((prev) => prev.filter((_, i) => i !== idx))}
                                                             >
                                                                 <Trash2 className="h-3 w-3" />
                                                                 remove
                                                             </Button>
-
                                                         </div>
-
                                                         <div className="relative flex justify-center items-center w-full">
                                                             {isVideo ? (
-                                                                <video src={url} controls className="max-h-[70vh] w-auto rounded-lg" />
+                                                                <video src={previewUrl} controls className="max-h-[70vh] w-auto rounded-lg" />
                                                             ) : (
-                                                                <img src={url} className="max-h-[70vh] w-auto rounded-lg" />
+                                                                <img src={previewUrl} className="max-h-[70vh] w-auto rounded-lg" />
                                                             )}
                                                         </div>
                                                     </CarouselItem>
-
                                                 );
                                             })}
                                         </CarouselContent>
@@ -197,23 +272,15 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                         rules={{ required: "Please select an editor" }}
                         render={({ field }) => (
                             <>
-                                <EditorSelectDialog
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                />
-                                {errors.assignedTo && (
-                                    <p className="text-red-500 text-sm">{errors.assignedTo.message}</p>
-                                )}
+                                <EditorSelectDialog value={field.value} onChange={field.onChange} />
+                                {errors.assignedTo && <p className="text-red-500 text-sm">{errors.assignedTo.message}</p>}
                             </>
-
                         )}
                     />
 
-
                     <Separator />
-                    <h2 className="text-muted-foreground ">Youtube Video Details</h2>
-
-                    <p className="text-muted-foreground text-sm">Fill the below video details right now or before uploading... Scroll & click on Save button to save changes</p>
+                    <h2 className="text-muted-foreground">YouTube Video Details</h2>
+                    <p className="text-muted-foreground text-sm">Fill the below video details right now or before uploading...</p>
 
                     <label>Title</label>
                     <Input {...register("title")} />
@@ -277,11 +344,7 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                     {thumbnailPreviewUrl && (
                         <div className="mt-2">
                             <p className="text-muted-foreground text-sm mb-1">Thumbnail Preview:</p>
-                            <img
-                                src={thumbnailPreviewUrl}
-                                alt="Thumbnail Preview"
-                                className="max-h-[200px] rounded-lg border"
-                            />
+                            <img src={thumbnailPreviewUrl} alt="Thumbnail Preview" className="max-h-[200px] rounded-lg border" />
                         </div>
                     )}
 
@@ -291,10 +354,13 @@ export const VideoTaskForm = ({ submitting, setSubmitting }: VideoTaskFormProps)
                             {submitting ? "Saving..." : "Save Task"}
                         </Button>
                         <SheetTrigger asChild>
-                            <Button disabled={submitting} type="button" variant="outline" onClick={() => reset()}>Cancel</Button>
+                            <Button disabled={submitting} type="button" variant="outline" onClick={() => reset()}>
+                                Cancel
+                            </Button>
                         </SheetTrigger>
                     </div>
-                </form>}
+                </form>
+            )}
         </>
     );
 };

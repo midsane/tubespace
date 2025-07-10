@@ -11,6 +11,7 @@ import { baseUrl } from "@/constast"
 import { UserRole, type AuthDataType } from "@/types/types"
 import { useNavigate } from "react-router-dom"
 import { Loader2Icon } from "lucide-react"
+import { toast } from "sonner"
 
 type FormValues = {
     name: string
@@ -108,7 +109,7 @@ export function ProfileEditCard({
                 throw new Error(result.message || "Failed to update profile");
             }
 
-            console.log("Profile update response:", result);
+            toast.success("Profile updated successfully!");
             updateState({
                 name: result.data.name,
                 bio: result.data.bio,
@@ -119,6 +120,7 @@ export function ProfileEditCard({
             naviagte(`/${useUserStore.getState().user.role === UserRole.YOUTUBER ? "y" : "c"}/profile/${result.data.name}`);
         } catch (err: any) {
             console.error(err);
+            toast.error(err.message || "Failed to update profile");
         } finally {
             onSubmittingChange(false);
         }

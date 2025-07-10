@@ -81,11 +81,135 @@ const createTask = asyncHandler(async (req: any, res: Response) => {
             tags: tags ? JSON.parse(tags) : [],
             madeForKids: madeForKids === "true" || madeForKids === true,
             thumbnail: thumbnailUrl,
+
         },
+        include: {
+            editor: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    profileImgUrl: true,
+                }
+            }
+        }
     });
 
     res.status(201).json({ message: "Task created", task: newTask });
 })
+
+const updateTask = asyncHandler(async (req: any, res: Response) => {
+    const { id } = req.user;
+    const { taskId } = req.params;
+
+    const user = await client.user.findUnique({ where: { id } });
+    if (!user) {
+        return res.status(404).json({ message: "User not authenticated" });
+    }
+
+    const existingTask = await client.task.findUnique({
+        where: { id: Number(taskId) }
+    });
+
+    if (!existingTask) {
+        return res.status(404).json({ message: "Task not found" });
+    }
+
+    if (existingTask.youtuberId !== id) {
+        return res.status(403).json({ message: "You do not have permission to update this task" });
+    }
+
+    const {
+        taskTitle,
+        workDescription,
+        deadline,
+        assignedTo,
+        title = "",
+        description = "",
+        tags,
+        madeForKids,
+        oldAttachments = "[]"
+    } = req.body;
+
+    if (!taskTitle || !deadline || !assignedTo || !workDescription) {
+        return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const duplicate = await client.task.findFirst({
+        where: {
+            taskTitle,
+            id: { not: Number(taskId) }
+        }
+    });
+    if (duplicate) {
+        return res.status(400).json({ message: "Task with this title already exists" });
+    }
+
+    const editor = await client.user.findUnique({ where: { name: assignedTo } });
+    if (!editor || editor.role !== Role.EDITOR) {
+        return res.status(404).json({ message: "Editor not found" });
+    }
+
+    const uploadedUrls: string[] = [];
+    if (req.files && Array.isArray(req.files.files)) {
+        for (const file of req.files.files) {
+            const url = await uploadToCloudinary(file.buffer, file.originalname, file.mimetype);
+            uploadedUrls.push(url);
+        }
+    }
+
+
+    let finalAttachments: string[] = [];
+    try {
+        const old = JSON.parse(oldAttachments);
+        if (Array.isArray(old)) {
+            finalAttachments = [...old, ...uploadedUrls];
+        } else {
+            finalAttachments = [...uploadedUrls];
+        }
+    } catch (err) {
+        finalAttachments = [...uploadedUrls];
+    }
+
+    let thumbnailUrl = existingTask.thumbnail || "";
+    if (req.files?.thumbnail && req.files.thumbnail[0]) {
+        thumbnailUrl = await uploadToCloudinary(
+            req.files.thumbnail[0].buffer,
+            req.files.thumbnail[0].originalname,
+            req.files.thumbnail[0].mimetype
+        );
+    }
+
+    const updatedTask = await client.task.update({
+        where: { id: Number(taskId) },
+        data: {
+            taskTitle,
+            workDescription,
+            deadline: new Date(deadline),
+            editorId: editor.id,
+            youtuberId: user.id,
+            title,
+            description,
+            tags: tags ? JSON.parse(tags) : [],
+            madeForKids: madeForKids === "true" || madeForKids === true,
+            attachments: finalAttachments,
+            thumbnail: thumbnailUrl,
+        },
+        include: {
+            editor: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    profileImgUrl: true,
+                }
+            }
+        }
+    });
+
+    return res.status(200).json({ message: "Task updated", task: updatedTask });
+});
+
 
 const fetchTasks = asyncHandler(async (req: any, res: Response) => {
     const { id, role } = req.user;
@@ -153,6 +277,7 @@ const fetchTaskById = asyncHandler(async (req: any, res: Response) => {
         const tasks = await client.task.findMany({
             where: { youtuberId: id, id: Number(taskid) },
             select: {
+
                 id: true,
                 title: true,
                 description: true,
@@ -178,7 +303,7 @@ const fetchTaskById = asyncHandler(async (req: any, res: Response) => {
 
         })
 
-        return res.status(200).json(new ApiResponse(tasks, "Successfully fetched tasks for youtuber"));
+        return res.status(200).json(new ApiResponse(tasks[0], "Successfully fetched tasks for youtuber"));
 
     }
 
@@ -265,4 +390,11 @@ const getVideoPreview = asyncHandler(async (req: any, res: Response) => {
     res.status(200).json(new ApiResponse(task, "Video preview fetched successfully"));
 })
 
-export { createTask, fetchTasks, uploadEditedVideoToServer, getVideoPreview, fetchTaskById };
+export {
+    createTask,
+    fetchTasks,
+    uploadEditedVideoToServer,
+    getVideoPreview,
+    fetchTaskById,
+    updateTask
+};

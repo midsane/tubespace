@@ -15,7 +15,6 @@ export const RootPageLayout: React.FC = () => {
         queryKey: ["check-auth"],
         queryFn: checkAuth,
         enabled: useUserStore.getState().user.email !== "",
-        staleTime: 1000 * 60 * 10 // 10 minutes
     });
     const updateState = useUserStore((state) => state.updateState);
     useEffect(() => {

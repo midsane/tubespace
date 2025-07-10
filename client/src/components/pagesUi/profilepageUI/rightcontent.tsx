@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { getTopEditors, getTopYoutubers } from "@/httpfnc/user";
 import { useCallback } from "react";
+import { toast } from "sonner";
 
 
 export const RightContent = () => {
@@ -24,10 +25,9 @@ export const RightContent = () => {
         staleTime: 1000 * 60 * 10, // 10 minutes
     });
 
-    console.log("Top Editors Data: ", data);
-    console.log("Top Editors Error: ", error);
-    console.log("Top Editors Loading: ", isLoading);
-
+    if (error) {
+        toast.error("Failed to fetch top users. Please try again later.");
+    }
 
     return <div className="h-full w-full flex flex-col gap-10" >
         {role === UserRole.YOUTUBER && <div className=" h-[3%] w-full " >

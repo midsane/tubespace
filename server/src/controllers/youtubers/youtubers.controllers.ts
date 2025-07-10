@@ -15,6 +15,7 @@ const fetchTopYoutubers = asyncHandler(async (req: any, res: Response) => {
             id: true,
             name: true,
             bio: true,
+            role: true,
             profileImgUrl: true,
             youtuberTasks: {
                 where: {
@@ -34,7 +35,8 @@ const fetchTopYoutubers = asyncHandler(async (req: any, res: Response) => {
             bio: youtuber.bio,
             profileImgUrl: youtuber.profileImgUrl,
             id: youtuber.id,
-            videosUploaded: youtuber.youtuberTasks.length
+            videosUploaded: youtuber.youtuberTasks.length,
+            role: youtuber.role
         })
 
     })

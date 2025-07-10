@@ -146,6 +146,9 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
 
         let user = await client.user.findUnique({ where: { email } });
         if (!user) {
+            if (role.trim().toLowerCase() !== "editor" && role.trim().toLowerCase() !== "youtuber") {
+                return res.status(400).json(new ApiResponse(null, "invalid role, choose a role before signing up"));
+            }
             user = await client.user.create({
                 data: {
                     email,
@@ -156,7 +159,7 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
                 }
             })
 
-           
+
         }
 
         const jwtSecret = process.env.JWT_SECRET;

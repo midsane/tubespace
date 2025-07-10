@@ -8,6 +8,7 @@ import {
 
 export function CreateTaskSheet({ type = 1, TriggerJsx = <><FilePlus /> Create Task</> }: { type?: number, TriggerJsx?: React.ReactNode }) {
     const [submitting, setSubmitting] = useState(false);
+    const [completed, setCompleted] = useState(false);
     const resetState = useOpenTaskUpdate((state) => state.resetState);
     return (
         <Sheet
@@ -16,7 +17,7 @@ export function CreateTaskSheet({ type = 1, TriggerJsx = <><FilePlus /> Create T
                     resetState()
                 }
             }}
-            open={submitting ? true : undefined} >
+            open={submitting && !completed ? true : undefined} >
             <SheetTrigger asChild>
                 <Button className={`text-chart-3 ${type === 2 && "w-fit"}`}
                     variant={type === 1 ? "outline" : "ghost"} disabled={submitting} size="sm">
@@ -25,13 +26,14 @@ export function CreateTaskSheet({ type = 1, TriggerJsx = <><FilePlus /> Create T
             </SheetTrigger>
             <SheetContent >
                 <VideoTaskForm
+                    setIsCompleted={setCompleted}
                     setSubmitting={setSubmitting} submitting={submitting} />
             </SheetContent>
         </Sheet>
     )
 }
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     Dialog, DialogContent, DialogTrigger
 } from "@/components/ui/dialog";
@@ -47,12 +49,14 @@ import {
 import { Check, Search } from "lucide-react";
 import { VideoTaskForm } from "../pagesUi/tasksPageUI/taskForm";
 import { useOpenTaskUpdate } from "@/store/updateTaskSheet";
+import { toast } from "sonner";
+import { searchUsers } from "@/httpfnc/user";
+import { useQuery } from "@tanstack/react-query";
+import type { userSearchType } from "@/types/types";
+import { Skeleton } from "../ui/skeleton";
+import { fallback_profileImg } from "@/constast";
+import { useTaskStore } from "@/store/task.store";
 
-const mockEditors = [
-    { id: "editor1", name: "midbroyoyo1" },
-    { id: "editor2", name: "Ravi" },
-    { id: "editor3", name: "Nandini" },
-];
 
 type EditorSelectDialogProps = {
     value: string;
@@ -61,7 +65,30 @@ type EditorSelectDialogProps = {
 
 export const EditorSelectDialog = ({ value, onChange }: EditorSelectDialogProps) => {
     const [open, setOpen] = useState(false);
-    const selectedEditor = mockEditors.find(e => e.name === value);
+    const timer = useRef<NodeJS.Timeout | null>(null)
+    const [query, setQuery] = useState("")
+    const [debouncedQuery, setDebouncedQuery] = useState("")
+    const { data: users, isLoading, error } = useQuery<userSearchType[]>({
+        queryKey: ["search-users", debouncedQuery],
+        queryFn: () => searchUsers(debouncedQuery),
+        enabled: open,
+        refetchOnWindowFocus: false,
+    })
+
+    if (error) {
+        console.log("Error fetching users:", error)
+        toast.error(error.message || "Failed to fetch users.")
+    }
+
+    useEffect(() => {
+        if (timer.current)
+            clearTimeout(timer.current)
+
+        timer.current = setTimeout(() => {
+            setDebouncedQuery(query)
+        }, 500);
+    }, [query])
+
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -71,29 +98,56 @@ export const EditorSelectDialog = ({ value, onChange }: EditorSelectDialogProps)
                     type="button"
                     className="w-full justify-between"
                 >
-                    {selectedEditor ? selectedEditor.name : "Search editor"}
+                    {value ? value : "Search editor"}
                     <Search className="w-4 h-4 opacity-50" />
                 </Button>
             </DialogTrigger>
 
             <DialogContent className="max-w-md p-0 overflow-hidden">
                 <Command>
-                    <CommandInput placeholder="Search editors..." />
+                    <CommandInput
+                        placeholder="Search editors..."
+                        value={query}
+                        onValueChange={setQuery}
+                    />
+
                     <CommandList>
                         <CommandEmpty>No editor found.</CommandEmpty>
                         <CommandGroup heading="Editors">
-                            {mockEditors.map((editor) => (
-                                <CommandItem
-                                    key={editor.id}
-                                    value={editor.name}
-                                    onSelect={() => {
-                                        onChange(editor.name);
-                                        setOpen(false);
-                                    }}
-                                    className="flex justify-between"
-                                >
-                                    {editor.name}
-                                    {value === editor.name && <Check className="w-4 h-4" />}
+                            {!isLoading && users && users.length > 0 && users.map(user => {
+                                return (
+                                    <CommandItem
+                                        key={user.id}
+                                        value={user.name}
+
+                                        onSelect={() => {
+                                            onChange(user.name);
+                                            setOpen(false);
+                                        }}
+                                        className="flex justify-between"
+
+                                    >
+                                        <div className="flex items-center justify-center gap-5" >
+                                            <img
+                                                className="w-8 aspect-square object-cover rounded-full ml-1"
+                                                src={user.profileImgUrl || fallback_profileImg}
+                                                alt={user.name}
+                                            />
+
+                                            <span>{user.name}</span>
+                                        </div>
+                                        {value === user.name && <Check className="w-4 h-4" />}
+                                    </CommandItem>
+                                )
+                            })
+                            }
+                            {!isLoading && users && users.length === 0 && <CommandEmpty>No users found.</CommandEmpty>}
+                            <CommandGroup ></CommandGroup>
+
+                            {isLoading && Array.from({ length: 5 }).map((_, index) => (
+                                <CommandItem key={index}>
+                                    <Skeleton className="w-8 aspect-square rounded-full mr-2" />
+                                    <Skeleton className="w-32 h-4 rounded-sm" />
                                 </CommandItem>
                             ))}
                         </CommandGroup>

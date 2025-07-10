@@ -29,7 +29,7 @@ const fetchTopEditors = asyncHandler(async (req: any, res: Response) => {
 
     })
 
-    let editorsData : TopEditorsData[]  = [];
+    let editorsData: TopEditorsData[] = [];
 
     allEditors.forEach((editor) => {
         const taskCount = editor.editorTasks.length;
@@ -67,6 +67,7 @@ const fetchTopEditors = asyncHandler(async (req: any, res: Response) => {
         editorsData.push({
             name: editor.name as string,
             bio: editor.bio,
+            role: editor.role,
             profileImgUrl: editor.profileImgUrl,
             tasksCompleted: taskCount,
             ratings: avgRatingEnum,

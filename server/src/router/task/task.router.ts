@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { upload } from "../../middleware/multer";
 import { authMiddleware } from "../../middleware/authMiddleware";
-import { createTask, fetchTaskById, fetchTasks, getVideoPreview, uploadEditedVideoToServer } from "../../controllers/task/task.controller";
+import { createTask, fetchTaskById, fetchTasks, getVideoPreview, updateTask, uploadEditedVideoToServer } from "../../controllers/task/task.controller";
 
 const taskRouter = Router();
 
@@ -13,6 +13,14 @@ taskRouter.post("/create-task", upload.fields([
     { name: "files" }
 ]),
     createTask
+);
+
+
+taskRouter.patch("/update-task/:taskId", upload.fields([
+    { name: "thumbnail", maxCount: 1 },
+    { name: "files" }
+]),
+    updateTask
 );
 
 taskRouter.get("/fetch-tasks", fetchTasks)
