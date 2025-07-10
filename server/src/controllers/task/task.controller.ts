@@ -145,6 +145,47 @@ const fetchTasks = asyncHandler(async (req: any, res: Response) => {
 
 });
 
+const fetchTaskById = asyncHandler(async (req: any, res: Response) => {
+    const { id, role } = req.user;
+    const { taskid } = req.params;
+
+    if (role === Role.YOUTUBER) {
+        const tasks = await client.task.findMany({
+            where: { youtuberId: id, id: Number(taskid) },
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                tags: true,
+                madeForKids: true,
+                thumbnail: true,
+                attachments: true,
+                deadline: true,
+                isCompleted: true,
+                taskTitle: true,
+                workDescription: true,
+                rating: true,
+                review: true,
+                editor: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        profileImgUrl: true,
+                    }
+                }
+            },
+
+        })
+
+        return res.status(200).json(new ApiResponse(tasks, "Successfully fetched tasks for youtuber"));
+
+    }
+
+    return res.status(403).json({ message: "You do not have permission to view tasks" });
+
+});
+
 const uploadEditedVideoToServer = asyncHandler(async (req: any, res: Response) => {
     const { id } = req.user;
     const user = await client.user.findUnique({ where: { id } });
@@ -156,7 +197,7 @@ const uploadEditedVideoToServer = asyncHandler(async (req: any, res: Response) =
         return res.status(403).json({ message: "Only editors can upload edited videos" });
     }
 
-    const { taskId : taskid } = req.body;
+    const { taskId: taskid } = req.body;
     const taskId = parseInt(taskid);
 
     const task = await client.task.findUnique({ where: { id: taskId } });
@@ -224,4 +265,4 @@ const getVideoPreview = asyncHandler(async (req: any, res: Response) => {
     res.status(200).json(new ApiResponse(task, "Video preview fetched successfully"));
 })
 
-export { createTask, fetchTasks, uploadEditedVideoToServer, getVideoPreview };
+export { createTask, fetchTasks, uploadEditedVideoToServer, getVideoPreview, fetchTaskById };

@@ -7,6 +7,7 @@ import { useScreenSizeStore } from "@/store/screenSizestate.store"
 
 export const TaskPage = () => {
     const mobileView = useScreenSizeStore((state) => state.mobileView)
+
     return (<PageWrapper
         headerText="Tasks"
         HeaderJSX={mobileView ? <CreateTaskSheet /> : <></>}

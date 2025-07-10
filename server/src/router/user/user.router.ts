@@ -5,6 +5,7 @@ import { authMiddleware } from "../../middleware/authMiddleware";
 import { fetchTopEditors } from "../../controllers/editors/editors.controller";
 import { upload } from "../../middleware/multer";
 import { fetchTopYoutubers } from "../../controllers/youtubers/youtubers.controllers";
+import { searchUsers } from "../../controllers/user/userSearch";
 
 const userRouter = Router();
 
@@ -25,6 +26,8 @@ userRouter.post("/edit-profile", upload.fields([
 ]),
     editProfile
 );
+
+userRouter.route("/search-user").get(searchUsers)
 
 
 export { userRouter };

@@ -14,3 +14,4 @@ export const useScreenSizeStore = create<State & Actions>((set) => ({
     changeMobileView: (newState: boolean) => set(() => ({ mobileView: newState })),
     resetState: () => set(() => ({ mobileView: false })),
 }))
+

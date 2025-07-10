@@ -8,6 +8,7 @@ import { fetchTasks } from "@/httpfnc/task"
 import { useTaskStore } from "@/store/task.store"
 import { BrushCleaning } from "lucide-react"
 
+
 export const LeftContent = () => {
     const [activeTab, setActiveTab] = useState<number>(1)
     const { data, isLoading, error } = useQuery<TaskDataType[]>({
@@ -17,9 +18,10 @@ export const LeftContent = () => {
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
-    console.log("error:", error )
+    console.log("error:", error)
     const tasksData = useTaskStore((state) => state.tasks)
     const setTasksData = useTaskStore((state) => state.setState)
+    
 
     let assignedTasks: Partial<TaskDataType>[] = [];
     let completedTasks: Partial<TaskDataType>[] = [];
@@ -60,14 +62,14 @@ export const LeftContent = () => {
                     {...task}
                 />
             ))}
-            {!isLoading && assignedTasks.length === 0 && (
+            {!isLoading && activeTab == 1 && assignedTasks.length === 0 && (
                 <div className="text-muted-foreground text-sm">
                     <p>No tasks currently assigned yet.</p>
                     <BrushCleaning />
 
                 </div>
             )}
-            {!isLoading && completedTasks.length === 0 && (
+            {!isLoading && activeTab === 2 && completedTasks.length === 0 && (
                 <div className="text-muted-foreground h-full text-sm flex flex-col gap-5 items-center justify-center">
                     <h1 className="text-lg" >No completed tasks yet.</h1>
                     <BrushCleaning size={30} />
@@ -87,16 +89,13 @@ export const LeftContent = () => {
             {isLoading && <TaskCard loading={isLoading} />}
 
         </div>
-        <div className="w-full h-10" >
+        <div className="w-full h-6" >
             <Separator orientation="horizontal" className="w-full" />
         </div>
-        <div className="text-sm text-muted-foreground w-full text-center mt-2">
+        <div className="text-xs text-muted-foreground w-full text-center mt-2">
             {activeTab === 1 ? "Tasks currently assigned to editor/ in progress" : "All your completed tasks that were assigend to editors"}
         </div>
-        <div className="text-sm text-muted-foreground w-full text-center mt-2">
-            Note: Click on a task to view details.
-        </div>
-
+      
     </div>)
 }
 

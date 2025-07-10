@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { upload } from "../../middleware/multer";
 import { authMiddleware } from "../../middleware/authMiddleware";
-import { createTask, fetchTasks, getVideoPreview, uploadEditedVideoToServer } from "../../controllers/task/task.controller";
+import { createTask, fetchTaskById, fetchTasks, getVideoPreview, uploadEditedVideoToServer } from "../../controllers/task/task.controller";
 
 const taskRouter = Router();
 
@@ -24,5 +24,6 @@ taskRouter.post("/upload-video-to-server", upload.fields([
     uploadEditedVideoToServer
 );
 taskRouter.get("/video-preview/:taskId", getVideoPreview);
+taskRouter.get("/fetch-task/:taskid", fetchTaskById);
 
 export { taskRouter };

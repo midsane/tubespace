@@ -6,17 +6,26 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 
-export function CreateTaskSheet() {
+export function CreateTaskSheet({ type = 1, TriggerJsx = <><FilePlus /> Create Task</> }: { type?: number, TriggerJsx?: React.ReactNode }) {
     const [submitting, setSubmitting] = useState(false);
+    const resetState = useOpenTaskUpdate((state) => state.resetState);
     return (
-        <Sheet open={submitting ? true : undefined} >
+        <Sheet
+            onOpenChange={(open) => {
+                if (!open) {
+                    resetState()
+                }
+            }}
+            open={submitting ? true : undefined} >
             <SheetTrigger asChild>
-                <Button className="text-chart-3" variant="outline" disabled={submitting} size="sm">
-                    <FilePlus /> Create Task
+                <Button className={`text-chart-3 ${type === 2 && "w-fit"}`}
+                    variant={type === 1 ? "outline" : "ghost"} disabled={submitting} size="sm">
+                    {TriggerJsx}
                 </Button>
             </SheetTrigger>
             <SheetContent >
-                <VideoTaskForm setSubmitting={setSubmitting} submitting={submitting} />
+                <VideoTaskForm
+                    setSubmitting={setSubmitting} submitting={submitting} />
             </SheetContent>
         </Sheet>
     )
@@ -37,6 +46,7 @@ import {
 } from "@/components/ui/command";
 import { Check, Search } from "lucide-react";
 import { VideoTaskForm } from "../pagesUi/tasksPageUI/taskForm";
+import { useOpenTaskUpdate } from "@/store/updateTaskSheet";
 
 const mockEditors = [
     { id: "editor1", name: "midbroyoyo1" },

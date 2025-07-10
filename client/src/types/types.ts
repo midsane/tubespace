@@ -67,3 +67,13 @@ export interface TaskDataType {
     youtuber?: Partial<AuthDataType> | null,
     editor?: Partial<AuthDataType> | null
 }
+
+
+
+export interface userSearchType {
+    id: string;
+    name: string;
+    email: string;
+    profileImgUrl?: string;
+    role: UserRole
+}

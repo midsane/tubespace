@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
+import { toast } from "sonner"
+
 
 import {
     Card,
@@ -29,25 +31,25 @@ import { googleIcon } from "@/constast"
 import { Loader2Icon } from "lucide-react"
 
 export function AuthPage() {
-    const [loginBox, setLoginBox] = useState<boolean>(false)
+    const [loginBox, setLoginBox] = useState<boolean>(true)
     const [data, setData] = useState({ email: "", password: "", role: UserRole.NORMAL })
     const [loading, setLoading] = useState<boolean>(false)
     const [oauthLoading, setOauthLoading] = useState<boolean>(false)
     const navigate = useNavigate()
     const setState = useUserStore((state) => state.setState)
-    console.log("loading:", loading)
+
     console.log(data)
     const handleSubmit = async () => {
         if (data.role === UserRole.NORMAL && !loginBox) {
-            alert("Please select a role")
+            toast.warning("Please select a role")
             return;
         }
         if (!data.email || !data.password || data.email?.trim() === "" || data.password?.trim() === "") {
-            alert("Please fill all fields")
+            toast.warning("Please fill all fields")
             return;
         }
         if (!data.email.includes("@") || !data.email.includes(".")) {
-            alert("invalid email format")
+            toast.warning("invalid email format")
             return;
         }
         setLoading(true)
@@ -58,16 +60,19 @@ export function AuthPage() {
 
                 setState(userData)
                 const prefix = userData.role === UserRole.YOUTUBER ? "y" : "c";
+                toast.success("Login successful! Redirecting to profile...");
                 navigate(`/${prefix}/profile/${userData.name}`);
             } else {
                 const userData: AuthDataType = await RegisterUser(data.email, data.password, data.role);
 
                 setState(userData)
                 const prefix = userData.role === UserRole.YOUTUBER ? "y" : "c";
+                toast.success("Account created successfully! Redirecting to profile...");
                 navigate(`/${prefix}/profile/${userData.name}`);
             }
 
         } catch (error) {
+            toast.error("Failed to " + (loginBox ? "login" : "signup") + ". Please try again.");
             console.error("Error during submission:", error);
         }
         setLoading(false)
@@ -75,20 +80,21 @@ export function AuthPage() {
 
     const handleOauthWindow = async () => {
         if (data.role === UserRole.NORMAL && !loginBox) {
-            alert("Please select a role")
+            toast.warning("Please select a role")
             return;
         }
-        useUserStore.getState().updateState({role: data.role}) 
+        useUserStore.getState().updateState({ role: data.role })
         setOauthLoading(true)
         try {
             const data: { url: string } = await getOauthWindow()
             if (!data || !data.url) {
-                throw new Error("Failed to get OAuth window URL");
+                toast.error("Failed to get OAuth URL. Please try again later.");
+                return;
             }
             window.location.href = data.url;
         } catch (error) {
             console.error("Error during OAuth window handling:", error);
-            alert("Failed to open OAuth window. Please try again.");
+            toast.error("Failed to open OAuth window. Please try again.");
         }
         setOauthLoading(false)
 
@@ -170,7 +176,7 @@ export function AuthPage() {
                 <CardFooter className="flex-col gap-2">
                     {loading ? <Button className="w-full" size="lg">
                         <p>{loginBox ? "Loggin you in" : "Signing you up"} </p>
-                        <Loader2Icon />
+                        <Loader2Icon className="animate-spin" />
                     </Button> :
                         <Button className="w-full" size="lg"
                             disabled={loading || oauthLoading}
@@ -182,7 +188,7 @@ export function AuthPage() {
                     {oauthLoading ? <Button variant="outline" className="w-full" size="lg" >
                         <img className="h-6 aspect-square" src={googleIcon} />
                         <p>{loginBox ? "Loggin you in" : "Signing you up"}  </p>
-                        <Loader2Icon />
+                        <Loader2Icon className="animate-spin" />
                     </Button> :
 
                         <Button variant="outline" className="w-full" size="lg"

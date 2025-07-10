@@ -8,6 +8,7 @@ import { UserRole, type AuthDataType } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { checkAuth } from "@/httpfnc/auth";
 import { Skeleton } from "../ui/skeleton";
+import { Toaster } from "@/components/ui/sonner"
 
 export const RootPageLayout: React.FC = () => {
     const { data, isLoading } = useQuery<AuthDataType>({
@@ -49,7 +50,8 @@ export const RootPageLayout: React.FC = () => {
         </nav>
         <section className="flex justify-center items-center">
             <Outlet />
-        </section>
+            <Toaster closeButton richColors position="top-center" />
+        </section> 
     </main>
     );
 };
