@@ -1,11 +1,12 @@
 import { useState, useRef, useCallback } from "react"
-import { Upload, Play, Pause, Volume2, VolumeX, Maximize, X, FileVideo, UploadIcon } from "lucide-react"
+import { Upload, Play, Pause, Volume2, VolumeX, Maximize, X, FileVideo, UploadIcon, Loader2Icon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
 import { baseUrl } from "@/constast"
+import { toast } from "sonner"
 
 interface VideoFile {
     file: File
@@ -27,11 +28,14 @@ export function DragAndDropVideo({ taskId }: { taskId: number }) {
     const fileInputRef = useRef<HTMLInputElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
 
+    const [loading, setLoading] = useState(false)
+
     const handleUpload = async () => {
         if (!videoFile) {
-            alert("Please upload a video file first")
+            toast.error("Please select a video file to upload")
             return
         }
+        setLoading(true)
         const formData = new FormData()
         formData.append("video", videoFile.file)
         formData.append("taskId", taskId.toString())
@@ -43,13 +47,12 @@ export function DragAndDropVideo({ taskId }: { taskId: number }) {
 
         if (!response.ok) {
             const errorData = await response.json()
-            alert(`Upload failed: ${errorData.message}`)
+            toast.error(`Upload failed: ${errorData.message}`)
             return
         }
 
-        const data = await response.json()
-        alert("Video uploaded successfully!")
-        console.log(data)
+        toast.success("Video uploaded successfully!")
+        setLoading(false)
         // Reset state after successful upload
         setVideoFile(null)
         setCurrentTime(0)
@@ -72,7 +75,7 @@ export function DragAndDropVideo({ taskId }: { taskId: number }) {
         if (videoRef.current) {
             videoRef.current.load()
         }
-        console.log("Video uploaded and state reset")
+
     }
 
     const handleDrag = useCallback((e: React.DragEvent) => {
@@ -348,10 +351,17 @@ export function DragAndDropVideo({ taskId }: { taskId: number }) {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button onClick={handleUpload} >
-                                <UploadIcon size={20} />
-                                Upload to our Server
-                            </Button>
+                            {!loading ?
+                                <Button onClick={handleUpload} >
+                                    <UploadIcon size={20} />
+                                    Upload to our Server
+                                </Button>
+                                :
+                                <Button disabled >
+                                    <UploadIcon size={20} />
+                                    Uploading... <Loader2Icon className="animate-spin ml-2" size={16} />
+                                </Button>
+                            }
                         </CardFooter>
                     </Card>
                 )}

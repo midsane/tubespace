@@ -7,12 +7,14 @@ import type { TaskDataType } from "@/types/types"
 import { fetchTasks } from "@/httpfnc/task"
 import { useTaskStore } from "@/store/task.store"
 import { BrushCleaning } from "lucide-react"
+import { useUserStore } from "@/store/user.store"
 
 
 export const LeftContent = () => {
+    const role = useUserStore((state) => state.user.role)
     const [activeTab, setActiveTab] = useState<number>(1)
     const { data, isLoading, error } = useQuery<TaskDataType[]>({
-        queryKey: ["fetchTask", activeTab],
+        queryKey: ["fetchTask", activeTab, role],
         queryFn: () => fetchTasks(),
         enabled: true,
         staleTime: 1000 * 60 * 5, // 5 minutes
@@ -21,7 +23,7 @@ export const LeftContent = () => {
     console.log("error:", error)
     const tasksData = useTaskStore((state) => state.tasks)
     const setTasksData = useTaskStore((state) => state.setState)
-    
+
 
     let assignedTasks: Partial<TaskDataType>[] = [];
     let completedTasks: Partial<TaskDataType>[] = [];
@@ -62,10 +64,11 @@ export const LeftContent = () => {
                     {...task}
                 />
             ))}
-            {!isLoading && activeTab == 1 && assignedTasks.length === 0 && (
-                <div className="text-muted-foreground text-sm">
-                    <p>No tasks currently assigned yet.</p>
-                    <BrushCleaning />
+
+            {!isLoading && activeTab === 1 && assignedTasks.length === 0 && (
+                <div className="text-muted-foreground h-full text-sm flex flex-col gap-5 items-center justify-center">
+                    <h1 className="text-lg" >No tasks currently assigned yet.</h1>
+                    <BrushCleaning size={30} />
 
                 </div>
             )}
@@ -95,7 +98,7 @@ export const LeftContent = () => {
         <div className="text-xs text-muted-foreground w-full text-center mt-2">
             {activeTab === 1 ? "Tasks currently assigned to editor/ in progress" : "All your completed tasks that were assigend to editors"}
         </div>
-      
+
     </div>)
 }
 
@@ -117,7 +120,7 @@ const Tab = ({ text, isActive, onClick }: { text: string, isActive: boolean, onC
                     animate: { opacity: 1 },
                 }}
                 transition={{
-                    duration: 0.3,
+                    duration: 0.1,
                     ease: "easeInOut",
                 }}
                 className={`

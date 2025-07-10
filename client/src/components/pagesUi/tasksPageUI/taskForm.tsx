@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useForm, Controller, set } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2Icon, ServerCrash, Trash2 } from "lucide-react";
 import {

@@ -1,13 +1,18 @@
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FullTextDialogView } from "../common/fullTextDialogView"
 import { UserRole, type TaskDataType } from "@/types/types";
-import { FilePenLine, Paperclip, UploadCloudIcon } from "lucide-react";
+import { Paperclip, UploadCloudIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { noPfpImg } from "@/constast";
 import { UploadEditedVideoDialog } from "@/components/dialogbox/uploadEditedVideoDialog";
 import { useOpenTaskUpdate } from "@/store/updateTaskSheet";
 import { CreateTaskSheet } from "@/components/dialogbox/createTaskSheet";
+
+import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 
 const CHAR_LIMIT = 80;
@@ -42,8 +47,10 @@ export const TaskCard = (
     const truncatedDescription = isDescriptionLong ? workDescription.slice(0, CHAR_LIMIT) + "..." : workDescription;
 
 
+    const [dialogOpen, setDialogOpen] = useState(false);
+
     return (
-        <Card className="w-[90%] text-popover-foreground">
+        <Card className="w-[90%] text-popover-foreground relative">
             <CardHeader className="flex flex-col gap-3" >
                 <div className="flex gap-2 items-end w-full">
                     {!loading && pfp && <img src={pfp} alt="user profile" className="object-cover border border-popover-foreground w-8 sm:w-10 aspect-square rounded-full" />}
@@ -76,7 +83,10 @@ export const TaskCard = (
                                         TriggerJsx={<UploadCloudIcon size={20} />} />
                                 </div>}
                                 {loading && <Skeleton />}
-                                {!loading && <Paperclip className="opacity-60" size={20} />}
+                                {!loading && <PreviewAttachment
+                                    dialogOpen={dialogOpen}
+                                    setDialogOpen={setDialogOpen}
+                                    selectedFiles={attachments || []} />}
                             </div> :
                             <div className="flex items-center sm:items-end justify-between w-full" >
                                 {!loading && <div className="p-1 hover:opacity-100 active:scale-90 ease-in duration-75
@@ -97,7 +107,11 @@ export const TaskCard = (
                                     onClick={() => setTaskId(id)}
                                     className="p-1 w-fit hover:opacity-100 active:scale-90 ease-in duration-75
                             rounded-sm opacity-80 text-chart-4 border-2" >
-                                    <FilePenLine size={20} />
+                                    <PreviewAttachment
+                                        dialogOpen={dialogOpen}
+                                        setDialogOpen={setDialogOpen}
+                                        selectedFiles={attachments || []} />
+
                                 </div>} />
                             }
                             {loading && <Skeleton className="h-6 w-6 rounded-sm" />}
@@ -118,4 +132,54 @@ export const TaskCard = (
             </CardFooter>
         </Card>
     )
+}
+
+
+const PreviewAttachment = ({
+    dialogOpen, setDialogOpen,
+    selectedFiles
+}:
+    {
+        dialogOpen: boolean, setDialogOpen: (open: boolean) => void,
+        selectedFiles: string[]
+    }) => {
+
+    return (<>
+        {
+            selectedFiles.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-3">
+                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="outline" type="button">
+                                <Paperclip className="opacity-60" size={20} />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-3xl">
+                            <Carousel className="w-full mt-10 sm:mt-0 relative max-w-full">
+                                <CarouselContent>
+                                    {selectedFiles.map((url, idx) => {
+                                        const isVideo = url.endsWith(".mp4") || url.endsWith(".webm") || url.endsWith(".ogg");
+                                        const previewUrl = url;
+                                        return (
+                                            <CarouselItem key={idx} className="flex flex-col items-center gap-2">
+                                                <div className="relative flex justify-center items-center w-full">
+                                                    {isVideo ? (
+                                                        <video src={previewUrl} controls className="max-h-[70vh] w-auto rounded-lg" />
+                                                    ) : (
+                                                        <img src={previewUrl} className="max-h-[70vh] w-auto rounded-lg" />
+                                                    )}
+                                                </div>
+                                            </CarouselItem>
+                                        );
+                                    })}
+                                </CarouselContent>
+                                <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10" />
+                                <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10" />
+                            </Carousel>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            )
+        }</>)
+
 }
