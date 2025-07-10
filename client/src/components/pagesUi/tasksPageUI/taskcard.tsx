@@ -105,13 +105,9 @@ export const TaskCard = (
                                 type={2}
                                 TriggerJsx={<div
                                     onClick={() => setTaskId(id)}
-                                    className="p-1 w-fit hover:opacity-100 active:scale-90 ease-in duration-75
-                            rounded-sm opacity-80 text-chart-4 border-2" >
-                                    <PreviewAttachment
-                                        dialogOpen={dialogOpen}
-                                        setDialogOpen={setDialogOpen}
-                                        selectedFiles={attachments || []} />
-
+                                    className="p-1 w-fit  active:scale-90 ease-in duration-75
+                                    rounded-sm text-chart-4 border-2" >
+                                    <Paperclip className="opacity-60" size={20} />
                                 </div>} />
                             }
                             {loading && <Skeleton className="h-6 w-6 rounded-sm" />}

@@ -8,7 +8,7 @@ import { GetStartedButton } from "./getStartedButton";
 import { logo } from "@/constast";
 export const LandingPage = () => {
 
-    return (<div className="flex overflow-hidden flex-col bg mix-blend-hard bg-background
+    return (<div className="flex overflow-hidden w-full flex-col bg mix-blend-hard bg-background
         bg-[radial-gradient(circle_at_center,theme(colors.chart-bg)_20%,transparent_90%)]">
         <div className="flex
         flex-col gap-10 items-center justify-center h-dvh" >
@@ -36,8 +36,8 @@ export const LandingPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-                className="scroll-m-20 text-foreground/80 text-center text-xl md:text-3xl font-extrabold tracking-tight text-balance">
-                It lets your editors upload once — you review and publish to YouTube instantly. No downloads, no re-uploads, just done.
+                className="scroll-m-20 text-foreground/80 text-center text-lg sm:text-xl md:text-3xl font-semibold tracking-tight text-balance">
+                Upload once. Review and publish to YouTube. No re-uploads, no internet waste.
             </motion.h1>
             <GetStartedButton />
         </div>

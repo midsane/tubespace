@@ -7,42 +7,78 @@ import { LogoutBox } from "../dialogbox/logout"
 import { useUserStore } from "@/store/user.store"
 import { Skeleton } from "../ui/skeleton"
 import { UserRole } from "@/types/types"
+import { fallback_profileImg } from "@/constast"
 
+interface SidebarItem {
+    text: string;
+    icon: ReactNode;
+}
 
 export const Sidebar = () => {
     const { mobileView, changeMobileView } = useScreenSizeStore()
     const [ICON_SIZE, setIconSize] = useState<number>(25);
     const [logoSize, setLogoSize] = useState<number>(40);
-    const UppersidebarItems = [
-        {
-            text: "Tubespace",
-            icon: <img src={logoImage} className={`h-${logoSize} aspect-square`} />
-        },
-        {
-            text: "Profile",
-            icon: <UserRoundPen size={ICON_SIZE} />
-        },
-        {
-            text: "Tasks",
-            icon: <StickyNote size={ICON_SIZE} />
-        },
-        {
-            text: "Messages",
-            icon: <MessageCircle size={ICON_SIZE} />
-        },
-        {
-            text: "Notifications",
-            icon: <Bell size={ICON_SIZE} />
-        },
+    const [UppersidebarItems, setUppersidebarItems] = useState<SidebarItem[]>([]);
 
-    ]
+    useEffect(() => {
+        if (mobileView) {
+            setUppersidebarItems([
+                {
+                    text: "Tasks",
+                    icon: <StickyNote size={ICON_SIZE} />
+                },
+                {
+                    text: "Messages",
+                    icon: <MessageCircle size={ICON_SIZE} />
+                },
+                {
+                    text: "Profile",
+                    icon: <img
+                        className="h-10 rounded-full  aspect-square object-cover"
+                        src={useUserStore.getState().user.profileImgUrl || fallback_profileImg}>
+                    </img>
 
-    const LowersidebarItems = [
-        {
-            text: "Logout",
-            icon: <LogOutIcon size={ICON_SIZE} />
-        },
-    ]
+                },
+                {
+                    text: "Notifications",
+                    icon: <Bell size={ICON_SIZE} />
+                },
+                {
+                    text: "Logout",
+                    icon: <LogOutIcon size={ICON_SIZE} />
+                }
+            ]);
+        }
+        else {
+            setUppersidebarItems([
+                {
+                    text: "Tubespace",
+                    icon: <img src={logoImage} className={`h-${logoSize} aspect-square`} />
+                },
+                {
+                    text: "Profile",
+                    icon: <UserRoundPen size={ICON_SIZE} />
+                },
+                {
+                    text: "Tasks",
+                    icon: <StickyNote size={ICON_SIZE} />
+                },
+                {
+                    text: "Messages",
+                    icon: <MessageCircle size={ICON_SIZE} />
+                },
+                {
+                    text: "Notifications",
+                    icon: <Bell size={ICON_SIZE} />
+                },
+                {
+                    text: "Logout",
+                    icon: <LogOutIcon size={ICON_SIZE} />
+                }
+            ]);
+        }
+    }, [mobileView, ICON_SIZE, logoSize]);
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -69,14 +105,16 @@ export const Sidebar = () => {
     }, []);
 
 
-    return (<nav className={`flex flex-col h-full w-fit pb-2 ${mobileView ? "sm:px-1 pt-4" : "pt-1 px-4  xl:px-6"} rounded-br-2xl  rounded-tr-2xl border border-sidebar-border justify-between bg-popover text-popover-foreground`} >
-        <ul className="flex justify-center flex-col gap-4 p-2" >
+    return (<nav className={`flex  ${mobileView ? "sm:px-1  rounded-tr-2xl rounded-tl-2xl sm:pt-4 w-screen h-[10vh] flex-row" : "h-full  rounded-br-2xl  rounded-tr-2xl  w-fit pb-2 pt-1 px-4 flex-col xl:px-6"} 
+       border border-sidebar-border 
+    justify-between bg-popover text-popover-foreground`} >
+        <ul className={`flex ${mobileView ? "flex-row items-center w-full" : "flex-col"} justify-center gap-4 p-2`} >
             {UppersidebarItems.map(item => <NavItem mobileView={mobileView} key={item.text} {...item} />)}
         </ul>
-
+        {/* 
         <ul className="flex justify-center flex-col gap-4 p-2" >
             {LowersidebarItems.map(item => <NavItem mobileView={mobileView} key={item.text} {...item} />)}
-        </ul>
+        </ul> */}
 
     </nav>)
 }

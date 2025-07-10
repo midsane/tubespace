@@ -24,7 +24,7 @@ export const RootPageLayout: React.FC = () => {
     }, [data]);
 
     const navigate = useNavigate()
-    return (<main>
+    return (<main className="" >
         <nav className="flex h-[8dvh] md:h-[10dvh] border text-sidebar-foreground border-sidebar-border z-50 
         fixed top-0 left-0 right-0  px-6 py-3  items-center justify-between" >
             <div className="flex gap-6 items-center" >

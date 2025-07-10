@@ -63,7 +63,7 @@ const dummyNotifications = [
 ]
 
 export const LeftContent = () => {
-    return (<div className="h-full  w-full flex flex-col justify-center items-center " >
+    return (<div className="h-full w-full flex flex-col justify-center items-center " >
         <div className="flex h-full py-5 items-center w-full flex-col gap-5 overflow-y-scroll">
             {dummyNotifications.map((notification, index) => (
                 <NotificationCard
