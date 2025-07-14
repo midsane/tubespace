@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { motion } from "framer-motion";
 import { baseUrl, googleIcon, logo } from "@/constast";
 import { LoadingTitle } from "@/components/loadingUI/loadingTitle";
@@ -11,7 +11,7 @@ export function YtOAuthPage() {
     const [searchParams] = useSearchParams();
     const code = searchParams.get('code');
     const taskId = useUploadVideo((state) => state.taskId);
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
     console.log("code", code);
     console.log("taskId", taskId);
 
@@ -28,7 +28,7 @@ export function YtOAuthPage() {
 
         const startVideoUploadSession = async () => {
             console.log("first");
-            const response = await axios.post(`${baseUrl}/yt-upload/start-session`, {
+            const response = await axios.post(`${baseUrl}yt-upload/start-session`, {
                 code,
                 taskId
             }, {
@@ -41,7 +41,7 @@ export function YtOAuthPage() {
 
             if (response.status === 200) {
                 toast.success("Successfully started video upload session");
-                // navigate(`/check-progress/${taskId}`);
+                navigate(`/check-progress/${taskId}`);
             } else {
                 toast.error("Failed to start video upload session");
             }

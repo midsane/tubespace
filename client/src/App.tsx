@@ -11,6 +11,7 @@ import { VideoPreviewPage } from './pages/videoPreviewPage'
 import { OAuthPage } from './components/pagesUi/authPage/OAuthPage'
 import { TaskUpdatePage } from './pages/taskUpdatePage'
 import { YtOAuthPage } from './components/pagesUi/yt-upload/Oauth'
+import { CheckProgressPage } from './pages/checkProgressPage'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "task-update/:taskId",
         element: <TaskUpdatePage />
+      },
+      {
+        path: "check-progress/:taskId",
+        element: <CheckProgressPage />
       }
     ]
   },
