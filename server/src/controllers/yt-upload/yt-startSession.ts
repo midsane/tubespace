@@ -11,8 +11,10 @@ import { getVideoFileConfigs } from '../../utils/cloudinary';
 
 const startSession = asyncHandler(async (req: any, res: Response) => {
 
-    const { code, taskId } = req.body;
+    const { code, taskId: taskid } = req.body;
+    const taskId = Number(taskid);
     let access_token = null;
+    
     try {
         access_token = await getTokenForStartingVideoUploadSession(code, taskId);
     } catch (error) {

@@ -6,10 +6,11 @@ const client_secret = process.env.YT_GOOGLE_CLIENT_SECRET
 
 export const getTokenForStartingVideoUploadSession = async (Encodedcode: string, taskId: number) => {
 
+    console.log('Encoded code:', Encodedcode);
     if (!Encodedcode) throw new Error("Encoded code is required");
     const code = decodeURIComponent(Encodedcode);
 
-
+    console.log('Decoded code:', code);
     if (!taskId) {
         throw new Error("taskId is required to get token");
     }
@@ -47,6 +48,7 @@ export const getTokenForStartingVideoUploadSession = async (Encodedcode: string,
         const accessToken = response.data.access_token;
         const refreshToken = response.data.refresh_token;
 
+        console.log('Access Token:', accessToken);
         return {
             accessToken,
             refreshToken,
