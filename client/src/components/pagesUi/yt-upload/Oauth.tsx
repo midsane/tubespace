@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import {  useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 import { motion } from "framer-motion";
 import { baseUrl, googleIcon, logo } from "@/constast";
 import { LoadingTitle } from "@/components/loadingUI/loadingTitle";
@@ -12,6 +12,8 @@ export function YtOAuthPage() {
     const code = searchParams.get('code');
     const taskId = useUploadVideo((state) => state.taskId);
     // const navigate = useNavigate()
+    console.log("code", code);
+    console.log("taskId", taskId);
 
     useEffect(() => {
 
@@ -25,6 +27,7 @@ export function YtOAuthPage() {
         }
 
         const startVideoUploadSession = async () => {
+            console.log("first");
             const response = await axios.post(`${baseUrl}/yt-upload/start-session`, {
                 code,
                 taskId
@@ -34,6 +37,7 @@ export function YtOAuthPage() {
                 },
                 withCredentials: true,
             });
+            console.log("response", response);
 
             if (response.status === 200) {
                 toast.success("Successfully started video upload session");
@@ -75,7 +79,7 @@ export function YtOAuthPage() {
                         className="text-4xl font-bold text-balance">TubeSpace</motion.h1>
                 </div>
                 <div className="flex flex-col w-screen justify-center items-center gap-5" >
-                    Loggin you in with... <img className="shadow-border w-10 shadow-2xl" src={googleIcon} />
+                    Starting a upload session for your youtube video using google Oauth... <img className="shadow-border w-10 shadow-2xl" src={googleIcon} />
                     <LoadingTitle />
 
                 </div>
