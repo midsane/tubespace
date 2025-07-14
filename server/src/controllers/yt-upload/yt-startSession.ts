@@ -14,9 +14,9 @@ const startSession = asyncHandler(async (req: any, res: Response) => {
     const { code, taskId: taskid } = req.body;
     const taskId = Number(taskid);
     let access_token = null;
-    
+
     try {
-        access_token = await getTokenForStartingVideoUploadSession(code, taskId);
+        access_token = (await getTokenForStartingVideoUploadSession(code, taskId)).accessToken
     } catch (error) {
         console.log('Error getting access token:', error);
         return res.status(500).json(new ApiResponse(null, "Error getting access token"));
@@ -69,7 +69,7 @@ const startSession = asyncHandler(async (req: any, res: Response) => {
             'X-Upload-Content-Length': fileSize,
             'X-Upload-Content-Type': mimeType
         },
-        data: videoMetadata
+        data: JSON.stringify(videoMetadata)
     })
         .then(response => {
             console.log('Resumable session initiated successfully!');

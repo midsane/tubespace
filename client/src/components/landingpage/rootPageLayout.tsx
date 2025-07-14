@@ -50,7 +50,7 @@ export const RootPageLayout: React.FC = () => {
         <section className="flex justify-center items-center">
             <Outlet />
             <Toaster closeButton richColors position="top-center" />
-        </section> 
+        </section>
     </main>
     );
 };
