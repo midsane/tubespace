@@ -78,8 +78,8 @@ export function YtOAuthPage() {
                         transition={{ duration: 0.6, ease: "easeOut" }}
                         className="text-4xl font-bold text-balance">TubeSpace</motion.h1>
                 </div>
-                <div className="flex flex-col w-screen justify-center items-center gap-5" >
-                    Starting a upload session for your youtube video using google Oauth... <img className="shadow-border w-10 shadow-2xl" src={googleIcon} />
+                <div className="flex flex-col w-screen px-5 justify-center text-center items-center gap-5" >
+                    Starting an upload session for your youtube video using google Oauth... <img className="shadow-border w-10 shadow-2xl" src={googleIcon} />
                     <LoadingTitle />
 
                 </div>

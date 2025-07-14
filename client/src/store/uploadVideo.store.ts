@@ -1,16 +1,31 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 type State = {
-    taskId: number | null,
-}
+    taskId: number | null;
+};
 
 type Actions = {
-    setTaskId: (id: number) => void,
-    resetState: () => void
-}
+    setTaskId: (id: number) => void;
+    resetState: () => void;
+};
 
-export const useUploadVideo = create<State & Actions>((set) => ({
-    taskId: null,
-    setTaskId: (newState: number) => set(() => ({ taskId: newState })),
-    resetState: () => set(() => ({ taskId: null })),
-}))
+export const useUploadVideo = create<State & Actions>()(
+    persist(
+        (set) => ({
+            taskId: null,
+            setTaskId: (id: number) => set(() => ({ taskId: id })),
+            resetState: () => {
+
+                set(() => ({ taskId: null }));
+
+
+                localStorage.removeItem('upload-video-storage');
+            },
+        }),
+        {
+            name: 'upload-video-storage',
+            partialize: (state) => ({ taskId: state.taskId }),
+        }
+    )
+);
