@@ -9,6 +9,8 @@ import { RootPageLayout } from './components/landingpage/rootPageLayout'
 import { LandingPage } from './components/landingpage/landingpage'
 import { VideoPreviewPage } from './pages/videoPreviewPage'
 import { OAuthPage } from './components/pagesUi/authPage/OAuthPage'
+import { TaskUpdatePage } from './pages/taskUpdatePage'
+import { YtOAuthPage } from './components/pagesUi/yt-upload/Oauth'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -28,8 +30,16 @@ const router = createBrowserRouter([
         element: <OAuthPage />
       },
       {
+        path: "yt-upload",
+        element: <YtOAuthPage />
+      },
+      {
         path: "video-preview/:taskId",
         element: <VideoPreviewPage />
+      },
+      {
+        path: "task-update/:taskId",
+        element: <TaskUpdatePage />
       }
     ]
   },

@@ -89,20 +89,28 @@ const editProfile = asyncHandler(async (req: any, res: Response) => {
 
     let profileImgUrl: string | null = "";
     if (req?.files?.profileImg && req.files.profileImg[0]) {
-        profileImgUrl = await uploadToCloudinary(
-            req.files.profileImg[0].buffer,
-            req.files.profileImg[0].originalname,
-            req.files.profileImg[0].mimetype
+        const response = await uploadToCloudinary(
+            req.files.profileImg[0].path
         );
+        if (response && response.secure_url) {
+            profileImgUrl = response.secure_url;
+        }
+        else {
+            return res.status(500).json(new ApiResponse(null, "failed to upload profile image!"));
+        }
     }
 
     let BannerImgUrl: string | null = "";
     if (req?.files?.BannerImg && req.files.BannerImg[0]) {
-        BannerImgUrl = await uploadToCloudinary(
-            req.files.BannerImg[0].buffer,
-            req.files.BannerImg[0].originalname,
-            req.files.BannerImg[0].mimetype
+        const response = await uploadToCloudinary(
+            req.files.BannerImg[0].path
         );
+        if (response && response.secure_url) {
+            BannerImgUrl = response.secure_url;
+        }
+        else {
+            return res.status(500).json(new ApiResponse(null, "failed to upload banner image!"));
+        }
     }
 
     if (BannerImgUrl && BannerImgUrl.trim() === "")

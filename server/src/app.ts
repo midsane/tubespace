@@ -3,11 +3,11 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { ApiResponse } from "./utils/apiresponse";
 import { userRouter } from "./router/user/user.router";
-import {taskRouter} from "./router/task/task.router"
-
+import { taskRouter } from "./router/task/task.router"
+import { router as youtubeUploadRouter } from "./router/yt-upload/yt-upload.router";
 
 const app = express();
-console.log("cors origin:", process.env.CORS_ORIGIN, "mode:", process.env.MODE, )
+console.log("cors origin:", process.env.CORS_ORIGIN, "mode:", process.env.MODE,)
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
@@ -22,7 +22,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/task", taskRouter)
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use("/api/v1/yt-upload", youtubeUploadRouter)
+app.use((err: any, req: any, res: express.Response, next: express.NextFunction) => {
     console.error(err.stack);
     res.status(500).json(new ApiResponse(null, "Something went wrong!"));
 });

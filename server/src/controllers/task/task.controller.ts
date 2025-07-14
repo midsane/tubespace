@@ -4,6 +4,7 @@ import { asyncHandler } from "../../utils/asyncHandler";
 import { Role } from "@prisma/client";
 import { client } from "../../db/connectToDb";
 import { Response } from "express";
+import fs from "fs";
 import { ApiResponse } from "../../utils/apiresponse";
 
 const createTask = asyncHandler(async (req: any, res: Response) => {
@@ -53,18 +54,27 @@ const createTask = asyncHandler(async (req: any, res: Response) => {
 
     if (req.files && Array.isArray(req.files.files)) {
         for (const file of req.files.files) {
-            const url = await uploadToCloudinary(file.buffer, file.originalname, file.mimetype);
-            uploadedUrls.push(url);
+            const response = await uploadToCloudinary(file.path);
+            if (response && response.secure_url) {
+                uploadedUrls.push(response.secure_url);
+            }
+            else {
+                return res.status(500).json(new ApiResponse(null, "Failed to upload files to Cloudinary"));
+            }
         }
     }
 
     let thumbnailUrl = "";
     if (req.files?.thumbnail && req.files.thumbnail[0]) {
-        thumbnailUrl = await uploadToCloudinary(
-            req.files.thumbnail[0].buffer,
-            req.files.thumbnail[0].originalname,
-            req.files.thumbnail[0].mimetype
+        const response = await uploadToCloudinary(
+            req.files.thumbnail[0].path
         );
+        if (response && response.secure_url) {
+            thumbnailUrl = response.secure_url;
+        }
+        else {
+            return res.status(500).json(new ApiResponse(null, "Failed to upload thumbnail to Cloudinary"));
+        }
     }
 
     console.log("tags: ", tags);
@@ -153,8 +163,13 @@ const updateTask = asyncHandler(async (req: any, res: Response) => {
     const uploadedUrls: string[] = [];
     if (req.files && Array.isArray(req.files.files)) {
         for (const file of req.files.files) {
-            const url = await uploadToCloudinary(file.buffer, file.originalname, file.mimetype);
-            uploadedUrls.push(url);
+            const response = await uploadToCloudinary(file.path);
+            if (response && response.secure_url) {
+                uploadedUrls.push(response.secure_url);
+            }
+            else {
+                return res.status(500).json(new ApiResponse(null, "Failed to upload files to Cloudinary"));
+            }
         }
     }
 
@@ -173,11 +188,14 @@ const updateTask = asyncHandler(async (req: any, res: Response) => {
 
     let thumbnailUrl = existingTask.thumbnail || "";
     if (req.files?.thumbnail && req.files.thumbnail[0]) {
-        thumbnailUrl = await uploadToCloudinary(
-            req.files.thumbnail[0].buffer,
-            req.files.thumbnail[0].originalname,
-            req.files.thumbnail[0].mimetype
-        );
+        const response = await uploadToCloudinary(req.files.thumbnail[0].path)
+        if (response && response.secure_url) {
+            thumbnailUrl = response.secure_url;
+        }
+        else {
+            return res.status(500).json(new ApiResponse(null, "Failed to upload thumbnail to Cloudinary"));
+
+        }
     }
 
     const updatedTask = await client.task.update({
@@ -339,8 +357,15 @@ const uploadEditedVideoToServer = asyncHandler(async (req: any, res: Response) =
         return res.status(400).json({ message: "Video file is required" });
     }
 
+
     const videoFile = req.files.video[0];
-    const videoUrl = await uploadToCloudinary(videoFile.buffer, videoFile.originalname, videoFile.mimetype);
+
+    const cloudinaryResponse = await uploadToCloudinary(videoFile.path);
+    const videoUrl = cloudinaryResponse?.secure_url;
+
+    if (!videoUrl) {
+        return res.status(500).json({ message: "Failed to upload video to Cloudinary" });
+    }
 
     await client.task.update({
         where: { id: taskId },

@@ -1,36 +1,51 @@
-import { getOauthLoginRegister } from "@/httpfnc/auth";
-import { useUserStore } from "@/store/user.store"
-import { UserRole, type AuthDataType } from "@/types/types";
 import { useEffect } from "react"
-import { useNavigate, useSearchParams } from "react-router-dom"
+import {  useSearchParams } from "react-router-dom"
 import { motion } from "framer-motion";
-import { googleIcon, logo } from "@/constast";
+import { baseUrl, googleIcon, logo } from "@/constast";
 import { LoadingTitle } from "@/components/loadingUI/loadingTitle";
+import { useUploadVideo } from "@/store/uploadVideo.store";
+import { toast } from "sonner";
+import axios from "axios";
 
-export function OAuthPage() {
+export function YtOAuthPage() {
     const [searchParams] = useSearchParams();
     const code = searchParams.get('code');
-    const role = useUserStore((state) => state.user.role);
-    const navigate = useNavigate()
-    const setState = useUserStore((state) => state.setState)
+    const taskId = useUploadVideo((state) => state.taskId);
+    // const navigate = useNavigate()
 
     useEffect(() => {
 
         if (!code) {
-            console.error("no code was provided");
+            toast.error("no code was provided");
+            return;
+        }
+        if (!taskId) {
+            toast.error("no taskId was provided");
             return;
         }
 
-        const getUserData = async () => {
-            const userData: AuthDataType = await getOauthLoginRegister(code, role)
-            setState(userData)
-            const prefix = userData.role === UserRole.YOUTUBER ? "y" : "c";
+        const startVideoUploadSession = async () => {
+            const response = await axios.post(`${baseUrl}/yt-upload/start-session`, {
+                code,
+                taskId
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
+            });
 
-            navigate(`/${prefix}/profile/${userData.name}`);
+            if (response.status === 200) {
+                toast.success("Successfully started video upload session");
+                // navigate(`/check-progress/${taskId}`);
+            } else {
+                toast.error("Failed to start video upload session");
+            }
+
         }
 
         try {
-            getUserData();
+            startVideoUploadSession();
         }
         catch (error) {
             console.error("Error during OAuth login/register:", error);
@@ -38,7 +53,7 @@ export function OAuthPage() {
 
         }
 
-    }, [code, role])
+    }, [code, taskId])
 
     return (
         <div className="h-dvh w-full bg mix-blend-hard bg-background

@@ -328,6 +328,7 @@ export function DragAndDropVideo({ taskId }: { taskId: number }) {
                                                 <Maximize className="w-4 h-4" />
                                             </Button>
                                             <Button
+                                                disabled={loading}
                                                 size="icon"
                                                 variant="ghost"
                                                 onClick={removeVideo}

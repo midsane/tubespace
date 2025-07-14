@@ -20,7 +20,7 @@ export const VideoPreviewPage = () => {
 
         data && !isLoading ?
             <div className="h-screen flex flex-col justify-center items-center gap-5 w-full px-6 
-            lg:px-20 lg:w-3/4 pt-20" >
+            lg:px-20 lg:w-3/4 pt-14" >
                 <div className="flex flex-col gap-2 w-full max-w-[600px]">
                     <h1 className="text-xl ml-2" >{data.taskTitle}</h1>
                     <Link to={`/c/profile/${data.editor.name}`} className="flex justify-between items-center w-fit rounded-xl py-1 px-2 hover:border-chart-1/60 border " >
@@ -36,7 +36,7 @@ export const VideoPreviewPage = () => {
 
                 </div>
                 <video
-                    className=" object-cover w-full max-w-[600px]  rounded-xl"
+                    className=" object-cover w-full max-h-[300px] max-w-[600px]  rounded-xl"
                     controls
                     src={data.editedVideoUrl}
                 >
@@ -46,7 +46,9 @@ export const VideoPreviewPage = () => {
 
                 <div className="flex justify-between max-w-[600px] w-full" >
                     <Button className="dark:text-red-500 text-red-800" variant="outline" >Reject <SquareX /></Button>
-                    <Button variant={"outline"} className="text-green-800 dark:text-green-500" >Approve <Check /> </Button>
+                    <Link to={`/task-update/${taskId}`} >
+                        <Button variant={"outline"} className="text-green-800 dark:text-green-500" >Approve <Check /> </Button>
+                    </Link>
                 </div>
             </div>
             :

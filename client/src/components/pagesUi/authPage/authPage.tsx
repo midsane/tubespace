@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom"
 import { useUserStore } from "@/store/user.store"
 import { googleIcon } from "@/constast"
 import { Loader2Icon } from "lucide-react"
+import { AnimatePresence, motion } from "framer-motion"
 
 export function AuthPage() {
     const [loginBox, setLoginBox] = useState<boolean>(true)
@@ -101,106 +102,126 @@ export function AuthPage() {
     }
 
     return (
-        <div className="h-dvh w-full bg mix-blend-hard bg-background
+        <div
+            className="h-dvh w-full bg mix-blend-hard bg-background
         bg-[radial-gradient(circle_at_center,theme(colors.chart-bg)_10%,transparent_80%)] flex items-center justify-center">
-            <Card className="w-full max-w-sm ">
-                <CardHeader>
-                    <CardTitle>{loginBox ? "Login" : "Signup"}</CardTitle>
-                    <CardDescription>
-                        {loginBox ? "Don't have an account? go to " : "Already have an account? go to "}
-                        <a
-                            onClick={() => setLoginBox(!loginBox)}
-                            className="text-blue-500 cursor-pointer dark:text-blue-300 font-semibold">
-                            {loginBox ? "Signup" : "Login"}
-                        </a>
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {!loginBox && (
-                        <Select
-                            onValueChange={(val) => {
-                                setData((prev) => ({
-                                    ...prev,
-                                    role: val as UserRole, // cast string to enum
-                                }));
-                            }}
-                        >
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Select a Role" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Role</SelectLabel>
-                                    <SelectItem value={UserRole.YOUTUBER}>Youtuber</SelectItem>
-                                    <SelectItem value={UserRole.EDITOR}>Editor</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    )}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className="w-full max-w-sm">
+                <Card className="w-full max-w-sm ">
+                    <CardHeader>
+                        <CardTitle>
+                            <AnimatePresence mode="wait">
+                                <motion.p
+                                    key={loginBox ? 'login' : 'signup'}
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
 
-                    <br />
-                    <form>
-                        <div className="flex flex-col gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    disabled={loading}
-                                    value={data.email}
-                                    onChange={(e) => setData(prev => ({ ...prev, email: e.target.value }))}
-                                    placeholder="Enter your email"
-                                    required
-                                />
-                            </div>
-                            <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    <a
-                                        href="#"
-                                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                                    >
-                                        Forgot your password?
-                                    </a>
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    {loginBox ? 'Login' : 'Sign up'}
+                                </motion.p>
+                            </AnimatePresence>
+
+                        </CardTitle>
+                        <CardDescription>
+                            {loginBox ? "Don't have an account? go to " : "Already have an account? go to "}
+                            <a
+                                onClick={() => setLoginBox(!loginBox)}
+                                className="text-blue-500 cursor-pointer dark:text-blue-300 font-semibold">
+                                {loginBox ? "Signup" : "Login"}
+                            </a>
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {!loginBox && (
+                            <Select
+                                onValueChange={(val) => {
+                                    setData((prev) => ({
+                                        ...prev,
+                                        role: val as UserRole, // cast string to enum
+                                    }));
+                                }}
+                            >
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Select a Role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Role</SelectLabel>
+                                        <SelectItem value={UserRole.YOUTUBER}>Youtuber</SelectItem>
+                                        <SelectItem value={UserRole.EDITOR}>Editor</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        )}
+
+                        <br />
+                        <form>
+                            <div className="flex flex-col gap-6">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="email">Email</Label>
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        disabled={loading}
+                                        value={data.email}
+                                        onChange={(e) => setData(prev => ({ ...prev, email: e.target.value }))}
+                                        placeholder="Enter your email"
+                                        required
+                                    />
                                 </div>
-                                <Input id="password" type="password"
-                                    disabled={loading}
-                                    value={data.password}
-                                    onChange={(e) => setData(prev => ({ ...prev, password: e.target.value }))}
-                                    placeholder="Enter your password"
-                                    required />
+                                <div className="grid gap-2">
+                                    <div className="flex items-center">
+                                        <Label htmlFor="password">Password</Label>
+                                        <a
+                                            href="#"
+                                            className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                                        >
+                                            Forgot your password?
+                                        </a>
+                                    </div>
+                                    <Input id="password" type="password"
+                                        disabled={loading}
+                                        value={data.password}
+                                        onChange={(e) => setData(prev => ({ ...prev, password: e.target.value }))}
+                                        placeholder="Enter your password"
+                                        required />
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </CardContent>
-                <CardFooter className="flex-col gap-2">
-                    {loading ? <Button className="w-full" size="lg">
-                        <p>{loginBox ? "Loggin you in" : "Signing you up"} </p>
-                        <Loader2Icon className="animate-spin" />
-                    </Button> :
-                        <Button className="w-full" size="lg"
-                            disabled={loading || oauthLoading}
-                            onClick={handleSubmit} >
-                            <p>{loginBox ? "Login" : "Sign up"} </p>
-                        </Button>
-                    }
+                        </form>
+                    </CardContent>
+                    <CardFooter className="flex-col gap-2">
+                        {loading ? <Button className="w-full" size="lg">
+                            <p>{loginBox ? "Loggin you in" : "Signing you up"} </p>
+                            <Loader2Icon className="animate-spin" />
+                        </Button> :
+                            <Button className="w-full" size="lg"
+                                disabled={loading || oauthLoading}
+                                onClick={handleSubmit} >
+                                <p>{loginBox ? "Login" : "Sign up"} </p>
+                            </Button>
+                        }
 
-                    {oauthLoading ? <Button variant="outline" className="w-full" size="lg" >
-                        <img className="h-6 aspect-square" src={googleIcon} />
-                        <p>{loginBox ? "Loggin you in" : "Signing you up"}  </p>
-                        <Loader2Icon className="animate-spin" />
-                    </Button> :
-
-                        <Button variant="outline" className="w-full" size="lg"
-                            disabled={loading || oauthLoading}
-                            onClick={handleOauthWindow}  >
+                        {oauthLoading ? <Button variant="outline" className="w-full" size="lg" >
                             <img className="h-6 aspect-square" src={googleIcon} />
-                            <p>{loginBox ? "Login with google" : "Sign up with google"} </p>
-                        </Button>
-                    }
+                            <p>{loginBox ? "Loggin you in" : "Signing you up"}  </p>
+                            <Loader2Icon className="animate-spin" />
+                        </Button> :
 
-                </CardFooter>
-            </Card>
+                            <Button variant="outline" className="w-full" size="lg"
+                                disabled={loading || oauthLoading}
+                                onClick={handleOauthWindow}  >
+                                <img className="h-6 aspect-square" src={googleIcon} />
+                                <p>{loginBox ? "Login with google" : "Sign up with google"} </p>
+                            </Button>
+                        }
+
+                    </CardFooter>
+                </Card>
+            </motion.div>
         </div>
     )
 
