@@ -39,7 +39,6 @@ export function AuthPage() {
     const navigate = useNavigate()
     const setState = useUserStore((state) => state.setState)
 
-    console.log(data)
     const handleSubmit = async () => {
         if (data.role === UserRole.NORMAL && !loginBox) {
             toast.warning("Please select a role")
