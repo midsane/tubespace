@@ -12,6 +12,9 @@ import { OAuthPage } from './components/pagesUi/authPage/OAuthPage'
 import { TaskUpdatePage } from './pages/taskUpdatePage'
 import { YtOAuthPage } from './components/pagesUi/yt-upload/Oauth'
 import { CheckProgressPage } from './pages/checkProgressPage'
+import { PricingPage } from './pages/staticPages/pricingPage'
+import { WorkingPage } from './pages/staticPages/workingPage'
+import { PrivacyPolicyPage } from './pages/staticPages/privacyPolicyPage'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,7 +26,19 @@ const router = createBrowserRouter([
       },
       {
         path: "pricing",
-        element: <AuthPage />
+        element: <PricingPage />
+      },
+      {
+        path: "what-we-solve",
+        element: <WorkingPage />
+      },
+      {
+        path: "working",
+        element: <WorkingPage />
+      },
+      {
+        path: "privacy",
+        element: <PrivacyPolicyPage />
       },
       {
         path: "auth",

@@ -18,7 +18,6 @@ export default function Footer() {
                 <p>© {new Date().getFullYear()} TubeSpace. Built by <a href="https://midsane.tech" target="_blank" className="underline">Midsane</a>.</p>
                 <div className="flex gap-4 mt-2 sm:mt-0">
                     <a href="/privacy" className="hover:underline">Privacy</a>
-                    <a href="/terms" className="hover:underline">Terms</a>
                 </div>
             </div>
 
@@ -34,8 +33,8 @@ export default function Footer() {
                 <div className="space-y-2">
                     <h4 className="font-medium text-foreground">Services</h4>
                     <ul className="space-y-1">
-                        <li><Link to="/features" className="hover:underline">What We Solve</Link></li>
-                        <li><Link to="/features#workflow" className="hover:underline">How It Works</Link></li>
+                        <li><Link to="/working" className="hover:underline">What We Solve</Link></li>
+                        <li><Link to="/working" className="hover:underline">How It Works</Link></li>
                         <li><Link to="/pricing" className="hover:underline">Pricing</Link></li>
                     </ul>
                 </div>
@@ -45,7 +44,7 @@ export default function Footer() {
                     <h4 className="font-medium text-foreground">Legal</h4>
                     <ul className="space-y-2">
                         <li><Link to="/privacy" className="hover:underline">Privacy Policy</Link></li>
-                        <li><Link to="/terms" className="hover:underline">Terms of Service</Link></li>
+                       
                     </ul>
                 </div>
 
@@ -53,9 +52,9 @@ export default function Footer() {
                 <div className="space-y-2">
                     <h4 className="font-medium text-foreground">Contact</h4>
                     <ul className="space-y-2">
-                        <li><a href="mailto:support@tubespace.io" className="hover:underline">support@tubespace.io</a></li>
+                        <li><a href="mailto:adityaraj10544@gmail.com" className="hover:underline">support@tubespace.io</a></li>
                         <li><a href="https://github.com/midsane" target="_blank" className="flex items-center gap-1 hover:underline"><Github className="w-4 h-4" /> GitHub</a></li>
-                        <li><a href="https://twitter.com/midsane" target="_blank" className="hover:underline">Twitter / X</a></li>
+                        <li><a href="https://twitter.com/no_more_mid" target="_blank" className="hover:underline">Twitter / X</a></li>
                     </ul>
                 </div>
             </div>
