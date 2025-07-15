@@ -6,6 +6,7 @@ import "./style.css"
 import { Globe } from "lucide-react";
 import { GetStartedButton } from "./getStartedButton";
 import { logo } from "@/constast";
+import { GradientText, LandingPara } from "../text-animation/text-animations";
 export const LandingPage = () => {
 
     return (<div className="flex overflow-hidden w-full flex-col bg mix-blend-hard bg-background
@@ -19,30 +20,28 @@ export const LandingPage = () => {
                 <Globe className="text-chart-3" />
                 <p className="text-muted-foreground text-sm" >Tubespace.midsane.tech</p>
             </Badge>
-            <div className="flex gap-2 justify-center items-center">
+
+            <div className="flex gap-1 sm:gap-2 justify-center items-center">
                 <motion.img
                     initial={{ opacity: 0, rotate: 30 }}
                     animate={{ opacity: 1, rotate: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     alt="TubeSpace Logo"
-                    className="h-20" src={logo} />
+                    className="h-16 md:h-20" src={logo} />
                 <motion.h1
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="text-4xl font-bold text-balance">TubeSpace</motion.h1>
+                    className="text-4xl font-bold text-balance">
+                    <GradientText text="TubeSpace" />
+                </motion.h1>
             </div>
-            <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-                className="scroll-m-20 text-foreground/80 text-center text-lg sm:text-xl md:text-3xl font-semibold tracking-tight text-balance">
-                Upload once. Review and publish to YouTube. No re-uploads, no internet waste.
-            </motion.h1>
+            <LandingPara />
             <GetStartedButton />
         </div>
 
         <HowToUseSections
+            id="features"
             title="Create Task / Assign Editor"
             imgPath={gif}
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
@@ -72,19 +71,28 @@ export const LandingPage = () => {
     </div>)
 }
 
-const HowToUseSections = ({ imgPath, title, text }: { imgPath: string, title: string, text: string }) => {
-    return (<div className="flex flex-col gap-4  items-center justify-center h-dvh" >
-        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            {title}
-        </h4>
-        <motion.img
-            initial={{ opacity: 0, scale: 0.7 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="max-w-[90%] md:h-[60%] rounded-2xl border " src={imgPath} />
-        <p className="leading-7  max-w-[90%] md:max-w-1/2 [&:not(:first-child)]:mt-6">
-            F{text}
-        </p>
+const HowToUseSections = ({ id, imgPath, title, text }: { id?: string, imgPath: string, title: string, text: string }) => {
+    return (<div
+        id={id && id}
+        className="h-dvh flex px-5 sm:px-20 justify-center items-center" >
+        <div className="flex  flex-col gap-4  items-center justify-center
+        h-fit
+        " >
+            <motion.img
+                initial={{ opacity: 0, scale: 0.7 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="md:max-w-[70%] max-h-[500px] sm:max-w-[80%] rounded-2xl border " src={imgPath} />
+
+            <div className="flex px-2 flex-col gap-4 justify-start items-start sm:w-[80%] md:w-[70%] h-full">
+                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                    {title}
+                </h4>
+                <p className="leading-7 [&:not(:first-child)]:mt-1">
+                    {text}
+                </p>
+            </div>
+        </div>
     </div>)
 }
 

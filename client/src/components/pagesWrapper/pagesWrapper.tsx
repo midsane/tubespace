@@ -8,7 +8,7 @@ export const PageWrapper = ({ HeaderJSX = <></>, HeaderIcon = <></>, leftContent
     { HeaderJSX?: ReactNode, HeaderIcon?: ReactNode, rightContent: ReactNode, leftContent: ReactNode, headerText: string }) => {
 
     const { mobileView } = useScreenSizeStore()
-    return (<section className={`${mobileView ? "h-[90vh]" : "h-screen"} w-full flex`} >
+    return (<section className={`${mobileView ? "h-[90dvh]" : "h-dvh"} w-full flex`} >
         <div className={`flex flex-col pt-2 pb-5 border-r h-full border-border ${mobileView ? "w-full" : "w-[65%]"}`} >
             <div className="items-center h-[12%] flex justify-between border-b border-border px-4 ">
                 <div className="flex gap-2 items-center ">

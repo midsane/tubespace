@@ -15,7 +15,7 @@ export const RootLayout: React.FC = () => {
 
     
     return (
-        <main className={`flex ${mobileView && "flex-col-reverse"} h-screen w-screen bg-background text-foreground `}>
+        <main className={`flex ${mobileView && "flex-col-reverse"} h-dvh w-screen bg-background text-foreground `}>
             <Sidebar />
             <Outlet />
             <Toaster closeButton richColors position="top-center" />

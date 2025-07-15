@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ModeToggle } from "../toggleTheme/toggletheme";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useUserStore } from "@/store/user.store";
 import { fallback_profileImg, logo } from "@/constast";
@@ -11,6 +11,8 @@ import { Skeleton } from "../ui/skeleton";
 import { Toaster } from "@/components/ui/sonner"
 
 export const RootPageLayout: React.FC = () => {
+    const location = useLocation();
+
     const { data, isLoading } = useQuery<AuthDataType>({
         queryKey: ["check-auth"],
         queryFn: checkAuth,
@@ -24,13 +26,45 @@ export const RootPageLayout: React.FC = () => {
     }, [data]);
 
     const navigate = useNavigate()
-    return (<main className="" >
-        <nav className="flex h-[8dvh] md:h-[10dvh] border text-sidebar-foreground border-sidebar-border z-50 
-        fixed top-0 left-0 right-0  px-6 py-3  items-center justify-between" >
-            <div className="flex gap-6 items-center" >
-                <Link to="/" ><img className="h-8" src={logo} /></Link>
 
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+        if (location.pathname === "/") {
+            document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+        }
+        else {
+            navigate("/", { state: { scrollToId: "features" } });
+        }
+    }
+
+    useEffect(() => {
+        const scrollToId = location.state?.scrollToId;
+
+        if (scrollToId) {
+            const el = document.getElementById(scrollToId);
+            if (el) {
+                setTimeout(() => {
+                    el.scrollIntoView({ behavior: "smooth" });
+                }, 100);
+            }
+            navigate(location.pathname, { replace: true, state: null });
+
+        }
+    }, [location]);
+    return (<main className="" >
+        <nav className="flex h-[8dvh] md:h-[10dvh] border-3 text-sidebar-foreground border-sidebar-border z-50 
+        fixed top-2 left-1/2 -translate-x-1/2 py-1 w-[80%] items-center justify-around
+        rounded-4xl bg-sidebar
+        " >
+            <div className="flex items-center" >
+                <Link to="/" ><img className="h-8" src={logo} /></Link>
             </div>
+            <div className="flex gap-10 items-center" >
+                <a href="/#features" onClick={handleClick} >Features</a>
+                <Link to="/pricing" >Pricing</Link>
+                <Link to="/working" >How it works</Link>
+            </div>
+
             <li className="flex gap-4 items-center" >
                 <ModeToggle />
                 {!isLoading ?
