@@ -12,7 +12,7 @@ export const LandingPage = () => {
     return (<div className="flex overflow-hidden w-full flex-col bg mix-blend-hard bg-background
         bg-[radial-gradient(circle_at_center,theme(colors.chart-bg)_20%,transparent_90%)]">
         <div className="flex
-        flex-col gap-10 items-center justify-center h-dvh" >
+        flex-col gap-10 items-center justify-center h-screen" >
             <Badge
                 variant="outline"
                 className="border border-chart-4/60 py-1 px-5 bg-background/10 rounded-3xl"
@@ -59,7 +59,7 @@ export const LandingPage = () => {
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
         /> */}
 
-        <div className="flex flex-col gap-4 border items-center justify-center h-dvh" >
+        <div className="flex flex-col gap-4 border items-center justify-center h-screen" >
             <div className="hidden md:flex h-3/4  flex-col justify-center items-center gap-10" >
                 <h1 className="scroll-m-20 text-center text-xl md:text-3xl font-extrabold tracking-tight text-balance">
                     What are you waiting for?
@@ -74,7 +74,7 @@ export const LandingPage = () => {
 const HowToUseSections = ({ id, imgPath, title, text }: { id?: string, imgPath: string, title: string, text: string }) => {
     return (<div
         id={id && id}
-        className="h-dvh flex px-5 sm:px-20 justify-center items-center" >
+        className="h-screen flex px-5 sm:px-20 justify-center items-center" >
         <div className="flex  flex-col gap-4  items-center justify-center
         h-fit
         " >

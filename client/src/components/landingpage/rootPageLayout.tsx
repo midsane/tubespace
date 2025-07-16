@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { ModeToggle } from "../toggleTheme/toggletheme";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
@@ -14,7 +14,8 @@ import { GradientText } from "../text-animation/text-animations";
 
 export const RootPageLayout: React.FC = () => {
     const location = useLocation();
-    const [openMenu, setOpenMenu] = useState(false);
+    const [openMenu, _setOpenMenu] = useState(false);
+    const setOpenMenu = useCallback((val: boolean) => _setOpenMenu(val), [])
     const { data, isLoading } = useQuery<AuthDataType>({
         queryKey: ["check-auth"],
         queryFn: checkAuth,
@@ -56,9 +57,9 @@ export const RootPageLayout: React.FC = () => {
 
 
     return (<main >
-        <nav className="flex h-[8dvh] md:h-[10dvh] border-3 text-sidebar-foreground border-sidebar-border z-50 
-        fixed top-2 left-1/2 -translate-x-1/2 sm:py-1 w-[90%] sm:w-[80%] items-center justify-around
-        rounded-4xl bg-sidebar
+        <nav className="flex h-[8dvh] md:h-[10dvh] border text-sidebar-foreground border-sidebar-border z-50 
+        fixed top-2 left-1/2 -translate-x-1/2 w-[95%] sm:w-[90%] md:w-[80%] items-center justify-between
+        rounded-4xl bg-sidebar px-10 
         " >
             <AnimatePresence>{openMenu && <MenuSheet setOpenMenu={setOpenMenu} />}</AnimatePresence>
             <div className="hidden sm:block" >
@@ -89,19 +90,19 @@ export const RootPageLayout: React.FC = () => {
                 <Link to="/working" >How it works</Link>
             </div>
 
-            <li className="flex gap-4 items-center" >
+            <li className="flex gap-3 items-center" >
                 <ModeToggle />
                 {!isLoading ?
                     data ?
                         <img
                             onClick={() => navigate(`/${data.role === UserRole.EDITOR ? "c" : "y"}/profile/${data.name}`)}
-                            className="w-8 sm:w-10 rounded-full border border-foreground aspect-square object-cover "
+                            className="w-9 sm:w-10 rounded-full border border-foreground aspect-square object-cover "
                             src={data.profileImgUrl || fallback_profileImg}
                         />
                         :
                         <Button onClick={() => navigate("/auth")} variant="outline">Signup</Button>
                     :
-                    <Skeleton className="w-10 rounded-full border border-border aspect-square object-cover" />
+                    <Skeleton className="w-9 sm:w-10 rounded-full border border-border aspect-square object-cover" />
                 }
             </li>
         </nav>
@@ -115,7 +116,7 @@ export const RootPageLayout: React.FC = () => {
 
 import { AnimatePresence, motion } from "framer-motion";
 
-export const MenuSheet = ({ setOpenMenu }: { setOpenMenu: (val: boolean) => void }) => {
+export const MenuSheet = memo(({ setOpenMenu }: { setOpenMenu: (val: boolean) => void }) => {
     const navigate = useNavigate();
     const handleClick = () => {
         setOpenMenu(false);
@@ -136,9 +137,10 @@ export const MenuSheet = ({ setOpenMenu }: { setOpenMenu: (val: boolean) => void
         initial={{ x: "-50%", opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: "-50%", opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="fixed z-[300] top-0 scale-110 right-0 w-fit px-10 " >
-        <div className="flex flex-col gap-6 items-center justify-start rounded-r-2xl border border-border pt-28 h-screen w-screen bg-background text-foreground">
+        transition={{ duration: 0.2 }}
+        className="fixed z-[300] -top-5 right-0 w-fit px-10 " >
+        <div className="flex flex-col gap-6 items-center 
+        justify-start rounded-2xl border border-border py-28 h-fit w-screen bg-sidebar text-foreground">
 
             <Link onClick={handleClick} to="/"><GradientText size="small" text="Tubespace" /></Link>
             <nav className="flex flex-col gap-4">
@@ -148,4 +150,4 @@ export const MenuSheet = ({ setOpenMenu }: { setOpenMenu: (val: boolean) => void
             </nav>
         </div>
     </motion.aside>)
-}
+})

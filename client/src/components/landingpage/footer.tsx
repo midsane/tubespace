@@ -1,4 +1,3 @@
-// components/Footer.tsx
 import { motion } from "framer-motion"
 import { Separator } from "@/components/ui/separator"
 import { Github } from "lucide-react"
@@ -10,7 +9,7 @@ export default function Footer() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className=" w-full border-t bg-background text-muted-foreground"
+            className=" w-screen border-t bg-background text-muted-foreground"
         >
             <Separator />
 
