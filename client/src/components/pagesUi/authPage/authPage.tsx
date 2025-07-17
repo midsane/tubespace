@@ -191,7 +191,7 @@ export function AuthPage() {
                                     />
                                 </div>
                                 <div className="grid gap-2">
-                                    {!loginBox && <div className="flex items-center">
+                                    {loginBox ? <div className="flex items-center">
                                         <Label htmlFor="password">Password</Label>
                                         {sendingOTP ? <>
                                             <Loader2Icon className="ml-auto animate-spin" />
@@ -204,7 +204,9 @@ export function AuthPage() {
                                             >
                                                 Forgot your password?
                                             </a>}
-                                    </div>}
+                                    </div> :
+                                        <Label htmlFor="password">Password</Label>
+                                    }
                                     <Input id="password" type="password"
                                         disabled={loading}
                                         value={data.password}
