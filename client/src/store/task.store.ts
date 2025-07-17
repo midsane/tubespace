@@ -20,8 +20,7 @@ export const useTaskStore = create<taskStore>()(
             DeleteState: (taskId) => set((state) => ({ tasks: state.tasks.filter(task => task.id !== taskId) })),
             resetState: () => {
                 set(() => ({ tasks: [] }));
-                const storage = createJSONStorage(() => localStorage);
-                storage?.removeItem('task-storage');
+                localStorage.removeItem('task-storage');
             },
             updateStateById: (taskId, updatedTask) => set((state) => ({
                 tasks: state.tasks.map(task =>

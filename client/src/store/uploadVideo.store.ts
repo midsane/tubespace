@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 type State = {
     taskId: number | null;
@@ -16,16 +16,13 @@ export const useUploadVideo = create<State & Actions>()(
             taskId: null,
             setTaskId: (id: number) => set(() => ({ taskId: id })),
             resetState: () => {
-
                 set(() => ({ taskId: null }));
-
-
                 localStorage.removeItem('upload-video-storage');
             },
         }),
         {
             name: 'upload-video-storage',
-            partialize: (state) => ({ taskId: state.taskId }),
+            storage: createJSONStorage(() => localStorage)
         }
     )
 );

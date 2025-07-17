@@ -21,21 +21,16 @@ const generateOTPForEmail = asyncHandler(async (req: any, res: Response) => {
     }
 })
 
-
-
 const verifyOTPForEmail = asyncHandler(async (req: any, res: Response) => {
     const { otp, email } = req.body;
-
-    try {
-        await verifyOtp(email, otp);
+    const isValid = await verifyOtp(email, otp);
+    if (isValid) {
         return res.status(200).json(new ApiResponse(null, "OTP verified successfully"));
-    } catch (error) {
-        console.error('Error sending OTP:', error);
-        return res.status(500).json(new ApiResponse(null, "Error verifying OTP"));
+    } else {
 
+        return res.status(500).json(new ApiResponse(null, "Error verifying OTP"));
     }
 })
-
 
 export {
     generateOTPForEmail,

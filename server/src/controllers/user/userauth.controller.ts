@@ -5,27 +5,24 @@ import { client } from "../../db/connectToDb";
 import bcrypt from "bcrypt"
 import axios from "axios";
 import jwt from "jsonwebtoken"
+import { jwtSecretConfig, mode, OauthConfig } from "../../config";
 
 const saltRounds = 10;
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
-const YOUR_REDIRECT_URI = process.env.YOUR_REDIRECT_URI;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
+const GOOGLE_CLIENT_ID = OauthConfig.GOOGLE_CLIENT_ID
+const YOUR_REDIRECT_URI = OauthConfig.YOUR_REDIRECT_URI;
+const GOOGLE_CLIENT_SECRET = OauthConfig.GOOGLE_CLIENT_SECRET
 
 const login = asyncHandler(async (req: any, res: Response) => {
     const { email, password } = req.body;
     const userExist = await client.user.findFirst({ where: { email } });
     if (!userExist) return res.status(400).json(new ApiResponse(null, "user does not exist"));
 
-    if (userExist.Oauth) {
-        return;
-    }
-
     const hashedInputPassword = await bcrypt.hash(password, userExist.salt as string)
     if (hashedInputPassword !== userExist.password)
         return res.status(401).json(new ApiResponse(null, "wrong password"));
 
-    const jwtSecret = process.env.JWT_SECRET;
+    const jwtSecret = jwtSecretConfig
     if (!jwtSecret)
         return res.status(500).json(new ApiResponse(null, "internal server err"))
 
@@ -35,9 +32,9 @@ const login = asyncHandler(async (req: any, res: Response) => {
         return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
 
     res.cookie("token", "Bearer " + token, {
-        secure: process.env.MODE !== "development",
+        secure: mode !== "development",
         httpOnly: true,
-        sameSite: process.env.MODE === "development" ? "lax" : "none"
+        sameSite: mode === "development" ? "lax" : "none"
     })
     const { password: psw, salt, ...filteredData } = userExist;
     res.status(200).json(new ApiResponse(filteredData, "user logged in successfully!"));
@@ -66,7 +63,7 @@ const signup = asyncHandler(async (req: any, res: Response) => {
     })
 
 
-    const jwtSecret = process.env.JWT_SECRET;
+    const jwtSecret = jwtSecretConfig
     if (!jwtSecret)
         return res.status(500).json(new ApiResponse(null, "internal server err"))
 
@@ -76,13 +73,36 @@ const signup = asyncHandler(async (req: any, res: Response) => {
         return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
 
     res.cookie("token", "Bearer " + token, {
-        secure: process.env.MODE !== "development",
+        secure: mode !== "development",
         httpOnly: true,
-        sameSite: process.env.MODE === "development" ? "lax" : "none"
+        sameSite: mode === "development" ? "lax" : "none"
     })
 
     const { password: psw, salt: sl, ...filteredData } = userDetail
     return res.status(200).json(new ApiResponse(filteredData, "user created successfully"));
+
+})
+
+const resetPassword = asyncHandler(async (req: any, res: Response) => {
+    const { password, email } = req.body;
+    if (typeof email !== "string" || !email.includes("@") || typeof password !== "string")
+        return res.status(400).json(new ApiResponse(null, "invalid data type"));
+
+    const emailExist = await client.user.findFirst({ where: { email } });
+    if (!emailExist) return res.status(400).json(new ApiResponse(null, "email doesn't exist"));
+
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await client.user.update({
+        where: { email },
+        data: {
+            password: hashedPassword,
+            salt: salt,
+        }
+    })
+
+    return res.status(200).json(new ApiResponse(null, "Password changed successfully!"));
 
 })
 
@@ -99,9 +119,9 @@ const checkAuth = asyncHandler(async (req: any, res: Response) => {
 
 const logout = asyncHandler(async (req: any, res: Response) => {
     res.clearCookie("token", {
-        secure: process.env.MODE !== "development",
+        secure: mode !== "development",
         httpOnly: true,
-        sameSite: process.env.MODE === "development" ? "lax" : "none"
+        sameSite: mode === "development" ? "lax" : "none"
     });
     res.status(200).json(new ApiResponse(null, "user logged out successfully!"));
 })
@@ -122,8 +142,6 @@ const getOauthWindow = asyncHandler(async (req: any, res: Response) => {
     });
     res.json(new ApiResponse({ url: `${redirectUri}?${params.toString()}` }, "Oauth consent window url generated successfully"));
 })
-
-
 
 const Oauth = asyncHandler(async (req: any, res: Response) => {
     {
@@ -162,7 +180,7 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
 
         }
 
-        const jwtSecret = process.env.JWT_SECRET;
+        const jwtSecret = jwtSecretConfig
         if (!jwtSecret)
             return res.status(500).json(new ApiResponse(null, "internal server err"))
 
@@ -172,9 +190,9 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
             return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
 
         res.cookie("token", "Bearer " + token, {
-            secure: process.env.MODE !== "development",
+            secure: mode !== "development",
             httpOnly: true,
-            sameSite: process.env.MODE === "development" ? "lax" : "none"
+            sameSite: mode === "development" ? "lax" : "none"
         })
 
         const { password: psw, salt: sl, ...filteredData } = user
@@ -187,6 +205,7 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
 export {
     login,
     signup,
+    resetPassword,
     checkAuth,
     logout,
     getOauthWindow,

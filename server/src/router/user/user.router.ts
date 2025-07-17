@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkAuth, getOauthWindow, login, logout, Oauth, signup } from "../../controllers/user/userauth.controller";
+import { checkAuth, getOauthWindow, login, logout, Oauth, resetPassword, signup } from "../../controllers/user/userauth.controller";
 import { editProfile, fetchProfile } from "../../controllers/user/userprofile.controller";
 import { authMiddleware } from "../../middleware/authMiddleware";
 import { fetchTopEditors } from "../../controllers/editors/editors.controller";
@@ -11,8 +11,9 @@ const userRouter = Router();
 
 userRouter.route("/login").post(login)
 userRouter.route("/signup").post(signup)
+userRouter.route("/reset-password").post(resetPassword)
 userRouter.route("/oauth/get-consent-window").get(getOauthWindow)
-userRouter.route("/oauth/login-register").get(Oauth) 
+userRouter.route("/oauth/login-register").get(Oauth)
 userRouter.route("/logout").post(logout)
 
 userRouter.use(authMiddleware);

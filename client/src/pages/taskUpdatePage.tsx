@@ -97,14 +97,14 @@ export const TaskUpdatePage = () => {
 
             toast.success("youtube video details updated successfully");
             useUploadVideo.getState().setTaskId(numericTaskId);
-            console.log("taskId in state: ", useUploadVideo.getState().taskId)
+
             taskId ? updateState(numericTaskId, result.task) : appendState(result.task);
         } catch (err) {
             console.error(err);
             toast.error("Failed to update youtube video details");
         } finally {
             setSubmitting(false);
-
+            console.log("taskId in state: ", useUploadVideo.getState().taskId)
             const promise: Promise<{ data: string | null, message: string }> = new Promise(async (resolve, reject) => {
                 const response = await axios(`${baseUrl}yt-upload/authorize`, {
                     method: "GET",

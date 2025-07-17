@@ -35,6 +35,23 @@ const RegisterUser = async (email: string, password: string, role: UserRole) => 
     return resData.data;
 }
 
+const resetPassword = async (email: string, password: string) => {
+    const response = await fetch(baseUrl + `user/reset-password`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password })
+    });
+
+    const resData: httpRequstType = await response.json();
+    if (!response.ok || response.status >= 300) {
+        throw new Error(resData.message || "Failed to reset password");
+    };
+    return resData.data;
+}
+
 const checkAuth = async () => {
     const response = await fetch(baseUrl + `user/check-auth`, {
         method: "GET",
@@ -142,6 +159,7 @@ const verifyOTP = async (email: string, otp: number) => {
 export {
     LoginUser,
     RegisterUser,
+    resetPassword,
     checkAuth,
     logout,
     getOauthWindow,

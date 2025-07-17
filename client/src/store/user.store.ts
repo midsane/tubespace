@@ -38,8 +38,7 @@ export const useUserStore = create<userStore>()(
             updateState: (newState) => set((state) => ({ user: { ...state.user, ...newState } })),
             resetState: () => {
                 set(() => ({ user: initialUserState }));
-                const storage = createJSONStorage(() => localStorage);
-                storage?.removeItem('user-storage');
+                localStorage.removeItem('user-storage');
             }
         }),
         {

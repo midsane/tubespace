@@ -96,7 +96,7 @@ export const RootPageLayout: React.FC = () => {
                     data ?
                         <img
                             onClick={() => navigate(`/${data.role === UserRole.EDITOR ? "c" : "y"}/profile/${data.name}`)}
-                            className="w-9 sm:w-10 rounded-full border border-foreground aspect-square object-cover "
+                            className="w-9 sm:w-10 rounded-full border border-border aspect-square object-cover "
                             src={data.profileImgUrl || fallback_profileImg}
                         />
                         :

@@ -3,7 +3,7 @@ import gif from "@/assets/form.gif"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion";
 import "./style.css"
-import { Globe } from "lucide-react";
+import { Flame } from "lucide-react";
 import { GetStartedButton } from "./getStartedButton";
 import { logo } from "@/constast";
 import { GradientText, LandingPara } from "../text-animation/text-animations";
@@ -17,8 +17,8 @@ export const LandingPage = () => {
                 variant="outline"
                 className="border border-chart-4/60 py-1 px-5 bg-background/10 rounded-3xl"
             >
-                <Globe className="text-chart-3" />
-                <p className="text-muted-foreground text-sm" >Tubespace.midsane.tech</p>
+                <Flame fill="red" className="text-red-400"  />
+                <p className="text-muted-foreground  text-sm" >Tubespace.studio</p>
             </Badge>
 
             <div className="flex gap-1 sm:gap-2 justify-center items-center">

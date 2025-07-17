@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 import { redisClient } from '../../lib/redisClient';
-const RESEND_API_KEY = process.env.RESEND_API_KEY
+import { RESEND_API_KEY } from '../../config';
 
 if (!RESEND_API_KEY) {
   throw new Error("RESEND_API_KEY is not defined in the environment variables.");
@@ -10,7 +10,7 @@ const resend = new Resend(RESEND_API_KEY);
 
 export const sendEmail = async (email: string, otp: number) => {
   await resend.emails.send({
-    from: 'tubespace <Aditya@midsane.tech>',
+    from: 'midsane <support@tubespace.studio>',
     to: email,
     subject: 'OTP for Update Password',
     html: `<html>   
@@ -39,9 +39,14 @@ export const sendEmail = async (email: string, otp: number) => {
 
 export const sendOtp = async (email: string, otp: number) => {
 
-  await redisClient.set(`otp:${email}`, otp, { ex: 120 });//expire in 2 minutes
+  const result = await redisClient.set(`otp:${email}`, otp, { ex: 120 });//expire in 2 minutes
+
+  console.log("Redis SET result:", result);
+  await inspectRedisOtps()
   console.log(`OTP for ${email} is ${otp}`);
   await sendEmail(email, otp);
+
+  console.log(`OTP sent to ${email} and otp is ${otp}`);
 
 };
 
@@ -49,13 +54,24 @@ export const verifyOtp = async (email: string, enteredOtp: number) => {
   const storedOtp = await redisClient.get(`otp:${email}`);
 
   console.log("Stored OTP:", storedOtp, "Entered:", enteredOtp);
+  await inspectRedisOtps()
 
-  if (storedOtp && storedOtp == enteredOtp) {
+  if (storedOtp && storedOtp === Number(enteredOtp)) {
     console.log("OTP is valid");
     await redisClient.del(`otp:${email}`);
     return true;
   } else {
-    console.log("Invalid or expired OTP, my lord.");
+    console.log("Invalid or expired OTP");
     return false;
+  }
+};
+
+export const inspectRedisOtps = async () => {
+  const keys = await redisClient.keys('otp:*');
+  console.log(`🔑 Found ${keys.length} OTP keys:\n`);
+
+  for (const key of keys) {
+    const value = await redisClient.get(key);
+    console.log(`${key} => ${value}`);
   }
 };

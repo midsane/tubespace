@@ -17,7 +17,6 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 export function VerifyOTPPage() {
 
-    const [changeEmail, setChangeEmail] = useState<boolean>(false)
     const [sendingOTP, setSendingOTP] = useState<boolean>(false)
     const [verifying, setVerifying] = useState<boolean>(false)
     const navigate = useNavigate()
@@ -25,15 +24,14 @@ export function VerifyOTPPage() {
     const [otp, setOtp] = useState<number | null | undefined>();
 
     const email = location.state?.email;
-    if (!email) {
-        toast.error("Email not found. Please try again.");
-        navigate("/auth");
-        return null;
-    }
+
+    const [changeEmail, setChangeEmail] = useState<boolean>(email ? false : true);
+    const [emailInput, setEmailInput] = useState<string>(email || "");
+
     const sendOTP = async () => {
         setSendingOTP(true);
         try {
-            await generateOTP(email);
+            await generateOTP(emailInput);
         } catch (error) {
             console.error("Error sending OTP:", error);
             toast.error("Failed to send OTP. Please try again.");
@@ -48,23 +46,24 @@ export function VerifyOTPPage() {
 
     const verifyTheOtp = async () => {
         setVerifying(true)
-        if (!otp || otp.toString().length !== 5) {
+        if (!otp || otp.toString().length !== 4) {
             toast.error("Please enter a valid OTP.");
             setVerifying(false);
             return;
         }
-        await verifyOTP(email, otp);
+
         try {
+            await verifyOTP(emailInput, otp);
             toast.success("OTP verified successfully.");
         } catch (error) {
             console.error("Error verifying OTP:", error);
-            toast.error("Failed to verify OTP. Please try again.");
+            showError(error, "Failed to verify OTP. Please try again.");
             setVerifying(false);
             return;
 
         }
         setVerifying(false)
-        navigate("/auth/reset-password", { state: { email } });
+        navigate("/auth/reset-password", { state: { emailInput } });
 
     }
 
@@ -94,7 +93,7 @@ export function VerifyOTPPage() {
                         <CardDescription>
                             {!changeEmail ? <div className="flex flex-col gap-3">
                                 <p className="text-sm text-muted-foreground">
-                                    Enter the OTP sent to your email {email}
+                                    Enter the OTP sent to your email {emailInput}
                                 </p>
                                 <Button
                                     variant="outline"
@@ -122,6 +121,8 @@ export function VerifyOTPPage() {
                                         Enter your email
                                     </p>
                                     <Input
+                                        value={emailInput}
+                                        onChange={(e) => setEmailInput(e.target.value)}
                                         type="email"
                                         placeholder="Enter your email"
                                         className="w-full"
@@ -142,7 +143,7 @@ export function VerifyOTPPage() {
                     </CardHeader>
                     <CardContent></CardContent>
                     <CardFooter className="flex-col gap-2">
-                        <p className="text-muted-foreground text-sm text-left w-full" >email expires in 1 minute.</p>
+                        <p className="text-muted-foreground text-sm text-left w-full" >otp expires in 2 minute.</p>
                     </CardFooter>
                 </Card>
             </motion.div>
@@ -163,6 +164,7 @@ import { Input } from "@/components/ui/input"
 import { Loader2Icon } from "lucide-react"
 import { GradientText } from "@/components/text-animation/text-animations"
 import { generateOTP, verifyOTP } from "@/httpfnc/auth"
+import { showError } from "@/lib/showError"
 
 export function InputOTPPattern({
     otp,
@@ -173,7 +175,7 @@ export function InputOTPPattern({
 }) {
     return (
         <InputOTP
-            maxLength={5}
+            maxLength={4}
             pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
             value={!otp ? "" : otp.toString()}
             onChange={(val) => {
@@ -185,7 +187,6 @@ export function InputOTPPattern({
                 <InputOTPSlot index={1} />
                 <InputOTPSlot index={2} />
                 <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
             </InputOTPGroup>
         </InputOTP>
     )

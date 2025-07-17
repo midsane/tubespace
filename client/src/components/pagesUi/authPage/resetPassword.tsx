@@ -17,12 +17,17 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@radix-ui/react-label"
 import { Loader2Icon } from "lucide-react"
 import { GradientText } from "@/components/text-animation/text-animations"
+import { showError } from "@/lib/showError"
+import { resetPassword as resetPasswordRequest } from "@/httpfnc/auth"
 
 export function ResetPasswordPage() {
 
     const [loading] = useState<boolean>(false)
     const navigate = useNavigate()
     const location = useLocation();
+    const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+
     const email = location.state?.email;
     if (!email) {
         toast.error("Email not found. Please try again.");
@@ -32,7 +37,22 @@ export function ResetPasswordPage() {
 
 
     const resetPassword = async () => {
-
+        if (!password || !confirmPassword) {
+            toast.error("Please fill in all fields.");
+            return;
+        }
+        if (password !== confirmPassword) {
+            toast.error("Passwords do not match. Please try again.");
+            return;
+        }
+        try {
+            await resetPasswordRequest(email, password);
+            toast.success("Password changed successfully.");
+            navigate("/auth");
+        } catch (error) {
+            console.error("Error resetting password:", error);
+            showError(error, "Failed to change password. Please try again.");
+        }
 
     }
 
@@ -70,6 +90,8 @@ export function ResetPasswordPage() {
                                     disabled={loading}
                                     placeholder="Enter new Password"
                                     required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
                             <div className="grid gap-2">
@@ -79,6 +101,8 @@ export function ResetPasswordPage() {
                                     disabled={loading}
                                     placeholder="Retype Password"
                                     required
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
                                 />
                             </div>
                             <Button

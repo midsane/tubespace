@@ -18,7 +18,7 @@ export function LogoutBox({ TriggerJsx }: { TriggerJsx: ReactNode }) {
     const navigate = useNavigate()
     const clearState = resetAllStores;
     const [loading, setLoading] = useState(false)
-    const handleLogout = async() => {
+    const handleLogout = async () => {
         setLoading(true)
         await logout()
         clearState()
@@ -28,7 +28,7 @@ export function LogoutBox({ TriggerJsx }: { TriggerJsx: ReactNode }) {
 
     return (
         <Dialog>
-            <form> 
+            <form>
                 <DialogTrigger asChild>
                     {TriggerJsx}
                 </DialogTrigger>

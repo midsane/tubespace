@@ -3,10 +3,11 @@ import { asyncHandler } from '../../utils/asyncHandler';
 import { ApiResponse } from '../../utils/apiresponse';
 import { client } from '../../db/connectToDb';
 import { uploadToCloudinary } from '../../utils/cloudinary';
+import { youtubeConfig } from '../../config';
 
-const clientId = process.env.YT_GOOGLE_CLIENT_ID
-const redirectUri = process.env.YT_YOUR_REDIRECT_URI
-const client_secret = process.env.YT_GOOGLE_CLIENT_SECRET
+const clientId = youtubeConfig.clientId
+const redirectUri = youtubeConfig.redirectUri
+const client_secret = youtubeConfig.client_secret
 const scope = 'https://www.googleapis.com/auth/youtube.upload';
 const state = 'some_random_state_value';
 

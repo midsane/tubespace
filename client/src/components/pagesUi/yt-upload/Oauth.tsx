@@ -6,6 +6,7 @@ import { LoadingTitle } from "@/components/loadingUI/loadingTitle";
 import { useUploadVideo } from "@/store/uploadVideo.store";
 import { toast } from "sonner";
 import axios from "axios";
+import { Loader2Icon } from "lucide-react";
 
 export function YtOAuthPage() {
     const [searchParams] = useSearchParams();
@@ -79,7 +80,7 @@ export function YtOAuthPage() {
                         className="text-4xl font-bold text-balance">TubeSpace</motion.h1>
                 </div>
                 <div className="flex flex-col w-screen px-5 justify-center text-center items-center gap-5" >
-                    Starting an upload session for your youtube video using google Oauth... <img className="shadow-border w-10 shadow-2xl" src={googleIcon} />
+                    Starting an upload session for your youtube video using google Oauth... <Loader2Icon className="animate-spin repeat-infinite" /> <img className="shadow-border w-10 shadow-2xl" src={googleIcon} />
                     <LoadingTitle />
 
                 </div>

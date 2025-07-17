@@ -1,11 +1,16 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
 import axios from 'axios';
+import { cloudinaryConfig } from '../config';
+
+if (!cloudinaryConfig.cloud_name || !cloudinaryConfig.api_key || !cloudinaryConfig.api_secret) {
+  throw new Error("Cloudinary configuration is not set properly.");
+}
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: cloudinaryConfig.cloud_name,
+  api_key: cloudinaryConfig.api_key,
+  api_secret: cloudinaryConfig.api_secret,
 });
 
 const uploadToCloudinary = async (localFilePath: string) => {
@@ -30,7 +35,7 @@ interface VideoFileConfigs {
 }
 
 export const getVideoFileConfigs = async (videoUrl: string): Promise<VideoFileConfigs> => {
-  if (!process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+  if (!cloudinaryConfig.api_key || !cloudinaryConfig.api_secret) {
     throw new Error("Cloudinary API credentials are not set.");
   }
   const response = await axios.head(videoUrl);

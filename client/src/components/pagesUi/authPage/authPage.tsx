@@ -31,6 +31,7 @@ import { googleIcon } from "@/constast"
 import { Loader2Icon } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
 import { GradientText } from "@/components/text-animation/text-animations"
+import { showError } from "@/lib/showError"
 
 export function AuthPage() {
     const [loginBox, setLoginBox] = useState<boolean>(true)
@@ -74,8 +75,8 @@ export function AuthPage() {
             }
 
         } catch (error) {
-            toast.error("Failed to " + (loginBox ? "login" : "signup") + ". Please try again.");
-            console.error("Error during submission:", error);
+            console.error("Error during authentication:", error);
+            showError(error, "Failed to authenticate. Please try again.");
         }
         setLoading(false)
     }
@@ -96,19 +97,19 @@ export function AuthPage() {
             window.location.href = data.url;
         } catch (error) {
             console.error("Error during OAuth window handling:", error);
-            toast.error("Failed to open OAuth window. Please try again.");
+            showError(error, "Failed to open OAuth window. Please try again.");
         }
         setOauthLoading(false)
 
     }
 
-    const sendOTP = async() => {
+    const sendOTP = async () => {
         setSendingOTP(true);
         try {
             await generateOTP(data.email)
         } catch (error) {
             console.error("Error sending OTP:", error);
-            toast.error("Failed to send OTP. Please try again.");
+            showError(error, "Failed to send OTP. Please try again.")
             setSendingOTP(false);
             return;
         }

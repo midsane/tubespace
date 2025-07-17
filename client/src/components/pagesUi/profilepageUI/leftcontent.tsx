@@ -42,10 +42,6 @@ export const LeftContent = () => {
         else userState = data;
     }
 
-    console.log("User State: ", userState);
-    console.log("currentUserState: ", currentUserState);
-    console.log("data: ", data);
-
     const isBioLong = !loading && userState?.bio && userState.bio?.length > CHAR_LIMIT;
     let truncatedBio = "No bio available!";
     truncatedBio = !loading && userState?.bio && (isBioLong ? userState.bio.slice(0, CHAR_LIMIT) + "..." : userState.bio) || truncatedBio;
