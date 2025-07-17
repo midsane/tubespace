@@ -15,6 +15,8 @@ import { CheckProgressPage } from './pages/checkProgressPage'
 import { PricingPage } from './pages/staticPages/pricingPage'
 import { WorkingPage } from './pages/staticPages/workingPage'
 import { PrivacyPolicyPage } from './pages/staticPages/privacyPolicyPage'
+import { VerifyOTPPage } from './components/pagesUi/authPage/verifyOtp'
+import { ResetPasswordPage } from './components/pagesUi/authPage/resetPassword'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -42,7 +44,15 @@ const router = createBrowserRouter([
       },
       {
         path: "auth",
-        element: <AuthPage />
+        element: <AuthPage />,
+      },
+      {
+        path: "auth/verify-otp",
+        element: <VerifyOTPPage />
+      },
+      {
+        path: "auth/reset-password",
+        element: <ResetPasswordPage />
       },
       {
         path: "oauth",

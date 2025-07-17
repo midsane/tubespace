@@ -101,11 +101,51 @@ const getOauthLoginRegister = async (code: string, role: UserRole) => {
     return resData.data;
 }
 
+
+const generateOTP = async (email: string) => {
+    const response = await fetch(baseUrl + `forgot-password/generate-otp`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email })
+    });
+
+    const resData: httpRequstType = await response.json();
+    if (!response.ok || response.status >= 300) {
+        throw new Error(resData.message || "Failed to generate OTP");
+    };
+    return resData.data;
+}
+
+const verifyOTP = async (email: string, otp: number) => {
+    const response = await fetch(baseUrl + `forgot-password/verify-otp`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, otp })
+    });
+
+    const resData: httpRequstType = await response.json();
+    if (!response.ok || response.status >= 300) {
+        throw new Error(resData.message || "Invalid or expired OTP. generate a new one.");
+    };
+    return resData.data;
+}
+
+
+
+
 export {
     LoginUser,
     RegisterUser,
     checkAuth,
     logout,
     getOauthWindow,
-    getOauthLoginRegister
+    getOauthLoginRegister,
+    generateOTP,
+    verifyOTP
 }

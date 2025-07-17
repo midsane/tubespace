@@ -24,12 +24,13 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { UserRole, type AuthDataType } from "@/types/types"
-import { getOauthWindow, LoginUser, RegisterUser } from "@/httpfnc/auth"
+import { generateOTP, getOauthWindow, LoginUser, RegisterUser } from "@/httpfnc/auth"
 import { useNavigate } from "react-router-dom"
 import { useUserStore } from "@/store/user.store"
 import { googleIcon } from "@/constast"
 import { Loader2Icon } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
+import { GradientText } from "@/components/text-animation/text-animations"
 
 export function AuthPage() {
     const [loginBox, setLoginBox] = useState<boolean>(true)
@@ -38,6 +39,7 @@ export function AuthPage() {
     const [oauthLoading, setOauthLoading] = useState<boolean>(false)
     const navigate = useNavigate()
     const setState = useUserStore((state) => state.setState)
+    const [sendingOTP, setSendingOTP] = useState<boolean>(false)
 
     const handleSubmit = async () => {
         if (data.role === UserRole.NORMAL && !loginBox) {
@@ -100,6 +102,21 @@ export function AuthPage() {
 
     }
 
+    const sendOTP = async() => {
+        setSendingOTP(true);
+        try {
+            await generateOTP(data.email)
+        } catch (error) {
+            console.error("Error sending OTP:", error);
+            toast.error("Failed to send OTP. Please try again.");
+            setSendingOTP(false);
+            return;
+        }
+        setSendingOTP(false);
+        toast.success("OTP sent to your email. Please check your inbox.");
+        navigate("/auth/verify-otp", { state: { email: data.email } });
+    }
+
     return (
         <div
             className="h-dvh w-full px-2 bg mix-blend-hard bg-background
@@ -120,7 +137,7 @@ export function AuthPage() {
 
                                     transition={{ duration: 0.3 }}
                                 >
-                                    {loginBox ? 'Login' : 'Sign up'}
+                                    {loginBox ? <GradientText size="small" text="Login" /> : <GradientText size="small" text="Sign Up" />}
                                 </motion.p>
                             </AnimatePresence>
 
@@ -173,15 +190,20 @@ export function AuthPage() {
                                     />
                                 </div>
                                 <div className="grid gap-2">
-                                    <div className="flex items-center">
+                                    {!loginBox && <div className="flex items-center">
                                         <Label htmlFor="password">Password</Label>
-                                        <a
-                                            href="#"
-                                            className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                                        >
-                                            Forgot your password?
-                                        </a>
-                                    </div>
+                                        {sendingOTP ? <>
+                                            <Loader2Icon className="ml-auto animate-spin" />
+                                            <p className="ml-2 text-sm text-muted-foreground">Sending OTP...</p>
+
+                                        </> :
+                                            <a
+                                                onClick={sendOTP}
+                                                className="ml-auto inline-block text-sm underline-offset-4 cursor-pointer hover:underline"
+                                            >
+                                                Forgot your password?
+                                            </a>}
+                                    </div>}
                                     <Input id="password" type="password"
                                         disabled={loading}
                                         value={data.password}
