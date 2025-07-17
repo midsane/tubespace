@@ -96,6 +96,8 @@ export const TaskUpdatePage = () => {
             if (!res.ok) throw new Error(result.message || "Failed");
 
             toast.success("youtube video details updated successfully");
+            useUploadVideo.getState().setTaskId(numericTaskId);
+            console.log("taskId in state: ", useUploadVideo.getState().taskId)
             taskId ? updateState(numericTaskId, result.task) : appendState(result.task);
         } catch (err) {
             console.error(err);
