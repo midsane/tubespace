@@ -10,32 +10,40 @@ const resend = new Resend(RESEND_API_KEY);
 
 export const sendEmail = async (email: string, otp: number) => {
   await resend.emails.send({
-    from: 'Tubespace <support@tubespace.studio>',
+    from: 'Tubespace <info@tubespace.studio>',
     to: email,
     subject: 'OTP for Update Password',
-    html: `<html>   
-  <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
-    <div style="max-width: 600px; margin: auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-      <h2 style="color: #333;">Password Reset Request</h2>
-      <p>Greetings from Tubespace.</p>
-      <p>You (or someone else) requested to reset your account password.</p>
-      <p>
-        Use the following One-Time Password (OTP) to verify your identity and change your password:
+    html: `
+<html>
+  <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px 0;">
+    <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 30px 40px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: relative;">
+      <div style="position: absolute; top: 30px; right: 40px;">
+        <img src="https://tubespace.vercel.app/favicon.png" alt="Tubespace Logo" style="height: 32px;" />
+      </div>
+      <h2 style="color: #111; margin-bottom: 20px;">Verify it’s you</h2>
+      <p style="font-size: 16px; color: #333; line-height: 1.6;">
+        There’s one quick step you need to complete to verify your identity.
       </p>
-      <p style="font-size: 24px; font-weight: bold; color: #007BFF; letter-spacing: 2px;">${otp}</p>
-      <p style="margin-top: 20px;">
-        This OTP is valid for a limited time. If you didn't request a password change, you can safely ignore this email.
+      <p style="margin: 20px 0 10px 0; font-size: 16px;">
+        Please enter this verification code when prompted:
       </p>
-      <p style="color: #888; font-size: 12px; margin-top: 40px;">
-        — Tubespace
+      <p style="font-size: 32px; font-weight: bold; letter-spacing: 2px; color: #007BFF; margin: 10px 0;">${otp}</p>
+      <p style="font-size: 14px; color: #555;">
+        This OTP expires in 10 minutes.
       </p>
+      <p style="margin-top: 40px; font-size: 14px; color: #888;">Thanks,<br />Tubespace Team</p>
     </div>
+    <p style="text-align: center; font-size: 12px; color: #aaa; margin-top: 20px;">
+      © Tubespace, 2025. All rights reserved.
+    </p>
   </body>
 </html>
 `
   });
+
   console.log('Email sent successfully');
-}
+};
+
 
 export const sendOtp = async (email: string, otp: number) => {
 
