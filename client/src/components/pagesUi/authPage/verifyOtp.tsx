@@ -63,7 +63,7 @@ export function VerifyOTPPage() {
 
         }
         setVerifying(false)
-        navigate("/auth/reset-password", { state: { emailInput } });
+        navigate("/auth/reset-password", { state: { email: emailInput } });
 
     }
 
