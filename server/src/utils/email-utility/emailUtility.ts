@@ -10,7 +10,7 @@ const resend = new Resend(RESEND_API_KEY);
 
 export const sendEmail = async (email: string, otp: number) => {
   await resend.emails.send({
-    from: 'midsane <support@tubespace.studio>',
+    from: 'Tubespace <support@tubespace.studio>',
     to: email,
     subject: 'OTP for Update Password',
     html: `<html>   
