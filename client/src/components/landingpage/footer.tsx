@@ -51,7 +51,7 @@ export default function Footer() {
                 <div className="space-y-2">
                     <h4 className="font-medium text-foreground">Contact</h4>
                     <ul className="space-y-2">
-                        <li><a href="mailto:adityaraj10544@gmail.com" className="hover:underline">support@tubespace.io</a></li>
+                        <li><a href="mailto:adityaraj10544@gmail.com" className="hover:underline">support@tubespace.studio</a></li>
                         <li><a href="https://github.com/midsane" target="_blank" className="flex items-center gap-1 hover:underline"><Github className="w-4 h-4" /> GitHub</a></li>
                         <li><a href="https://twitter.com/no_more_mid" target="_blank" className="hover:underline">Twitter / X</a></li>
                     </ul>

@@ -61,35 +61,37 @@ export const RootPageLayout: React.FC = () => {
         fixed top-2 left-1/2 -translate-x-1/2 w-[95%] sm:w-[90%] md:w-[80%] items-center justify-between
         rounded-4xl bg-sidebar px-10 
         " >
-            <AnimatePresence>{openMenu && <MenuSheet setOpenMenu={setOpenMenu} />}</AnimatePresence>
-            <div className="hidden sm:block" >
-                <Link to="/" ><img className="h-8" src={logo} /></Link>
-            </div>
-            <div className="sm:hidden flex gap-2 items-center relative">
-                <span className="opacity-0">asdf</span>
-                <img className="h-8 opacity-0" src={logo} />
-                <div
-
-                    className="w-fit h-full fixed top-0 flex gap-2 items-center left-10 z-[310]">
-                    <span
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            e.preventDefault();
-
-
-                        }}
-                    ><MorphedMenu openMenu={openMenu} setOpenMenu={setOpenMenu} />
-                    </span>
+            <div className="flex gap-2 items-center justify-start">
+                <AnimatePresence>{openMenu && <MenuSheet setOpenMenu={setOpenMenu} />}</AnimatePresence>
+                <div className="hidden sm:block" >
                     <Link to="/" ><img className="h-8" src={logo} /></Link>
                 </div>
-            </div>
+                <div className="sm:hidden flex gap-2 items-center relative">
+                    <span className="opacity-0">asdf</span>
+                    <img className="h-8 opacity-0" src={logo} />
+                    <div
 
-            <div className="sm:flex hidden gap-10 items-center" >
-                <a href="/#features" onClick={handleClick} >Features</a>
-                <Link to="/pricing" >Pricing</Link>
-                <Link to="/working" >How it works</Link>
-            </div>
+                        className="w-fit h-full fixed top-0 flex gap-2 items-center left-10 z-[310]">
+                        <span
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                e.preventDefault();
 
+
+                            }}
+                        ><MorphedMenu openMenu={openMenu} setOpenMenu={setOpenMenu} />
+                        </span>
+                        <Link to="/" ><img className="h-8" src={logo} /></Link>
+                    </div>
+                </div>
+
+                <div className="sm:flex hidden gap-10 items-center w-fit" >
+                    <a href="/#features" onClick={handleClick} >Features</a>
+                    <Link to="/pricing" >Pricing</Link>
+                    <Link to="/working" >How it works</Link>
+                </div>
+
+            </div>
             <li className="flex gap-3 items-center" >
                 <ModeToggle />
                 {!isLoading ?
@@ -105,6 +107,7 @@ export const RootPageLayout: React.FC = () => {
                     <Skeleton className="w-9 sm:w-10 rounded-full border border-border aspect-square object-cover" />
                 }
             </li>
+
         </nav>
         <section className="flex justify-center items-center">
             <Outlet />
