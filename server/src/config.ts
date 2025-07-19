@@ -7,7 +7,7 @@ export const CLIENT_URL2 = process.env.CLIENT_URL2
 
 export const RESEND_API_KEY = process.env.RESEND_API_KEY;
 export const jwtSecretConfig = process.env.JWT_SECRET;
-export const REDIS_API_KEY = process.env.REDIS_API_KEY;
+export const REDIS_CLOUD_URL = process.env.REDIS_CLOUD_URL;
 
 export const PORT = process.env.PORT || 3000;
 export const mode = process.env.MODE || "development";

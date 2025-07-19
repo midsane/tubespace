@@ -1,44 +1,52 @@
-import axios from 'axios';
 import { Response } from 'express';
+import axios from 'axios';
 import fs from 'fs';
-import { asyncHandler } from '../../utils/asyncHandler';
-import { ApiResponse } from '../../utils/apiresponse';
 import { client } from '../../db/connectToDb';
-import { DownloadImgFromCloudinaryUrl } from '../../utils/yt-helper/imgDownloadCloudinaryurl';
+import { ApiResponse } from '../../utils/apiresponse';
+import { asyncHandler } from '../../utils/asyncHandler';
 import { getTokenForStartingVideoUploadSession } from '../../utils/yt-helper/getToken';
 import { getVideoFileConfigs } from '../../utils/cloudinary';
-
+import { youtubeUploadQueue } from '../../lib/bullmq';
+import { DownloadImgFromCloudinaryUrl } from '../../utils/yt-helper/imgDownloadCloudinaryurl';
 
 const startSession = asyncHandler(async (req: any, res: Response) => {
-
     const { code, taskId: taskid } = req.body;
     const taskId = Number(taskid);
-    let access_token = null;
 
-    try {
-        access_token = (await getTokenForStartingVideoUploadSession(code, taskId)).accessToken
-    } catch (error) {
-        console.log('Error getting access token:', error);
-        return res.status(500).json(new ApiResponse(null, "Error getting access token"));
+    if (!code || !taskId) {
+        return res.status(400).json(new ApiResponse(null, "Code and taskId are required"));
     }
 
-    if (!access_token) return res.status(400).send('Access token is required');
+    let access_token: string | null = null;
+
+    try {
+        access_token = (await getTokenForStartingVideoUploadSession(code, taskId)).accessToken;
+    } catch (error) {
+        console.error('Error getting access token:', error);
+        return res.status(500).json(new ApiResponse(null, "Failed to get access token"));
+    }
+
+    if (!access_token) {
+        return res.status(400).json(new ApiResponse(null, "Access token is required"));
+    }
 
     const ytDetails = await client.task.findFirst({
-        where: {
-            id: taskId
-        },
+        where: { id: taskId },
         select: {
             title: true,
             description: true,
             tags: true,
             madeForKids: true,
             editedVideoUrl: true,
-        }
+        },
     });
-    if (!ytDetails) return res.status(404).json(new ApiResponse(null, "YouTube details not found for the task"));
+
+    if (!ytDetails) {
+        return res.status(404).json(new ApiResponse(null, "YouTube details not found for this task"));
+    }
 
     const { title, description, tags, madeForKids, editedVideoUrl } = ytDetails;
+
     if (!title || !description || !editedVideoUrl) {
         return res.status(400).json(new ApiResponse(null, "Title, description and video are required"));
     }
@@ -46,101 +54,75 @@ const startSession = asyncHandler(async (req: any, res: Response) => {
     const { fileSize, mimeType } = await getVideoFileConfigs(editedVideoUrl);
 
     const videoMetadata = {
-        "snippet": {
+        snippet: {
             title,
             description,
             tags: tags || [],
-            "categoryId": 22
+            categoryId: 22,
         },
-        "status": {
-            "privacyStatus": "private",
-            "embeddable": true,
-            "license": "youtube",
-            madeForKids
-        }
+        status: {
+            privacyStatus: 'private',
+            embeddable: true,
+            license: 'youtube',
+            madeForKids,
+        },
     };
 
-    axios({
-        method: 'post',
-        url: 'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status,contentDetails',
-        headers: {
-            'Authorization': `Bearer ${access_token}`,
-            'Content-Type': 'application/json; charset=UTF-8',
-            'X-Upload-Content-Length': fileSize,
-            'X-Upload-Content-Type': mimeType
-        },
-        data: JSON.stringify(videoMetadata)
-    })
-        .then(response => {
-            console.log('Resumable session initiated successfully!');
-            console.log('Location header (resumable session URI):', response.headers.location);
-            return res.status(200).json(new ApiResponse({
-                uploadUrl: response.headers.location
-            }, "Resumable session initiated successfully"));
-        })
-        .catch(error => {
-            console.error('Error initiating resumable session:', error);
-            return res.status(500).json(new ApiResponse(null, "Error initiating resumable session"));
-        });
-})
-
-const uploadChunks = asyncHandler(async (req: any, res: Response) => {
-    const { access_token, uploadUrl, chunkSize, startByte = 0, videoPath, fileSize } = req.body;
-    if (!access_token || !uploadUrl || !chunkSize || !videoPath || !chunkSize)
-        return res.status(400).json(new ApiResponse(null, "access_token, uploadUrl, chunkSize, videoPath and fileSize are required"));
-
-    const endByte = Math.min(startByte + chunkSize - 1, fileSize - 1);
-    const contentLength = endByte - startByte + 1;
-
-    console.log(`Uploading chunk: ${startByte} to ${endByte} (length: ${contentLength})`);
-
-    const fileChunk = fs.createReadStream(videoPath, { start: startByte, end: endByte });
-
     try {
-        const response = await axios({
-            method: 'put',
-            url: uploadUrl,
-            headers: {
-                'Authorization': `Bearer ${access_token}`,
-                'Content-Length': contentLength,
-                'Content-Type': 'video/webm', // Use actual MIME type
-                'Content-Range': `bytes ${startByte}-${endByte}/${fileSize}`
+        const response = await axios.post(
+            'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status,contentDetails',
+            videoMetadata,
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-Upload-Content-Length': fileSize,
+                    'X-Upload-Content-Type': mimeType,
+                },
+            }
+        );
+
+        const uploadUrl = response.headers.location;
+
+        if (!uploadUrl) {
+            throw new Error("Missing 'Location' header in resumable session response");
+        }
+
+        const jobData = {
+            taskId,
+            youtuberId: req.user.id,
+            uploadUrl,
+            mimeType,
+            accessToken: access_token,
+            chunkSize: 1024 * 1024, // 1MB
+            startByte: 0,
+            videoUrl: editedVideoUrl,
+            fileSize,
+            title,
+            description,
+            tags,
+            madeForKids,
+        };
+
+        await youtubeUploadQueue.add('upload-video-task', jobData, {
+            attempts: 3,
+            backoff: {
+                type: 'exponential',
+                delay: 1000, // Retry after 1s, then 2s, then 4s...
             },
-            data: fileChunk,
-            validateStatus: () => true, // Accept non-2xx (like 308)
+            removeOnComplete: true,
+            removeOnFail: false,
         });
 
-        //  Chunk successfully uploaded
-        if (response.status === 308) {
-            const range = response.headers.range; // Might be undefined if nothing uploaded
-            const nextStart = range ? parseInt(range.split('-')[1]) + 1 : startByte + chunkSize;
-
-            return res.status(200).json({
-                message: 'Chunk uploaded, continue upload',
-                nextStartByte: nextStart
-            });
-        }
-
-        //  Final chunk uploaded
-        if (response.status === 201 || response.status === 200) {
-            return res.status(201).json({
-                message: 'Upload complete!',
-                video: response.data
-            });
-        }
-
-        // Unexpected status
-        return res.status(response.status).json({
-            message: 'Unexpected response during upload',
-            status: response.status,
-            data: response.data
-        });
-
-    } catch (error) {
-        console.error('Upload failed:', error);
-        return res.status(500).json(new ApiResponse(null, "Error uploading chunk"));
+        return res.status(200).json(new ApiResponse(
+            { uploadUrl },
+            'Video upload session staged successfully'
+        ));
+    } catch (err) {
+        console.error('🔥 Error initiating YouTube upload session:', err);
+        return res.status(500).json(new ApiResponse(null, 'Failed to initiate upload session'));
     }
-})
+});
 
 const uploadThumbnail = asyncHandler(async (req: any, res: Response) => {
     const { videoId, accessToken, taskId } = req.body;
@@ -253,7 +235,6 @@ const publishVideo = asyncHandler(async (req: any, res: Response) => {
 
 export {
     startSession,
-    uploadChunks,
     uploadThumbnail,
     publishVideo
 }

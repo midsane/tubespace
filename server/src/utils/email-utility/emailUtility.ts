@@ -10,13 +10,13 @@ const resend = new Resend(RESEND_API_KEY);
 
 export const sendEmail = async (email: string, otp: number) => {
   await resend.emails.send({
-    from: 'Tubespace <info@tubespace.studio>',
+    from: 'Tubespace <support@tubespace.studio>',
     to: email,
-    subject: 'OTP for Update Password',
+    subject: 'OTP for Updating Password',
     html: `
 <html>
   <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px 0;">
-    <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 30px 40px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: relative;">
+    <div style="max-width: 600px; width:90%; margin: auto; background-color: #fff; padding: 20px 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: relative;">
       <div style="position: absolute; top: 30px; right: 40px;">
         <img src="https://tubespace.vercel.app/favicon.png" alt="Tubespace Logo" style="height: 32px;" />
       </div>
@@ -29,7 +29,7 @@ export const sendEmail = async (email: string, otp: number) => {
       </p>
       <p style="font-size: 32px; font-weight: bold; letter-spacing: 2px; color: #007BFF; margin: 10px 0;">${otp}</p>
       <p style="font-size: 14px; color: #555;">
-        This OTP expires in 10 minutes.
+        This OTP expires in 2 minutes.
       </p>
       <p style="margin-top: 40px; font-size: 14px; color: #888;">Thanks,<br />Tubespace Team</p>
     </div>
@@ -47,7 +47,7 @@ export const sendEmail = async (email: string, otp: number) => {
 
 export const sendOtp = async (email: string, otp: number) => {
 
-  const result = await redisClient.set(`otp:${email}`, otp, { ex: 120 });//expire in 2 minutes
+  const result = await redisClient.set(`otp:${email}`, otp, 'EX', 120);//expire in 2 minutes
 
   console.log("Redis SET result:", result);
   await inspectRedisOtps()
@@ -64,7 +64,7 @@ export const verifyOtp = async (email: string, enteredOtp: number) => {
   console.log("Stored OTP:", storedOtp, "Entered:", enteredOtp);
   await inspectRedisOtps()
 
-  if (storedOtp && storedOtp === Number(enteredOtp)) {
+  if (storedOtp && Number(storedOtp) === Number(enteredOtp)) {
     console.log("OTP is valid");
     await redisClient.del(`otp:${email}`);
     return true;
