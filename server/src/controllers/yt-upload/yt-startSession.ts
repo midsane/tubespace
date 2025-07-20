@@ -131,7 +131,7 @@ const startSession = asyncHandler(async (req: customRequest, res: Response) => {
             madeForKids
         );
     } catch (error) {
-        console.error('Failed to start video upload session', error);
+        console.error('Failed to start video upload session ', error);
         return res.status(500).json(new ApiResponse(null, "Failed to start video upload session"));
 
     }
@@ -197,8 +197,18 @@ const reqForChunkedUpload = async (
             removeOnFail: false,
         });
     }
-    catch {
-        console.error("YouTube resumable session error:", error);
+    catch (err: any) {
+        if (axios.isAxiosError(err)) {
+            console.error("YouTube resumable session error:", {
+                status: err.response?.status,
+                statusText: err.response?.statusText,
+                data: err.response?.data,
+                headers: err.response?.headers,
+            });
+        } else {
+            console.error("Non-Axios error:", err);
+        }
+
         throw new Error("Failed to get upload session URL");
     }
 }
