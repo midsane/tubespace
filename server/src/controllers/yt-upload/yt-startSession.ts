@@ -8,26 +8,18 @@ import { getTokenForStartingVideoUploadSession } from '../../utils/yt-helper/get
 import { getVideoFileConfigs } from '../../utils/cloudinary';
 import { youtubeUploadQueue } from '../../lib/bullmq';
 import { DownloadImgFromCloudinaryUrl } from '../../utils/yt-helper/imgDownloadCloudinaryurl';
+import { customRequest, JobData, VideoMetadata } from '../../types/types';
+import { redisClient } from '../../lib/redisClient';
+import { error } from 'console';
+import { buildYouTubeMetadata } from '../../utils/youtubeMetdata';
 
-const startSession = asyncHandler(async (req: any, res: Response) => {
+
+const startSession = asyncHandler(async (req: customRequest, res: Response) => {
     const { code, taskId: taskid } = req.body;
     const taskId = Number(taskid);
 
     if (!code || !taskId) {
         return res.status(400).json(new ApiResponse(null, "Code and taskId are required"));
-    }
-
-    let access_token: string | null = null;
-
-    try {
-        access_token = (await getTokenForStartingVideoUploadSession(code, taskId)).accessToken;
-    } catch (error) {
-        console.error('Error getting access token:', error);
-        return res.status(500).json(new ApiResponse(null, "Failed to get access token"));
-    }
-
-    if (!access_token) {
-        return res.status(400).json(new ApiResponse(null, "Access token is required"));
     }
 
     const ytDetails = await client.task.findFirst({
@@ -41,6 +33,7 @@ const startSession = asyncHandler(async (req: any, res: Response) => {
         },
     });
 
+
     if (!ytDetails) {
         return res.status(404).json(new ApiResponse(null, "YouTube details not found for this task"));
     }
@@ -53,21 +46,86 @@ const startSession = asyncHandler(async (req: any, res: Response) => {
 
     const { fileSize, mimeType } = await getVideoFileConfigs(editedVideoUrl);
 
-    const videoMetadata = {
-        snippet: {
-            title,
-            description,
-            tags: tags || [],
-            categoryId: 22,
-        },
-        status: {
-            privacyStatus: 'private',
-            embeddable: true,
-            license: 'youtube',
-            madeForKids,
-        },
-    };
+    const videoMetadata = buildYouTubeMetadata(title, description, tags, madeForKids);
 
+
+    const redisKey = `yt-token-${req.user.id}`;
+
+    const tokenStr = await redisClient.get(redisKey);
+    let access_token = undefined;
+    let refresh_token = undefined;
+    if (tokenStr) {
+        const ytToken = JSON.parse(tokenStr)
+        access_token = ytToken.access_token;
+        refresh_token = ytToken.refresh_token;
+    }
+
+    if (access_token) {
+
+        try {
+            await reqForChunkedUpload(
+                req.user.id,
+                videoMetadata,
+                access_token,
+                fileSize,
+                mimeType,
+                taskId,
+                editedVideoUrl,
+                title,
+                description,
+                tags,
+                madeForKids
+            );
+        } catch (error) {
+            console.error('access token expired, getting new access token', error);
+            const ytTokens = await getTokenForStartingVideoUploadSession(code, taskId)
+            access_token = ytTokens.accessToken;
+            refresh_token = ytTokens.refreshToken
+
+            await redisClient.set(redisKey, JSON.stringify({ access_token, refresh_token }), 'EX', 60 * 60 * 24); // 24 hours expiry
+            try {
+                await reqForChunkedUpload(
+                    req.user.id,
+                    videoMetadata,
+                    access_token,
+                    fileSize,
+                    mimeType,
+                    taskId,
+                    editedVideoUrl,
+                    title,
+                    description,
+                    tags,
+                    madeForKids
+                );
+            } catch (error) {
+                console.error('Failed to start video upload session', error);
+                return res.status(500).json(new ApiResponse(null, "Failed to start video upload session"));
+
+            }
+
+        }
+
+        return res.status(200).json(new ApiResponse(
+            null,
+            'Video upload session added to queue successfully'
+        ));
+    }
+
+})
+
+const reqForChunkedUpload = async (
+    youtuberId: number,
+    videoMetadata: VideoMetadata,
+    access_token: string,
+    fileSize: number,
+    mimeType: string,
+    taskId: number,
+    editedVideoUrl: string,
+    title: string,
+    description: string,
+    tags: string[] | undefined,
+    madeForKids: boolean
+): Promise<void> => {
     try {
         const response = await axios.post(
             'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status,contentDetails',
@@ -82,15 +140,15 @@ const startSession = asyncHandler(async (req: any, res: Response) => {
             }
         );
 
-        const uploadUrl = response.headers.location;
+        const uploadUrl: string | undefined = response.headers.location;
 
         if (!uploadUrl) {
             throw new Error("Missing 'Location' header in resumable session response");
         }
 
-        const jobData = {
+        const jobData: JobData = {
             taskId,
-            youtuberId: req.user.id,
+            youtuberId,
             uploadUrl,
             mimeType,
             accessToken: access_token,
@@ -113,18 +171,14 @@ const startSession = asyncHandler(async (req: any, res: Response) => {
             removeOnComplete: true,
             removeOnFail: false,
         });
-
-        return res.status(200).json(new ApiResponse(
-            { uploadUrl },
-            'Video upload session staged successfully'
-        ));
-    } catch (err) {
-        console.error('🔥 Error initiating YouTube upload session:', err);
-        return res.status(500).json(new ApiResponse(null, 'Failed to initiate upload session'));
     }
-});
+    catch {
+        console.error("YouTube resumable session error:", error);
+        throw new Error("Failed to get upload session URL");
+    }
+}
 
-const uploadThumbnail = asyncHandler(async (req: any, res: Response) => {
+const uploadThumbnail = asyncHandler(async (req: customRequest, res: Response) => {
     const { videoId, accessToken, taskId } = req.body;
 
     if (!videoId || !accessToken || !taskId) {
@@ -174,7 +228,7 @@ const uploadThumbnail = asyncHandler(async (req: any, res: Response) => {
     }
 })
 
-const publishVideo = asyncHandler(async (req: any, res: Response) => {
+const publishVideo = asyncHandler(async (req: customRequest, res: Response) => {
     const {
         accessToken,
         videoId,

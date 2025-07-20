@@ -4,15 +4,13 @@ import "./lib/redisClient"
 import "./lib/webSocketClient";
 const port = PORT
 
-const startServer = async() => {
-   
+const startServer = async () => {
+
     httpServer.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
+        console.log(`Server is running on port ${port} ⛩️`);
     });
 }
 
-startServer().then(() => {
-    console.log("Server started successfully");
-}).catch((error) => {
+startServer().catch((error) => {
     console.error("Error starting server:", error);
 });
