@@ -50,7 +50,7 @@ export function YtOAuthPage() {
                 }
             } catch (error) {
                 console.error("Error during OAuth login/register:", error);
-                alert("Failed to login/register with OAuth. Please try again.");
+                toast.error("Failed to login/register with OAuth. Please try again.");
             }
 
         }

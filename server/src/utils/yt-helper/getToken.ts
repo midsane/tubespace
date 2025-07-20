@@ -49,6 +49,12 @@ export const getTokenForStartingVideoUploadSession = async (Encodedcode: string,
         const accessToken = response.data.access_token;
         const refreshToken = response.data.refresh_token;
 
+        console.log('Scopes returned:', response.data.scope);
+        if (!response.data.scope.includes('youtube.upload')) {
+            console.error('Access token does not have youtube.upload scope');
+            throw new Error("Token does not have required youtube.upload scope");
+        }
+
         console.log('Access Token:', accessToken);
         return {
             accessToken,

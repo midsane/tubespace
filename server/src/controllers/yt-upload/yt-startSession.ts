@@ -10,7 +10,6 @@ import { youtubeUploadQueue } from '../../lib/bullmq';
 import { DownloadImgFromCloudinaryUrl } from '../../utils/yt-helper/imgDownloadCloudinaryurl';
 import { customRequest, JobData, VideoMetadata } from '../../types/types';
 import { redisClient } from '../../lib/redisClient';
-import { error } from 'console';
 import { buildYouTubeMetadata } from '../../utils/youtubeMetdata';
 
 
