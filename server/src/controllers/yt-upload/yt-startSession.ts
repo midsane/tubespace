@@ -111,6 +111,31 @@ const startSession = asyncHandler(async (req: customRequest, res: Response) => {
         ));
     }
 
+    const ytTokens = await getTokenForStartingVideoUploadSession(code, taskId)
+    access_token = ytTokens.accessToken;
+    refresh_token = ytTokens.refreshToken
+
+    await redisClient.set(redisKey, JSON.stringify({ access_token, refresh_token }), 'EX', 60 * 60 * 24); // 24 hours expiry
+    try {
+        await reqForChunkedUpload(
+            req.user.id,
+            videoMetadata,
+            access_token,
+            fileSize,
+            mimeType,
+            taskId,
+            editedVideoUrl,
+            title,
+            description,
+            tags,
+            madeForKids
+        );
+    } catch (error) {
+        console.error('Failed to start video upload session', error);
+        return res.status(500).json(new ApiResponse(null, "Failed to start video upload session"));
+
+    }
+
 })
 
 const reqForChunkedUpload = async (
