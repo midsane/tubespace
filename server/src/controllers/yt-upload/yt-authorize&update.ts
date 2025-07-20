@@ -8,6 +8,7 @@ import { youtubeConfig } from '../../config';
 const clientId = youtubeConfig.clientId
 const redirectUri = youtubeConfig.redirectUri
 const client_secret = youtubeConfig.client_secret
+const scope = 'https://www.googleapis.com/auth/youtube.upload';
 const state = 'some_random_state_value';
 
 
@@ -75,15 +76,13 @@ const authorize = asyncHandler(async (req: any, res: Response) => {
         return res.status(500).json(new ApiResponse(null, "Google OAuth credentials are not set"));
     }
 
-    const scope = 'https://www.googleapis.com/auth/youtube.upload';
-
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
         `client_id=${encodeURIComponent(clientId)}&` +
         `redirect_uri=${encodeURIComponent(redirectUri)}&` +
         `response_type=code&` +
         `scope=${encodeURIComponent(scope)}&` +
         `access_type=offline&` +
-        `prompt=consent&` + // force consent every time
+        `include_granted_scopes=true&` +
         `state=${encodeURIComponent(state)}`;
 
 

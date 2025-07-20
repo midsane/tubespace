@@ -32,7 +32,6 @@ const startSession = asyncHandler(async (req: customRequest, res: Response) => {
         },
     });
 
-
     if (!ytDetails) {
         return res.status(404).json(new ApiResponse(null, "YouTube details not found for this task"));
     }
@@ -47,95 +46,43 @@ const startSession = asyncHandler(async (req: customRequest, res: Response) => {
 
     const videoMetadata = buildYouTubeMetadata(title, description, tags, madeForKids);
 
-
-    const redisKey = `yt-token-${req.user.id}`;
-
-    const tokenStr = await redisClient.get(redisKey);
-    let access_token = undefined;
-    let refresh_token = undefined;
-    if (tokenStr) {
-        const ytToken = JSON.parse(tokenStr)
-        access_token = ytToken.access_token;
-        refresh_token = ytToken.refresh_token;
+    console.log("videoMetadata", videoMetadata);
+    const { accessToken, refreshToken } = await getTokenForStartingVideoUploadSession(code, taskId);
+    if(!accessToken) {
+        return res.status(400).json(new ApiResponse(null, "Failed to get access token"));
     }
 
-    if (access_token) {
+    console.log("file size:", fileSize);
+    console.log("mimeType:", mimeType);
+    console.log("accessToken:", accessToken);
 
-        try {
-            await reqForChunkedUpload(
-                req.user.id,
-                videoMetadata,
-                access_token,
-                fileSize,
-                mimeType,
-                taskId,
-                editedVideoUrl,
-                title,
-                description,
-                tags,
-                madeForKids
-            );
-        } catch (error) {
-            console.error('access token expired, getting new access token', error);
-            const ytTokens = await getTokenForStartingVideoUploadSession(code, taskId)
-            access_token = ytTokens.accessToken;
-            refresh_token = ytTokens.refreshToken
 
-            await redisClient.set(redisKey, JSON.stringify({ access_token, refresh_token }), 'EX', 60 * 60 * 24); // 24 hours expiry
-            try {
-                await reqForChunkedUpload(
-                    req.user.id,
-                    videoMetadata,
-                    access_token,
-                    fileSize,
-                    mimeType,
-                    taskId,
-                    editedVideoUrl,
-                    title,
-                    description,
-                    tags,
-                    madeForKids
-                );
-            } catch (error) {
-                console.error('Failed to start video upload session', error);
-                return res.status(500).json(new ApiResponse(null, "Failed to start video upload session"));
-
-            }
-
-        }
-
-        return res.status(200).json(new ApiResponse(
-            null,
-            'Video upload session added to queue successfully'
-        ));
-    }
-
-    const ytTokens = await getTokenForStartingVideoUploadSession(code, taskId)
-    access_token = ytTokens.accessToken;
-    refresh_token = ytTokens.refreshToken
-
-    await redisClient.set(redisKey, JSON.stringify({ access_token, refresh_token }), 'EX', 60 * 60 * 24); // 24 hours expiry
-    try {
-        await reqForChunkedUpload(
-            req.user.id,
-            videoMetadata,
-            access_token,
-            fileSize,
-            mimeType,
-            taskId,
-            editedVideoUrl,
-            title,
-            description,
-            tags,
-            madeForKids
-        );
-    } catch (error) {
-        console.error('Failed to start video upload session ', error);
-        return res.status(500).json(new ApiResponse(null, "Failed to start video upload session"));
-
-    }
+    await axios({
+        method: 'post',
+        url: 'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status,contentDetails',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Upload-Content-Length': `${fileSize}`, // Replace with the actual size of your video file in bytes
+            'X-Upload-Content-Type': `${mimeType}` // Replace with the actual MIME type of your video file
+        },
+        data: JSON.stringify(videoMetadata)
+    })
+        .then(response => {
+            console.log('Resumable session initiated successfully!');
+            console.log('Location header (resumable session URI):', response.headers.location);
+            // You would typically save the location header value to use for the actual video upload
+        })
+        .catch(error => {
+            console.error('Error initiating resumable session:', error.response ? error.response.data : error.message);
+        });
 
 })
+
+
+
+
+
 
 const reqForChunkedUpload = async (
     youtuberId: number,
