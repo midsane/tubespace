@@ -29,36 +29,35 @@ export function YtOAuthPage() {
 
         const startVideoUploadSession = async () => {
             console.log("first");
-            const response = await axios.post(`${baseUrl}yt-upload/start-session`, {
-                code,
-                taskId
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                withCredentials: true,
-            });
-            console.log("response", response);
+            try {
+                const response = await axios.post(`${baseUrl}yt-upload/start-session`, {
+                    code,
+                    taskId
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: true,
+                });
+                console.log("response", response);
 
-            if (response.status === 200) {
-                toast.success("Successfully started video upload session");
-                navigate(`/check-progress/${taskId}`);
-            } else {
-                toast.error("Failed to start video upload session");
+                if (response.status === 200) {
+                    toast.success("Successfully started video upload session");
+                    navigate(`/check-progress/${taskId}`);
+                } else {
+                    toast.error("Failed to login/register with OAuth. Please try again.");
+
+                }
+            } catch (error) {
+                console.error("Error during OAuth login/register:", error);
+                alert("Failed to login/register with OAuth. Please try again.");
             }
 
         }
 
-        try {
-            startVideoUploadSession();
-        }
-        catch (error) {
-            console.error("Error during OAuth login/register:", error);
-            alert("Failed to login/register with OAuth. Please try again.");
+        startVideoUploadSession();
 
-        }
-
-    }, [code, taskId])
+    }, [code, taskId, navigate])
 
     return (
         <div className="h-dvh w-full bg mix-blend-hard bg-background
