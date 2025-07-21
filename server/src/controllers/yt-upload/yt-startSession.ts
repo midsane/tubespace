@@ -132,7 +132,7 @@ const startSession = asyncHandler(async (req: customRequest, res: Response) => {
                 delay: 1000, // Retry after 1s, then 2s, then 4s...
             },
             removeOnComplete: true,
-            removeOnFail: false,
+            removeOnFail: true,
         });
         console.log('Job added to queue:', jobData);
         return res.status(200).json(new ApiResponse(null, "Resumable session initiated successfully"));

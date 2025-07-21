@@ -11,6 +11,8 @@ const startServer = async () => {
     await thumbnailUploadQueue.obliterate({ force: true });
     await publishVideoQueue.obliterate({ force: true });
 
+    console.log("BullMQ queues cleared");
+
     httpServer.listen(port, () => {
         console.log(`Server is running on port ${port} ⛩️`);
     });

@@ -56,7 +56,7 @@ export const uploadChunkedVideoToYouTube = async ({
           throw new Error("Video ID not found in response data");
         }
 
-        await publishVideoQueue.add(YOUTUBE_UPLOAD_TYPES.THUMBNAIL_UPLOAD, {
+        await thumbnailUploadQueue.add(YOUTUBE_UPLOAD_TYPES.THUMBNAIL_UPLOAD, {
           videoId,
           ...jobDataValues
         }, {
@@ -66,7 +66,7 @@ export const uploadChunkedVideoToYouTube = async ({
             delay: 1000,
           },
           removeOnComplete: true,
-          removeOnFail: false,
+          removeOnFail: true,
         })
 
         break;

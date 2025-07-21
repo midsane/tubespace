@@ -67,6 +67,14 @@ thumbnailUploadWorker.on("completed", async (job) => {
     console.log(`Job ${job.id} completed successfully`);
     await publishVideoQueue.add(YOUTUBE_UPLOAD_TYPES.PUBLISH_VIDEO, {
         ...job.data
+    }, {
+        attempts: 3,
+        backoff: {
+            type: 'exponential',
+            delay: 1000,
+        },
+        removeOnComplete: true,
+        removeOnFail: true,
     });
 });
 
