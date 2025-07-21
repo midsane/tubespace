@@ -37,7 +37,7 @@ export interface VideoMetadata {
             title: string;
             description: string;
             tags?: string[];
-            categoryId: number;
+            categoryId: string;
       };
       status: {
             privacyStatus: string;
@@ -61,4 +61,10 @@ export interface JobData {
       description: string;
       tags?: string[];
       madeForKids: boolean;
+}
+
+export enum YOUTUBE_UPLOAD_TYPES {
+      VIDEO_UPLOAD = "video-upload",
+      THUMBNAIL_UPLOAD = "thumbnail-upload",
+      PUBLISH_VIDEO = "publish-video",
 }

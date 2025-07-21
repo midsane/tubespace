@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import fs from 'fs';
 import { client } from '../../db/connectToDb';
 import { ApiResponse } from '../../utils/apiresponse';
@@ -8,17 +8,54 @@ import { getTokenForStartingVideoUploadSession } from '../../utils/yt-helper/get
 import { getVideoFileConfigs } from '../../utils/cloudinary';
 import { youtubeUploadQueue } from '../../lib/bullmq';
 import { DownloadImgFromCloudinaryUrl } from '../../utils/yt-helper/imgDownloadCloudinaryurl';
-import { customRequest, JobData, VideoMetadata } from '../../types/types';
-import { redisClient } from '../../lib/redisClient';
+import { customRequest, JobData, VideoMetadata, YOUTUBE_UPLOAD_TYPES } from '../../types/types';
 import { buildYouTubeMetadata } from '../../utils/youtubeMetdata';
+import { jwtSecretConfig, mode } from '../../config';
+import jwt from "jsonwebtoken"
+
+const getAccessToken = asyncHandler(async (req: customRequest, res: Response) => {
+    const { code, taskId: taskid } = req.body;
+    const taskId = Number(taskid);
+    if (!code || !taskId) {
+        return res.status(400).json(new ApiResponse(null, " and taskId are required"));
+    }
+
+    const { accessToken } = await getTokenForStartingVideoUploadSession(code, taskId);
+    if (!accessToken) {
+        return res.status(400).json(new ApiResponse(null, "Failed to get access token"));
+    }
+
+
+    const jwtSecret = jwtSecretConfig
+    if (!jwtSecret)
+        return res.status(500).json(new ApiResponse(null, "jwt secret not loaded/ internal server err"))
+
+    const token = jwt.sign({ accessToken }, jwtSecret, { expiresIn: "2d" })
+
+    if (!token)
+        return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
+
+    res.cookie("accessToken", token, {
+        secure: mode !== "development",
+        httpOnly: true,
+        sameSite: mode === "development" ? "lax" : "none"
+    })
+
+    res.status(200).json(new ApiResponse(accessToken, "access token generated successfully"))
+
+})
 
 
 const startSession = asyncHandler(async (req: customRequest, res: Response) => {
-    const { code, taskId: taskid } = req.body;
+    const { taskId: taskid, accessToken } = req.body;
+
+    if (!accessToken) {
+        return res.status(400).json(new ApiResponse(null, "access token required"));
+    }
     const taskId = Number(taskid);
 
-    if (!code || !taskId) {
-        return res.status(400).json(new ApiResponse(null, "Code and taskId are required"));
+    if (!taskId) {
+        return res.status(400).json(new ApiResponse(null, "taskId is required"));
     }
 
     const ytDetails = await client.task.findFirst({
@@ -44,85 +81,40 @@ const startSession = asyncHandler(async (req: customRequest, res: Response) => {
 
     const { fileSize, mimeType } = await getVideoFileConfigs(editedVideoUrl);
 
-    const videoMetadata = buildYouTubeMetadata(title, description, tags, madeForKids);
+    const videoMetadata: VideoMetadata = buildYouTubeMetadata(title, description, tags, madeForKids);
 
     console.log("videoMetadata", videoMetadata);
-    const { accessToken, refreshToken } = await getTokenForStartingVideoUploadSession(code, taskId);
-    if(!accessToken) {
-        return res.status(400).json(new ApiResponse(null, "Failed to get access token"));
-    }
 
     console.log("file size:", fileSize);
     console.log("mimeType:", mimeType);
     console.log("accessToken:", accessToken);
 
 
-    await axios({
-        method: 'post',
-        url: 'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status,contentDetails',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json; charset=UTF-8',
-            'X-Upload-Content-Length': `${fileSize}`, // Replace with the actual size of your video file in bytes
-            'X-Upload-Content-Type': `${mimeType}` // Replace with the actual MIME type of your video file
-        },
-        data: JSON.stringify(videoMetadata)
-    })
-        .then(response => {
-            console.log('Resumable session initiated successfully!');
-            console.log('Location header (resumable session URI):', response.headers.location);
-            // You would typically save the location header value to use for the actual video upload
-        })
-        .catch(error => {
-            console.error('Error initiating resumable session:', error.response ? error.response.data : error.message);
-        });
-
-})
-
-
-
-
-
-
-const reqForChunkedUpload = async (
-    youtuberId: number,
-    videoMetadata: VideoMetadata,
-    access_token: string,
-    fileSize: number,
-    mimeType: string,
-    taskId: number,
-    editedVideoUrl: string,
-    title: string,
-    description: string,
-    tags: string[] | undefined,
-    madeForKids: boolean
-): Promise<void> => {
     try {
-        const response = await axios.post(
-            'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status,contentDetails',
-            videoMetadata,
-            {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    'X-Upload-Content-Length': fileSize,
-                    'X-Upload-Content-Type': mimeType,
-                },
-            }
-        );
+        const response = await axios({
+            method: 'post',
+            url: 'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status,contentDetails',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-Upload-Content-Length': `${fileSize}`,
+                'X-Upload-Content-Type': `${mimeType}`
+            },
+            data: videoMetadata
+        })
 
-        const uploadUrl: string | undefined = response.headers.location;
-
+        console.log('Resumable session initiated successfully!');
+        console.log('Location header (resumable session URI):', response.headers.location);
+        const uploadUrl = response.headers.location;
         if (!uploadUrl) {
-            throw new Error("Missing 'Location' header in resumable session response");
+            return res.status(500).json(new ApiResponse(null, "Failed to get upload URL"));
         }
-
         const jobData: JobData = {
             taskId,
-            youtuberId,
+            youtuberId: req.user.id,
             uploadUrl,
             mimeType,
-            accessToken: access_token,
+            accessToken: accessToken,
             chunkSize: 1024 * 1024, // 1MB
             startByte: 0,
             videoUrl: editedVideoUrl,
@@ -133,7 +125,7 @@ const reqForChunkedUpload = async (
             madeForKids,
         };
 
-        await youtubeUploadQueue.add('upload-video-task', jobData, {
+        await youtubeUploadQueue.add(YOUTUBE_UPLOAD_TYPES.VIDEO_UPLOAD, jobData, {
             attempts: 3,
             backoff: {
                 type: 'exponential',
@@ -142,43 +134,46 @@ const reqForChunkedUpload = async (
             removeOnComplete: true,
             removeOnFail: false,
         });
-    }
-    catch (err: any) {
-        if (axios.isAxiosError(err)) {
-            console.error("YouTube resumable session error:", {
-                status: err.response?.status,
-                statusText: err.response?.statusText,
-                data: err.response?.data,
-                headers: err.response?.headers,
-            });
-        } else {
-            console.error("Non-Axios error:", err);
-        }
+        console.log('Job added to queue:', jobData);
+        return res.status(200).json(new ApiResponse(null, "Resumable session initiated successfully"));
 
-        throw new Error("Failed to get upload session URL");
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(new ApiResponse(null, "Failed to initiate resumable session"));
     }
+
+})
+
+
+interface uploadThumbnailParams {
+    taskId: number,
+    videoId: string,
+    accessToken: string,
+    onComplete: () => void
 }
 
-const uploadThumbnail = asyncHandler(async (req: customRequest, res: Response) => {
-    const { videoId, accessToken, taskId } = req.body;
+const uploadThumbnail = async ({ taskId, videoId, accessToken, onComplete }: uploadThumbnailParams) => {
 
     if (!videoId || !accessToken || !taskId) {
-        return res.status(400).json({ error: 'videoId, taskId and accessToken are required' });
+        throw new Error("videoId, taskId and accessToken are required")
     }
 
-    const task = await client.task.findFirst({
-        where: {
-            id: taskId
-        }
-    });
-    if (!task || !task.thumbnail) {
-        return res.status(400).json(new ApiResponse(null, "Invalid task or no thumbnail available"));
+    const task = await client.task.findFirst({ where: { id: taskId }, select: { thumbnail: true } });
+    if (!task) {
+        throw new Error("Task not found");
     }
 
-    const thumbnailPath = DownloadImgFromCloudinaryUrl(task.thumbnail)
+    const { thumbnail } = task;
+
+    if (!thumbnail) {
+        throw new Error("Thumbnail is required")
+    }
+
+    const thumbnailPath = await DownloadImgFromCloudinaryUrl(thumbnail)
+    console.log("Thumbnail path:", thumbnailPath);
 
     if (!fs.existsSync(thumbnailPath)) {
-        return res.status(404).json({ error: 'Thumbnail image not found on server' });
+        throw new Error("Thumbnail image not found on server");
     }
 
     const imageData = fs.readFileSync(thumbnailPath);
@@ -195,33 +190,30 @@ const uploadThumbnail = asyncHandler(async (req: customRequest, res: Response) =
                     'Content-Length': fileSize
                 }
             }
-        );
-
+        )
         console.log('Thumbnail uploaded:', response.data);
-        res.status(200).json({
-            message: 'Thumbnail uploaded successfully',
-            thumbnailDetails: response.data
-        });
 
-    } catch (error) {
-        console.error('Error uploading thumbnail:', error);
-        res.status(500).json(new ApiResponse(null, "Error uploading thumbnail"));
+        onComplete();
+
     }
-})
+    catch (error) {
+        console.error('Error uploading thumbnail:', error);
+        throw new Error(`Failed to upload thumbnail: ${error}`);
+    }
+}
 
-const publishVideo = asyncHandler(async (req: customRequest, res: Response) => {
-    const {
-        accessToken,
-        videoId,
-        taskId,
-        categoryId = 22,
+interface publishVideoParams {
+    taskId: number,
+    videoId: string,
+    accessToken: string,
+    onComplete: () => void;
+}
 
-    } = req.body;
 
-    if (!accessToken || !videoId || taskId) {
-        return res.status(400).json({
-            error: 'Missing required fields: accessToken, videoId, taskId'
-        });
+const publishVideo = async ({ taskId, videoId, accessToken, onComplete }: publishVideoParams) => {
+
+    if (!accessToken || !videoId || !taskId) {
+        throw new Error('Missing required fields: accessToken, videoId, taskId');
     }
 
     const task = await client.task.findFirst({
@@ -231,9 +223,16 @@ const publishVideo = asyncHandler(async (req: customRequest, res: Response) => {
     });
 
     if (!task) {
-        return res.status(404).json(new ApiResponse(null, "Task not found"));
+        throw new Error("Task not found");
     }
     const { title, description, tags, madeForKids } = task;
+    console.log("title: ", title)
+    console.log("description:", description)
+    console.log("tags: ", tags)
+    console.log("madeForKids:", madeForKids)
+    console.log("taskId: ", taskId)
+    console.log("videoId:", videoId)
+    console.log("accessToken:", accessToken)
 
     try {
         const response = await axios.put(
@@ -244,7 +243,7 @@ const publishVideo = asyncHandler(async (req: customRequest, res: Response) => {
                     title,
                     description,
                     tags: tags || [],
-                    categoryId
+                    categoryId: 22
                 },
                 status: {
                     privacyStatus: "public",
@@ -258,17 +257,19 @@ const publishVideo = asyncHandler(async (req: customRequest, res: Response) => {
                 }
             }
         );
-
+        console.log('Video published successfully:', response.data);
         console.log(`Video "${title}" published successfully!`);
-        return res.status(200).json(new ApiResponse(response.data, "Video published successfully"));
-
+        onComplete();
     } catch (error) {
-        console.error('Failed to publish video:', error);
-        return res.status(500).json(new ApiResponse(null, "Failed to publish video"));
+        if (error instanceof AxiosError)
+            console.error('Error response:', error?.response?.data);
+        throw new Error(`Failed to publish video: ${JSON.stringify((error as AxiosError).response?.data)}`);
+
     }
-})
+}
 
 export {
+    getAccessToken,
     startSession,
     uploadThumbnail,
     publishVideo

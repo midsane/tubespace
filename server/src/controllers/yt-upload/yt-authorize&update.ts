@@ -4,15 +4,36 @@ import { ApiResponse } from '../../utils/apiresponse';
 import { client } from '../../db/connectToDb';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { youtubeConfig } from '../../config';
+import { customRequest } from '../../types/types';
 
 const clientId = youtubeConfig.clientId
 const redirectUri = youtubeConfig.redirectUri
 const client_secret = youtubeConfig.client_secret
-const scope = 'https://www.googleapis.com/auth/youtube.upload';
-const state = 'some_random_state_value';
 
+const authorize = asyncHandler(async (req: customRequest, res: Response) => {
+    if (!clientId || !redirectUri || !client_secret) {
+        return res
+            .status(500)
+            .json(new ApiResponse(null, "Google OAuth credentials are not set"));
+    }
 
-const updateMetaDataYoutube = asyncHandler(async (req: any, res: Response) => {
+    const scope = 'https://www.googleapis.com/auth/youtube.upload';
+    const state = 'kicks9';
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+        `client_id=${encodeURIComponent(clientId)}&` +
+        `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+        `response_type=code&` +
+        `prompt=consent&` +
+        `scope=${encodeURIComponent(scope)}&` +
+        `access_type=offline&` +
+        `include_granted_scopes=true&` +
+        `state=${encodeURIComponent(state)}`;
+
+    res.status(200)
+        .json(new ApiResponse(authUrl, "Authorization URL generated successfully"));
+});
+
+const updateMetaDataYoutube = asyncHandler(async (req: customRequest, res: Response) => {
     const { id } = req.user;
     const { taskId: taskid } = req.body;
     const taskId = Number(taskid);
@@ -71,24 +92,6 @@ const updateMetaDataYoutube = asyncHandler(async (req: any, res: Response) => {
     return res.status(200).json(new ApiResponse(updatedTask, "Youtube video details updated successfully"));
 })
 
-const authorize = asyncHandler(async (req: any, res: Response) => {
-    if (!clientId || !redirectUri || !client_secret) {
-        return res.status(500).json(new ApiResponse(null, "Google OAuth credentials are not set"));
-    }
-
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
-        `client_id=${encodeURIComponent(clientId)}&` +
-        `redirect_uri=${encodeURIComponent(redirectUri)}&` +
-        `response_type=code&` +
-        `scope=${encodeURIComponent(scope)}&` +
-        `access_type=offline&` +
-        `include_granted_scopes=true&` +
-        `state=${encodeURIComponent(state)}`;
-
-
-    res.status(200).json(new ApiResponse(authUrl, "Authorization URL generated successfully"));
-
-});
 
 export {
     authorize,

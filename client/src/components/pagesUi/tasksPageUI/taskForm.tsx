@@ -199,7 +199,6 @@ export const VideoTaskForm = ({ setIsCompleted, submitting, setSubmitting }: Vid
                     <label className="font-semibold">TaskTitle</label>
                     <Input {...register("taskTitle", { required: "Task title is required" })} />
                     {errors.taskTitle && <span className="text-red-500 text-sm">{errors.taskTitle.message}</span>}
-
                     <label>Work description</label>
                     <Textarea {...register("workDescription", { required: "Work description is required" })} />
                     {errors.workDescription && <span className="text-red-500 text-sm">{errors.workDescription.message}</span>}

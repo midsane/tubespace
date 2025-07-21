@@ -1,8 +1,30 @@
-export const DownloadImgFromCloudinaryUrl = (url: string): string => {
-    const cloudinaryBaseUrl = "https://res.cloudinary.com/your-cloud-name/image/upload/";
-    const publicId = url.split("/").pop()?.split(".")[0]; // Extract public ID from URL
-    if (!publicId) {
-        throw new Error("Invalid Cloudinary URL");
+import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
+import path from "path"
+import fs from "fs";
+export const DownloadImgFromCloudinaryUrl: (url: string) => Promise<string> = async (url: string) => {
+    const extension = path.extname(url)
+    const endpoint = uuidv4() + extension;
+    const rootDir = path.resolve(__dirname, "../../../")
+    const tempDir = path.join(rootDir, "public", "temp")
+
+    if (!fs.existsSync(tempDir)) {
+        fs.mkdirSync(tempDir, { recursive: true });
     }
-    return `${cloudinaryBaseUrl}${publicId}.jpg`; // Assuming the image is in JPG format
+
+
+    const filePath = path.join(tempDir, endpoint);
+
+    const writer = fs.createWriteStream(filePath);
+    const response = await axios({
+        url,
+        method: "GET",
+        responseType: "stream"
+    })
+    response.data.pipe(writer)
+
+    return new Promise((resolve, reject) => {
+        writer.on("finish", () => resolve(filePath))
+        writer.on("error", (err) => reject(err));
+    });
 }

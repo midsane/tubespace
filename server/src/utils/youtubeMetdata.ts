@@ -10,7 +10,7 @@ export const buildYouTubeMetadata = (
     title,
     description,
     tags,
-    categoryId: 22,
+    categoryId: "22",
   },
   status: {
     privacyStatus: 'private',

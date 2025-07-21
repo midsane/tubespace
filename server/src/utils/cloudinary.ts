@@ -40,7 +40,7 @@ export const getVideoFileConfigs = async (videoUrl: string): Promise<VideoFileCo
   }
   const response = await axios.head(videoUrl);
   const contentLength = response.headers['content-length'];
-  const mimeType = response.headers['content-type']
+  const mimeType = response.headers['content-type']?.split(";")[0]; 
   if (!contentLength || !mimeType) {
     throw new Error("invalid header in the video url response.");
   }
