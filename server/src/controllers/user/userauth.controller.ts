@@ -155,57 +155,63 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
     {
         const { code, role } = req.query;
 
-        const tokenRes = await axios.post("https://oauth2.googleapis.com/token", {
-            code,
-            client_id: GOOGLE_CLIENT_ID,
-            client_secret: GOOGLE_CLIENT_SECRET,
-            redirect_uri: YOUR_REDIRECT_URI,
-            grant_type: "authorization_code"
-        });
-
-        const { id_token } = tokenRes.data;
-
-        const decoded = jwt.decode(id_token);
-        console.log("decoded:", decoded)
-
-        const { email, picture } = decoded as { email: string, name: string, picture: string };
-
-        let user = await client.user.findUnique({ where: { email } });
-        if (!user) {
-            if (role.trim().toLowerCase() !== "editor" && role.trim().toLowerCase() !== "youtuber") {
-                return res.status(400).json(new ApiResponse(null, "invalid role, choose a role before signing up"));
-            }
-            user = await client.user.create({
-                data: {
-                    email,
-                    name: email,
-                    profileImgUrl: picture,
-                    Oauth: true,
-                    role: role.trim().toLowerCase() === "editor" ? "EDITOR" : "YOUTUBER"
+        try {
+            const tokenRes = await axios.post("https://oauth2.googleapis.com/token", {
+                code,
+                client_id: GOOGLE_CLIENT_ID,
+                client_secret: GOOGLE_CLIENT_SECRET,
+                redirect_uri: YOUR_REDIRECT_URI,
+                grant_type: "authorization_code"
+            });
+    
+            const { id_token } = tokenRes.data;
+    
+            const decoded = jwt.decode(id_token);
+            console.log("decoded:", decoded)
+    
+            const { email, picture } = decoded as { email: string, name: string, picture: string };
+    
+            let user = await client.user.findUnique({ where: { email } });
+            if (!user) {
+                if (role.trim().toLowerCase() !== "editor" && role.trim().toLowerCase() !== "youtuber") {
+                    return res.status(400).json(new ApiResponse(null, "invalid role, choose a role before signing up"));
                 }
+                user = await client.user.create({
+                    data: {
+                        email,
+                        name: email,
+                        profileImgUrl: picture,
+                        Oauth: true,
+                        role: role.trim().toLowerCase() === "editor" ? "EDITOR" : "YOUTUBER"
+                    }
+                })
+    
+    
+            }
+    
+            const jwtSecret = jwtSecretConfig
+            if (!jwtSecret)
+                return res.status(500).json(new ApiResponse(null, "internal server err"))
+    
+            const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, jwtSecret, { expiresIn: "2d" })
+    
+            if (!token)
+                return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
+    
+            res.cookie("token", "Bearer " + token, {
+                secure: mode !== "development",
+                httpOnly: true,
+                sameSite: mode === "development" ? "lax" : "none"
             })
-
-
+    
+            const { password: psw, salt: sl, ...filteredData } = user
+            return res.status(200).json(new ApiResponse(filteredData, "user logged in/registered successfully"))
+    
+        } catch (error) {
+            console.error("Error during OAuth process:", error);
+            return res.status(500).json(new ApiResponse(null, "internal server error during OAuth process"));
+            
         }
-
-        const jwtSecret = jwtSecretConfig
-        if (!jwtSecret)
-            return res.status(500).json(new ApiResponse(null, "internal server err"))
-
-        const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, jwtSecret, { expiresIn: "2d" })
-
-        if (!token)
-            return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
-
-        res.cookie("token", "Bearer " + token, {
-            secure: mode !== "development",
-            httpOnly: true,
-            sameSite: mode === "development" ? "lax" : "none"
-        })
-
-        const { password: psw, salt: sl, ...filteredData } = user
-        return res.status(200).json(new ApiResponse(filteredData, "user logged in/registered successfully"))
-
     }
 })
 

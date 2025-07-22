@@ -4,6 +4,7 @@ dotenv.config({ path: './.env' });
 
 export const CLIENT_URL1 = process.env.CLIENT_URL1
 export const CLIENT_URL2 = process.env.CLIENT_URL2
+export const CLIENT_URL3 = process.env.CLIENT_URL3
 
 export const RESEND_API_KEY = process.env.RESEND_API_KEY;
 export const jwtSecretConfig = process.env.JWT_SECRET;
