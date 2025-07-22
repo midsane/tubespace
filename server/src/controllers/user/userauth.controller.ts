@@ -3,7 +3,7 @@ import { ApiResponse } from "../../utils/apiresponse";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { client } from "../../db/connectToDb";
 import bcrypt from "bcrypt"
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import jwt from "jsonwebtoken"
 import { jwtSecretConfig, mode, OauthConfig } from "../../config";
 import { getOrigin } from "../../utils/getOrigin";
@@ -17,8 +17,8 @@ const GOOGLE_CLIENT_SECRET = OauthConfig.GOOGLE_CLIENT_SECRET
 
 
 const login = asyncHandler(async (req: any, res: Response) => {
-const redirect_uri = getOrigin(req) + YOUR_REDIRECT_URI;
-    console.log("redirect_uri:", redirect_uri,"\n");
+    const redirect_uri = getOrigin(req) + YOUR_REDIRECT_URI;
+    console.log("redirect_uri:", redirect_uri, "\n");
     const { email, password } = req.body;
     const userExist = await client.user.findFirst({ where: { email } });
     if (!userExist) return res.status(400).json(new ApiResponse(null, "user does not exist"));
@@ -137,12 +137,13 @@ const getOauthWindow = asyncHandler(async (req: any, res: Response) => {
         return res.status(500).json({ message: "could not load google client id" })
 
     const redirect_uri = getOrigin(req) + YOUR_REDIRECT_URI;
-    console.log("redirect_uri:", redirect_uri,"\n");
+    console.log("redirect_uri:", redirect_uri, "\n");
 
     const redirectUri = "https://accounts.google.com/o/oauth2/v2/auth";
+    console.log("redirectUri:", redirectUri, "\n");
     const params = new URLSearchParams({
         client_id: GOOGLE_CLIENT_ID,
-        redirect_uri,
+        redirect_uri: redirect_uri,
         response_type: "code",
         scope: "email profile",
         access_type: "offline",
@@ -156,6 +157,9 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
         const { code, role } = req.query;
 
         try {
+
+            console.log("code:", code, "\n");
+            console.log("role:", role, "\n");
             const tokenRes = await axios.post("https://oauth2.googleapis.com/token", {
                 code,
                 client_id: GOOGLE_CLIENT_ID,
@@ -163,14 +167,15 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
                 redirect_uri: YOUR_REDIRECT_URI,
                 grant_type: "authorization_code"
             });
-    
+
+            console.log("tokenRes:", tokenRes.data, "\n");
             const { id_token } = tokenRes.data;
-    
+
             const decoded = jwt.decode(id_token);
             console.log("decoded:", decoded)
-    
+
             const { email, picture } = decoded as { email: string, name: string, picture: string };
-    
+
             let user = await client.user.findUnique({ where: { email } });
             if (!user) {
                 if (role.trim().toLowerCase() !== "editor" && role.trim().toLowerCase() !== "youtuber") {
@@ -185,32 +190,34 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
                         role: role.trim().toLowerCase() === "editor" ? "EDITOR" : "YOUTUBER"
                     }
                 })
-    
-    
+
+
             }
-    
+
             const jwtSecret = jwtSecretConfig
             if (!jwtSecret)
                 return res.status(500).json(new ApiResponse(null, "internal server err"))
-    
+
             const token = jwt.sign({ id: user.id, name: user.name, email: user.email, role: user.role }, jwtSecret, { expiresIn: "2d" })
-    
+
             if (!token)
                 return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
-    
+
             res.cookie("token", "Bearer " + token, {
                 secure: mode !== "development",
                 httpOnly: true,
                 sameSite: mode === "development" ? "lax" : "none"
             })
-    
+
             const { password: psw, salt: sl, ...filteredData } = user
             return res.status(200).json(new ApiResponse(filteredData, "user logged in/registered successfully"))
-    
+
         } catch (error) {
-            console.error("Error during OAuth process:", error);
+            if (error instanceof AxiosError)
+                console.error("Error during OAuth process:", error.response?.data || error.message);
+            else console.error("Unexpected error during OAuth process:", error);
             return res.status(500).json(new ApiResponse(null, "internal server error during OAuth process"));
-            
+
         }
     }
 })
