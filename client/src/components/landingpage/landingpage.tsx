@@ -61,9 +61,7 @@ export const LandingPage = () => {
 
         <div className="flex flex-col gap-4 border items-center justify-center h-screen" >
             <div className="hidden md:flex h-3/4  flex-col justify-center items-center gap-10" >
-                <h1 className="scroll-m-20 text-center text-xl md:text-3xl font-extrabold tracking-tight text-balance">
-                    What are you waiting for?
-                </h1>
+                <GradientText text="What are you Waiting For?" size="medium" />
                 <GetStartedButton />
             </div>
             <Footer />
@@ -75,30 +73,30 @@ const HowToUseSections = ({ id, imgPath, title, text }: { id?: string, imgPath: 
     return (<div
         id={id && id}
         className="h-screen flex px-5 sm:px-20 justify-center items-center" >
-        <div className="flex  flex-col gap-4  items-center justify-center
+        <div className="flex md:flex-row md:max-w-full max-[340px]:max-w-[90%] max-w-[350px] flex-col gap-4  sm:items-start items-center justify-center
         h-fit
         " >
             <motion.img
-                initial={{ opacity: 0, scale: 0.7 }}
+                initial={{ opacity: 0.5, scale: 0.7 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="md:max-w-[70%] max-h-[500px] sm:max-w-[80%] rounded-2xl border " src={imgPath} />
+                className="max-[340px]:max-w-[90%] max-w-[350px] lg:max-w-[600px] rounded-2xl border " src={imgPath} />
 
             <div className="flex px-2 flex-col gap-4 justify-start items-start sm:w-[80%] md:w-[70%] h-full">
                 <div className="relative border p-1 " >
-                    <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                    <h4 className="scroll-m-20 md:text-xl font-semibold text-lg tracking-tight">
                         {title}
                     </h4>
-                    <h4 className="scroll-m-20 absolute top-1 left-1 z-10 text-xl font-semibold tracking-tight">
+                    <h4 className="scroll-m-20 absolute top-1 left-1 z-10 text-lg md:text-xl font-semibold tracking-tight">
                         {title} 
                     </h4>
                     <motion.div 
-                    whileInView={{ opacity: 1, scale: 1, originX: "left"}}
+                    whileInView={{ opacity: 1, scale: 1, originX: "left", originY: "top" }}
                     initial={{ opacity: 0, scale: 0.7 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="absolute top-0 left-0 w-full h-full bg-chart-2 rounded p-3" ></motion.div>
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    className="absolute top-0 left-0 w-full h-full bg-chart-3/70 border border-chart-4 rounded p-3" ></motion.div>
                 </div>
-                <p className="leading-7 [&:not(:first-child)]:mt-1">
+                <p className="leading-7 md:text-lg  [&:not(:first-child)]:mt-1">
                     {text}
                 </p>
             </div>

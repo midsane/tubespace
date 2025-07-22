@@ -6,7 +6,7 @@ export function GradientText({ text, size = "large" }: { size?: string, text: st
     <motion.span
       initial="initial"
       animate="animate"
-      className={`${size === "large"? "text-4xl md:text-6xl": "text-2xl"} font-bold bg-clip-text text-transparent 
+      className={`${size === "large" ? "text-4xl md:text-6xl" : size === "medium" ? "text-3xl md:text-4xl" : "text-2xl"} font-bold bg-clip-text text-transparent 
        dark:bg-gradient-to-r dark:from-orange-400 dark:via-red-500 dark:to-pink-500  
        bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 `}
     >
