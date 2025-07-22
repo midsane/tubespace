@@ -5,6 +5,7 @@ import { client } from '../../db/connectToDb';
 import { uploadToCloudinary } from '../../utils/cloudinary';
 import { youtubeConfig } from '../../config';
 import { customRequest } from '../../types/types';
+import { getOrigin } from '../../utils/getOrigin';
 
 const clientId = youtubeConfig.clientId
 const redirectUri = youtubeConfig.redirectUri
@@ -16,6 +17,8 @@ const authorize = asyncHandler(async (req: customRequest, res: Response) => {
             .status(500)
             .json(new ApiResponse(null, "Google OAuth credentials are not set"));
     }
+
+    const redirect_uri = getOrigin(req) + redirectUri;
 
     const scope = 'https://www.googleapis.com/auth/youtube';
     const state = 'kicks9';
