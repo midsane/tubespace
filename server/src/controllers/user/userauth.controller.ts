@@ -6,6 +6,7 @@ import bcrypt from "bcrypt"
 import axios from "axios";
 import jwt from "jsonwebtoken"
 import { jwtSecretConfig, mode, OauthConfig } from "../../config";
+import { getRedirectUri } from "../../utils/getOrigin";
 
 const saltRounds = 10;
 
@@ -13,7 +14,10 @@ const GOOGLE_CLIENT_ID = OauthConfig.GOOGLE_CLIENT_ID
 const YOUR_REDIRECT_URI = OauthConfig.YOUR_REDIRECT_URI;
 const GOOGLE_CLIENT_SECRET = OauthConfig.GOOGLE_CLIENT_SECRET
 
+
+
 const login = asyncHandler(async (req: any, res: Response) => {
+
     const { email, password } = req.body;
     const userExist = await client.user.findFirst({ where: { email } });
     if (!userExist) return res.status(400).json(new ApiResponse(null, "user does not exist"));
@@ -131,10 +135,14 @@ const getOauthWindow = asyncHandler(async (req: any, res: Response) => {
     if (!GOOGLE_CLIENT_ID || !YOUR_REDIRECT_URI || !GOOGLE_CLIENT_SECRET)
         return res.status(500).json({ message: "could not load google client id" })
 
+    const redirect_uri = getRedirectUri(req) + YOUR_REDIRECT_URI;
+
+
+
     const redirectUri = "https://accounts.google.com/o/oauth2/v2/auth";
     const params = new URLSearchParams({
         client_id: GOOGLE_CLIENT_ID,
-        redirect_uri: YOUR_REDIRECT_URI,
+        redirect_uri,
         response_type: "code",
         scope: "email profile",
         access_type: "offline",
