@@ -51,7 +51,7 @@ export const RightContent = () => {
 
         </div>
             :
-            <div className="flex w-full overflow-y-scroll gap-5 items-center flex-col h-[97%]" >
+            <div className="flex w-full overflow-y-scroll gap-5 items-start pr-4 flex-col h-[97%]" >
                 {data && data.length > 0 && data.map(editor => <UserCard key={editor.id} {...editor} />)}
                 {data && data.length === 0 && <div className="h-full w-full flex items-center justify-center text-gray-500" >
                     No Editors Found

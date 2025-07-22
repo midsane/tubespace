@@ -14,7 +14,7 @@ export const UserCard = ({ name, role, bio, profileImgUrl, loading = false }: us
     const truncatedBio = bio && bio.length > BIO_LENGTH ? bio.slice(0, BIO_LENGTH) + "..." : bio;
     return (<Card
         onClick={() => navigate(`/${role === UserRole.YOUTUBER ? "y" : "c"}/profile/${name}`)}
-        className="w-[90%] cursor-pointer" >
+        className="w-[100%] cursor-pointer" >
         <CardHeader>
             <div className="flex w-full gap-3 items-start">
                 {!loading && <img

@@ -2,6 +2,7 @@
 import { LoadingTitle } from "@/components/loadingUI/loadingTitle";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { socketUrl } from "@/constast";
 import { UploadSocketEvent } from "@/types/socketEventEnums";
 import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
@@ -15,7 +16,7 @@ export const CheckProgressPage = () => {
     const socketRef = useRef<Socket | null>(null)
 
     useEffect(() => {
-        const socket = io("http://localhost:3000", {
+        const socket = io(socketUrl, {
             withCredentials: true,
         })
 
@@ -44,7 +45,7 @@ export const CheckProgressPage = () => {
         socket.on(UploadSocketEvent.THUMBNAIL_UPLOADED, (data) => {
             console.log("Thumbnail uploaded:", data);
             // Handle thumbnail upload success here
-        }); 
+        });
         socket.on(UploadSocketEvent.THUMBNAIL_UPLOAD_FAILED, (error) => {
             console.error("Thumbnail upload failed:", error);
             // Handle thumbnail upload failure here
