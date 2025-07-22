@@ -136,7 +136,7 @@ const getOauthWindow = asyncHandler(async (req: any, res: Response) => {
         return res.status(500).json({ message: "could not load google client id" })
 
     const redirect_uri = getOrigin(req) + YOUR_REDIRECT_URI;
-    console.log("redirect_uri:", redirect_uri)
+    console.log("redirect_uri:", redirect_uri,"\n");
 
     const redirectUri = "https://accounts.google.com/o/oauth2/v2/auth";
     const params = new URLSearchParams({

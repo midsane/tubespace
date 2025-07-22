@@ -19,12 +19,12 @@ const authorize = asyncHandler(async (req: customRequest, res: Response) => {
     }
 
     const redirect_uri = getOrigin(req) + redirectUri;
-
+    console.log("redirect_uri:", redirect_uri, "\n");
     const scope = 'https://www.googleapis.com/auth/youtube';
     const state = 'kicks9';
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
         `client_id=${encodeURIComponent(clientId)}&` +
-        `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+        `redirect_uri=${encodeURIComponent(redirect_uri)}&` +
         `response_type=code&` +
         `prompt=consent&` +
         `scope=${encodeURIComponent(scope)}&` +
