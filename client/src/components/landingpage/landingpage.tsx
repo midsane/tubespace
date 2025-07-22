@@ -17,7 +17,7 @@ export const LandingPage = () => {
                 variant="outline"
                 className="border border-chart-4/60 py-1 px-5 bg-background/10 rounded-3xl"
             >
-                <Flame fill="red" className="text-red-400"  />
+                <Flame fill="red" className="text-red-400" />
                 <p className="text-muted-foreground  text-sm" >Tubespace.studio</p>
             </Badge>
 
@@ -47,17 +47,17 @@ export const LandingPage = () => {
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
         />
 
-        {/* <HowToUseSections
+        <HowToUseSections
             title="Get Notified When Task is Completed"
             imgPath={gif}
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
         />
 
-          <HowToUseSections
+        <HowToUseSections
             title="Preview and Publish"
             imgPath={gif}
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
-        /> */}
+        />
 
         <div className="flex flex-col gap-4 border items-center justify-center h-screen" >
             <div className="hidden md:flex h-3/4  flex-col justify-center items-center gap-10" >
@@ -85,9 +85,19 @@ const HowToUseSections = ({ id, imgPath, title, text }: { id?: string, imgPath: 
                 className="md:max-w-[70%] max-h-[500px] sm:max-w-[80%] rounded-2xl border " src={imgPath} />
 
             <div className="flex px-2 flex-col gap-4 justify-start items-start sm:w-[80%] md:w-[70%] h-full">
-                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                    {title}
-                </h4>
+                <div className="relative border p-1 " >
+                    <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                        {title}
+                    </h4>
+                    <h4 className="scroll-m-20 absolute top-1 left-1 z-10 text-xl font-semibold tracking-tight">
+                        {title} 
+                    </h4>
+                    <motion.div 
+                    whileInView={{ opacity: 1, scale: 1, originX: "left"}}
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="absolute top-0 left-0 w-full h-full bg-chart-2 rounded p-3" ></motion.div>
+                </div>
                 <p className="leading-7 [&:not(:first-child)]:mt-1">
                     {text}
                 </p>

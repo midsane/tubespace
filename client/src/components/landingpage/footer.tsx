@@ -43,7 +43,8 @@ export default function Footer() {
                     <h4 className="font-medium text-foreground">Legal</h4>
                     <ul className="space-y-2">
                         <li><Link to="/privacy" className="hover:underline">Privacy Policy</Link></li>
-                       
+                        <li><Link to="/terms-and-conditions" className="hover:underline">Terms and Conditions</Link></li>
+
                     </ul>
                 </div>
 
@@ -58,7 +59,7 @@ export default function Footer() {
                 </div>
             </div>
 
-         
+
 
         </motion.footer>
     )

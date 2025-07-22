@@ -17,7 +17,17 @@ import { WorkingPage } from './pages/staticPages/workingPage'
 import { PrivacyPolicyPage } from './pages/staticPages/privacyPolicyPage'
 import { VerifyOTPPage } from './components/pagesUi/authPage/verifyOtp'
 import { ResetPasswordPage } from './components/pagesUi/authPage/resetPassword'
+import { TNC } from './pages/staticPages/termsAndConditionsPage'
 const router = createBrowserRouter([
+
+  {
+    path: "privacy",
+    element: <PrivacyPolicyPage />
+  },
+  {
+    path: "terms-and-conditions",
+    element: <TNC />
+  },
   {
     path: "/",
     element: <RootPageLayout />,
@@ -38,10 +48,7 @@ const router = createBrowserRouter([
         path: "working",
         element: <WorkingPage />
       },
-      {
-        path: "privacy",
-        element: <PrivacyPolicyPage />
-      },
+
       {
         path: "auth",
         element: <AuthPage />,

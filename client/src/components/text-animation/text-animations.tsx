@@ -20,7 +20,7 @@ export const LandingPara = () => {
 
   const textArr = ["Upload once", "Cozy up", "Travel"]
   const [index, setIndex] = useState<number>(0);
-  const emojiArr = ["✨", "🏝️🍹🤙", "🧳✈️⛱️"]
+  const emojiArr = ["✨", "🏝️🍹", "🧳✈️⛱️"]
 
   useEffect(() => {
     const interval = setInterval(() => {
