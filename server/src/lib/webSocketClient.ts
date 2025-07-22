@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
 import { httpServer } from '../app';
 import { CLIENT_URL1, CLIENT_URL2, jwtSecretConfig } from '../config';
+import { UploadSocketEvent } from '../types/socketEventEnums';
 
 if (!CLIENT_URL1 || !CLIENT_URL2) {
   console.log("CLIENT_URL1 or CLIENT_URL2 is not set in the environment variables.");
@@ -46,14 +47,14 @@ io.use((socket, next) => {
 });
 
 
-io.on('connection', (socket) => {
+io.on(UploadSocketEvent.CONNECT, (socket) => {
   const user = (socket as any).user;
   console.log(`socketId: ${socket.id},  User connected: ${user?.email}`);
 
   if (user && user.id)
     userSocketMap.set(user.id, socket.id);
 
-  socket.on('disconnect', () => {
+  socket.on(UploadSocketEvent.DISCONNECT, () => {
     if (user && user.id)
       userSocketMap.delete(user.id);
     console.log(`socketId: ${socket.id}, User disconnected: ${user?.email}`);

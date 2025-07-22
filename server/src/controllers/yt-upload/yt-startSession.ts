@@ -15,27 +15,26 @@ import jwt from "jsonwebtoken"
 
 const getAccessToken = asyncHandler(async (req: customRequest, res: Response) => {
     const { code, taskId: taskid } = req.body;
-    const taskId = Number(taskid);
+    const 
+    taskId = Number(taskid);
     if (!code || !taskId) {
         return res.status(400).json(new ApiResponse(null, " and taskId are required"));
     }
-
     const { accessToken } = await getTokenForStartingVideoUploadSession(code, taskId);
     if (!accessToken) {
         return res.status(400).json(new ApiResponse(null, "Failed to get access token"));
     }
 
-
     const jwtSecret = jwtSecretConfig
     if (!jwtSecret)
         return res.status(500).json(new ApiResponse(null, "jwt secret not loaded/ internal server err"))
 
-    const token = jwt.sign({ accessToken }, jwtSecret, { expiresIn: "2d" })
+    const token = jwt.sign({ accessToken, id: req.user.id }, jwtSecret, { expiresIn: "2d" })
 
     if (!token)
         return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
 
-    res.cookie("accessToken", token, {
+    res.cookie("auth", "Bearer " + token, {
         secure: mode !== "development",
         httpOnly: true,
         sameSite: mode === "development" ? "lax" : "none"
@@ -45,12 +44,17 @@ const getAccessToken = asyncHandler(async (req: customRequest, res: Response) =>
 
 })
 
-
 const startSession = asyncHandler(async (req: customRequest, res: Response) => {
-    const { taskId: taskid, accessToken } = req.body;
+    const { taskId: taskid } = req.body;
+    const accessToken = req?.user?.accessToken;
+    const userId = req?.user?.id;
 
     if (!accessToken) {
-        return res.status(400).json(new ApiResponse(null, "access token required"));
+        return res.status(400).json(new ApiResponse(null, "access token not set in cookie"));
+    }
+
+    if (!userId) {
+        return res.status(400).json(new ApiResponse(null, "user ID not set in cookie"));
     }
     const taskId = Number(taskid);
 
@@ -61,6 +65,7 @@ const startSession = asyncHandler(async (req: customRequest, res: Response) => {
     const ytDetails = await client.task.findFirst({
         where: { id: taskId },
         select: {
+            youtuberId: true,
             title: true,
             description: true,
             tags: true,
@@ -71,6 +76,10 @@ const startSession = asyncHandler(async (req: customRequest, res: Response) => {
 
     if (!ytDetails) {
         return res.status(404).json(new ApiResponse(null, "YouTube details not found for this task"));
+    }
+
+    if (ytDetails.youtuberId !== userId) {
+        return res.status(404).json(new ApiResponse(null, "user not authorized to start this session"));
     }
 
     const { title, description, tags, madeForKids, editedVideoUrl } = ytDetails;
@@ -192,12 +201,14 @@ const uploadThumbnail = async ({ taskId, videoId, accessToken, onComplete }: upl
             }
         )
         console.log('Thumbnail uploaded:', response.data);
-
+        fs.unlinkSync(thumbnailPath); // Clean up the thumbnail file after upload
+        console.log('Thumbnail file deleted from server:', thumbnailPath);
         onComplete();
 
     }
     catch (error) {
         console.error('Error uploading thumbnail:', error);
+        fs.unlinkSync(thumbnailPath); // Clean up the thumbnail file even if upload fails
         throw new Error(`Failed to upload thumbnail: ${error}`);
     }
 }
@@ -232,7 +243,7 @@ const publishVideo = async ({ taskId, videoId, accessToken, onComplete }: publis
     console.log("madeForKids:", madeForKids)
     console.log("taskId: ", taskId)
     console.log("videoId:", videoId)
-    console.log("accessToken:", accessToken)
+    // console.log("accessToken:", accessToken)
 
     try {
         const response = await axios.put(

@@ -5,7 +5,7 @@ import { redisClient } from "../lib/redisClient";
 import { publishVideo, uploadThumbnail } from "../controllers/yt-upload/yt-startSession";
 import { publishVideoQueue, youtubeUploadQueue } from "../lib/bullmq";
 import { YOUTUBE_UPLOAD_TYPES } from "../types/types";
-
+import { UploadSocketEvent } from "../types/socketEventEnums";
 
 const videoUploadWorker = new Worker(YOUTUBE_UPLOAD_TYPES.VIDEO_UPLOAD, async (job) => {
     console.log(`Processing video upload job ${job.id} for taskId: ${job.data.taskId}`);
@@ -15,9 +15,9 @@ const videoUploadWorker = new Worker(YOUTUBE_UPLOAD_TYPES.VIDEO_UPLOAD, async (j
         onProgress: (percent) => {
             const socketId = userSocketMap.get(youtuberId);
             if (socketId)
-                io.to(socketId).emit('upload-progress', { taskId, youtuberId, percent });
+                io.to(socketId).emit(UploadSocketEvent.UPLOAD_PROGRESS, { taskId, youtuberId, percent });
             else
-                io.emit('upload-progress', { taskId, youtuberId, percent });
+                io.emit(UploadSocketEvent.UPLOAD_PROGRESS, { taskId, youtuberId, percent });
         }
     });
 
@@ -32,9 +32,9 @@ videoUploadWorker.on("failed", (job, err) => {
     const { youtuberId, taskId } = job?.data || {};
     const socketId = userSocketMap.get(youtuberId);
     if (socketId) {
-        io.to(socketId).emit('upload-failed', { taskId, youtuberId, error: err.message });
+        io.to(socketId).emit(UploadSocketEvent.UPLOAD_FAILED, { taskId, youtuberId, error: err.message });
     } else {
-        io.emit('upload-failed', { taskId, youtuberId, error: err.message });
+        io.emit(UploadSocketEvent.UPLOAD_FAILED, { taskId, youtuberId, error: err.message });
     }
 });
 
@@ -54,9 +54,9 @@ const thumbnailUploadWorker = new Worker(YOUTUBE_UPLOAD_TYPES.THUMBNAIL_UPLOAD, 
         onComplete: () => {
             const socketId = userSocketMap.get(job.data.youtuberId);
             if (socketId) {
-                io.to(socketId).emit('thumbnail-uploaded', { taskId, videoId: job.data.videoId });
+                io.to(socketId).emit(UploadSocketEvent.THUMBNAIL_UPLOADED, { taskId, videoId: job.data.videoId });
             } else {
-                io.emit('thumbnail-uploaded', { taskId, videoId: job.data.videoId });
+                io.emit(UploadSocketEvent.THUMBNAIL_UPLOADED, { taskId, videoId: job.data.videoId });
             }
         }
     });
@@ -83,13 +83,11 @@ thumbnailUploadWorker.on("failed", (job, err) => {
     const { youtuberId, taskId } = job?.data || {};
     const socketId = userSocketMap.get(youtuberId);
     if (socketId) {
-        io.to(socketId).emit('upload-failed', { taskId, youtuberId, error: err.message });
+        io.to(socketId).emit(UploadSocketEvent.THUMBNAIL_UPLOAD_FAILED, { taskId, youtuberId, error: err.message });
     } else {
-        io.emit('upload-failed', { taskId, youtuberId, error: err.message });
+        io.emit(UploadSocketEvent.THUMBNAIL_UPLOAD_FAILED, { taskId, youtuberId, error: err.message });
     }
 });
-
-
 
 const publishVideoWorker = new Worker(YOUTUBE_UPLOAD_TYPES.PUBLISH_VIDEO, async (job) => {
     console.log(`Processing publish-video job ${job.id} for taskId: ${job.data.taskId}`);
@@ -106,9 +104,9 @@ const publishVideoWorker = new Worker(YOUTUBE_UPLOAD_TYPES.PUBLISH_VIDEO, async 
         onComplete: () => {
             const socketId = userSocketMap.get(job.data.youtuberId);
             if (socketId) {
-                io.to(socketId).emit('publish-video', { taskId, videoId: job.data.videoId });
+                io.to(socketId).emit(UploadSocketEvent.PUBLISH_VIDEO, { taskId, videoId: job.data.videoId });
             } else {
-                io.emit('publish-video', { taskId, videoId: job.data.videoId });
+                io.emit(UploadSocketEvent.PUBLISH_VIDEO, { taskId, videoId: job.data.videoId });
             }
         }
     });
@@ -124,9 +122,9 @@ publishVideoWorker.on("failed", (job, err) => {
     const { youtuberId, taskId } = job?.data || {};
     const socketId = userSocketMap.get(youtuberId);
     if (socketId) {
-        io.to(socketId).emit('upload-failed', { taskId, youtuberId, error: err.message });
+        io.to(socketId).emit(UploadSocketEvent.PUBLISH_VIDEO_FAILED, { taskId, youtuberId, error: err.message });
     } else {
-        io.emit('upload-failed', { taskId, youtuberId, error: err.message });
+        io.emit(UploadSocketEvent.PUBLISH_VIDEO_FAILED, { taskId, youtuberId, error: err.message });
     }
 });
 

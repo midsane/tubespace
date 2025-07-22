@@ -28,6 +28,8 @@ export interface customRequest extends Request {
             name: string;
             email: string;
             role: Role;
+            accessToken?: string;
+
       }
 }
 

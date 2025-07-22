@@ -7,11 +7,11 @@ const client_secret = youtubeConfig.client_secret
 
 export const getTokenForStartingVideoUploadSession = async (Encodedcode: string, taskId: number) => {
 
-    console.log('Encoded code:', Encodedcode);
+    // console.log('Encoded code:', Encodedcode);
     if (!Encodedcode) throw new Error("Encoded code is required");
     const code = decodeURIComponent(Encodedcode);
 
-    console.log('Decoded code:', code);
+    // console.log('Decoded code:', code);
     if (!taskId) {
         throw new Error("taskId is required to get token");
     }
@@ -51,7 +51,7 @@ export const getTokenForStartingVideoUploadSession = async (Encodedcode: string,
 
         console.log('Scopes returned:', response.data.scope);
         
-        console.log('Access Token:', accessToken);
+        // console.log('Access Token:', accessToken);
         return {
             accessToken,
             refreshToken,

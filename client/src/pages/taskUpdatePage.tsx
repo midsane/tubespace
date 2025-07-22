@@ -57,7 +57,6 @@ export const TaskUpdatePage = () => {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-
     useEffect(() => {
         if (data) {
             reset({

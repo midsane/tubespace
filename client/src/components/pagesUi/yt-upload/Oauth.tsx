@@ -1,12 +1,13 @@
 import { useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { motion } from "framer-motion";
-import {  googleIcon, logo } from "@/constast";
+import {  baseUrl, googleIcon, logo } from "@/constast";
 import { LoadingTitle } from "@/components/loadingUI/loadingTitle";
 import { useUploadVideo } from "@/store/uploadVideo.store";
 import { toast } from "sonner";
 
 import { Loader2Icon } from "lucide-react";
+import axios from "axios";
 
 export function YtOAuthPage() {
     const [searchParams] = useSearchParams();
@@ -27,35 +28,34 @@ export function YtOAuthPage() {
             return;
         }
 
-        // const startVideoUploadSession = async () => {
-        //     console.log("first");
-        //     try {
-        //         const response = await axios.post(`${baseUrl}yt-upload/start-session`, {
-        //             code,
-        //             taskId
-        //         }, {
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             withCredentials: true,
-        //         });
-        //         console.log("response", response);
+        const startVideoUploadSession = async () => {
+            try {
+                const response = await axios.post(`${baseUrl}yt-upload/get-accessToken`, {
+                    code,
+                    taskId
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: true,
+                });
+                console.log("response", response);
 
-        //         if (response.status === 200) {
-        //             toast.success("Successfully started video upload session");
-        //             navigate(`/check-progress/${taskId}`);
-        //         } else {
-        //             toast.error("Failed to login/register with OAuth. Please try again.");
+                if (response.status === 200) {
+                    toast.success("Successfully authorized to start video upload session");
+                    navigate(`/check-progress/${taskId}`);
+                } else {
+                    toast.error("Failed to login/register with OAuth. Please try again.");
 
-        //         }
-        //     } catch (error) {
-        //         console.error("Error during OAuth login/register:", error);
-        //         toast.error("Failed to login/register with OAuth. Please try again.");
-        //     }
+                }
+            } catch (error) {
+                console.error("Error during OAuth login/register:", error);
+                toast.error("Failed to login/register with OAuth. Please try again.");
+            }
 
-        // }
+        }
 
-        // startVideoUploadSession();
+        startVideoUploadSession();
 
     }, [code, taskId, navigate])
 

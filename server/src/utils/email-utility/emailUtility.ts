@@ -18,13 +18,13 @@ export const sendEmail = async (email: string, otp: number) => {
   <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px 0;">
     <div style="max-width: 600px; width:90%; margin: auto; background-color: #fff; padding: 20px 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: relative;">
       <div style="position: absolute; top: 30px; right: 40px;">
-        <img src="https://tubespace.vercel.app/favicon.png" alt="Tubespace Logo" style="height: 32px;" />
+        <img src="https://tubespace.vercel.app/favicon.png" alt="Tubespace Logo" style="height: 40px;" />
       </div>
-      <h2 style="color: #111; margin-bottom: 20px;">Verify it’s you</h2>
+      <h2 style="color: #111; margin-bottom: 10px;">Verify it’s you</h2>
       <p style="font-size: 16px; color: #333; line-height: 1.6;">
         There’s one quick step you need to complete to verify your identity.
       </p>
-      <p style="margin: 20px 0 10px 0; font-size: 16px;">
+      <p style="margin: 10px 0 10px 0; font-size: 16px;">
         Please enter this verification code when prompted:
       </p>
       <p style="font-size: 32px; font-weight: bold; letter-spacing: 2px; color: #007BFF; margin: 10px 0;">${otp}</p>
