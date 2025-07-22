@@ -6,6 +6,7 @@ export const getOrigin = (req: customRequest) => {
 
 export const getRedirectUri = (req: customRequest) => {
     const origin = getOrigin(req);
+    console.log("Origin:", origin);
     const redirectUri = new URL(origin);
     redirectUri.pathname = req.baseUrl + req.path;
     return redirectUri.toString();
