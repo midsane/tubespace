@@ -17,7 +17,8 @@ const GOOGLE_CLIENT_SECRET = OauthConfig.GOOGLE_CLIENT_SECRET
 
 
 const login = asyncHandler(async (req: any, res: Response) => {
-
+const redirect_uri = getOrigin(req) + YOUR_REDIRECT_URI;
+    console.log("redirect_uri:", redirect_uri,"\n");
     const { email, password } = req.body;
     const userExist = await client.user.findFirst({ where: { email } });
     if (!userExist) return res.status(400).json(new ApiResponse(null, "user does not exist"));
