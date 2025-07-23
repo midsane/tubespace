@@ -1,22 +1,21 @@
 {
-    "redirects": [
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
         {
-            "source": "/(.*)",
-            "has": [
-                {
-                    "type": "host",
-                    "value": "tubespace.vercel.app"
-                }
-            ],
-            "destination": "https://tubespace.studio/$1",
-            "permanent": true
+          "type": "host",
+          "value": "tubespace.vercel.app"
         }
-    ],
-    "routes": [
-        {
-            "src": "/[^.]+",
-            "dest": "/",
-            "status": 200
-        }
-    ]
+      ],
+      "destination": "https://tubespace.studio/$1",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
 }
