@@ -1,5 +1,6 @@
 import { Rating_val, Role } from "@prisma/client";
 import { Request } from "express";
+import { type Socket } from "socket.io";
 
 export interface TopEditorsData {
       name: string;
@@ -33,6 +34,15 @@ export interface customRequest extends Request {
       }
 }
 
+
+export interface customSocket extends Socket {
+      user?: {
+            id: number;
+            name: string;
+            email: string;
+            role: Role;
+      }
+}
 
 export interface VideoMetadata {
       snippet: {

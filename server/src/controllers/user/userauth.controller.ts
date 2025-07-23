@@ -165,11 +165,10 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
                 grant_type: "authorization_code"
             });
 
-            console.log("tokenRes:", tokenRes.data, "\n");
             const { id_token } = tokenRes.data;
 
             const decoded = jwt.decode(id_token);
-            console.log("decoded:", decoded)
+          
 
             const { email, picture } = decoded as { email: string, name: string, picture: string };
 

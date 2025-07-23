@@ -3,6 +3,7 @@ import { PORT } from "./config";
 import { youtubeUploadQueue, thumbnailUploadQueue, publishVideoQueue } from "./lib/bullmq";
 import "./lib/redisClient"
 import "./lib/webSocketClient";
+import "./realTime-chat/socket";
 import "./upload-worker/uploadWorker"
 const port = PORT
 
