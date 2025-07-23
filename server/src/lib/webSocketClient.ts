@@ -36,6 +36,8 @@ io.use((socket, next) => {
       return next()
     }
 
+    console.log("token:", token);
+
     const payload = jwt.verify(token, jwtSecretConfig);
     (socket as any).user = payload;
 

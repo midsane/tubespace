@@ -11,7 +11,8 @@ if (!CLIENT_URL1 || !CLIENT_URL2 || !CLIENT_URL3) {
     throw new Error("CLIENT_URL1 or CLIENT_URL2 or CLIENT_URL3 is not set in the environment variables.");
 }
 
-const userChatSocketMap = new Map<string, string>();
+const getSocketFromEmailMap = new Map<string, string>();// get 
+const getEmailFromSocketMap = new Map<string, string>();//get email from socket id
 
 const io = new Server(httpServer, {
     cors: {
@@ -37,7 +38,8 @@ io.use((socket: customSocket, next) => {
     }
 
     socket.user = decoded as typeof socket.user;
-    userChatSocketMap.set(socket.user?.email as string, socket.id);
+    getSocketFromEmailMap.set(socket.user?.email as string, socket.id);
+    getEmailFromSocketMap.set(socket.id, socket.user?.email as string);
     next();
 });
 
@@ -52,3 +54,10 @@ io.on(ChatSocketEvents.CONNECT_ERROR, (error) => {
 io.on(ChatSocketEvents.DISCONNECT, (socket) => {
     console.log("A user disconnected:", socket.id);
 });
+
+io.on(ChatSocketEvents.MESSAGE_RECEIVED, (socket, data) => {
+    console.log("Message received from socket", socket.id);
+    console.log("Message received from email", getEmailFromSocketMap.get(socket.id));
+    console.log("Message received:", data);
+
+})
