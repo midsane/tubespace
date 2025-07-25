@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion";
 import { baseUrl, logo } from "@/constast";
 import { LoadingTitle } from "@/components/loadingUI/loadingTitle";
@@ -10,19 +10,11 @@ import { Loader2Icon } from "lucide-react";
 import axios from "axios";
 
 export function YTStartUploadSession() {
-    const [searchParams] = useSearchParams();
-    const code = searchParams.get('code');
     const taskId = useUploadVideo((state) => state.taskId);
     const navigate = useNavigate()
-    console.log("code", code);
-    console.log("taskId", taskId);
 
     useEffect(() => {
 
-        if (!code) {
-            toast.error("no code was provided");
-            return;
-        }
         if (!taskId) {
             toast.error("no taskId was provided");
             return;
@@ -30,7 +22,6 @@ export function YTStartUploadSession() {
         const startVideoUploadSession = async () => {
             try {
                 const response = await axios.post(`${baseUrl}yt-upload/start-session`, {
-                    code,
                     taskId
                 }, {
                     headers: {
@@ -56,7 +47,7 @@ export function YTStartUploadSession() {
 
         startVideoUploadSession()
 
-    }, [code, taskId, navigate])
+    }, [taskId, navigate])
 
     return (
         <div className="h-dvh w-full bg mix-blend-hard bg-background
@@ -80,7 +71,6 @@ export function YTStartUploadSession() {
                 <div className="flex flex-col w-screen px-5 justify-center text-center items-center gap-5" >
                     Starting your Video upload Session... <Loader2Icon className="animate-spin repeat-infinite" />
                     <LoadingTitle />
-
                 </div>
 
             </div>
