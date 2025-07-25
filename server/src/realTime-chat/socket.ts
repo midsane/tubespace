@@ -5,14 +5,13 @@ import { ChatSocketEvents } from "../types/socketEventEnums";
 import jwt from "jsonwebtoken";
 import { customSocket } from "../types/types";
 
-
 if (!CLIENT_URL1 || !CLIENT_URL2 || !CLIENT_URL3) {
     console.log("CLIENT_URL1 or CLIENT_URL2 or CLIENT_URL3 is not set in the environment variables.");
     throw new Error("CLIENT_URL1 or CLIENT_URL2 or CLIENT_URL3 is not set in the environment variables.");
 }
 
-const getSocketFromEmailMap = new Map<string, string>();// get 
-const getEmailFromSocketMap = new Map<string, string>();//get email from socket id
+const getSocketFromEmailMap = new Map<string, string>();
+const getEmailFromSocketMap = new Map<string, string>();
 
 const io = new Server(httpServer, {
     cors: {

@@ -20,6 +20,7 @@ export const io = new Server(httpServer, {
 export const userSocketMap = new Map<string, string>();
 
 io.use((socket, next) => {
+  console.log("inside socket middleware")
   try {
     const rawCookie = socket.handshake.headers.cookie;
     if (!rawCookie) {
