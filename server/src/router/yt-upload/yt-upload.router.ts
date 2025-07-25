@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { authMiddleware } from '../../middleware/authMiddleware'
+import { authMiddleware, socketAuthMiddleware } from '../../middleware/authMiddleware'
 
 import { upload } from '../../middleware/multer'
 import { authorize, updateMetaDataYoutube } from '../../controllers/yt-upload/yt-authorize&update'
@@ -13,6 +13,6 @@ router.use(authMiddleware)
 router.patch('/update-meta-data', upload.single("thumbnail"), updateMetaDataYoutube)
 router.get('/authorize', authorize)
 router.post('/get-accessToken', getAccessToken)
-router.post('/start-session', authMiddleware, startSession)
+router.post('/start-session', socketAuthMiddleware, startSession)
 
 export { router }

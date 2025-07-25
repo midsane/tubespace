@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import axios, { AxiosError } from 'axios';
 import fs from 'fs';
+import FormData from 'form-data';
 import { client } from '../../db/connectToDb';
 import { ApiResponse } from '../../utils/apiresponse';
 import { asyncHandler } from '../../utils/asyncHandler';
@@ -15,8 +16,8 @@ import jwt from "jsonwebtoken"
 
 const getAccessToken = asyncHandler(async (req: customRequest, res: Response) => {
     const { code, taskId: taskid } = req.body;
-    const 
-    taskId = Number(taskid);
+    const
+        taskId = Number(taskid);
     if (!code || !taskId) {
         return res.status(400).json(new ApiResponse(null, " and taskId are required"));
     }
@@ -62,7 +63,7 @@ const startSession = asyncHandler(async (req: customRequest, res: Response) => {
         return res.status(400).json(new ApiResponse(null, "taskId is required"));
     }
 
-    
+
     const ytDetails = await client.task.findFirst({
         where: { id: taskId },
         select: {
@@ -186,19 +187,20 @@ const uploadThumbnail = async ({ taskId, videoId, accessToken, onComplete }: upl
         throw new Error("Thumbnail image not found on server");
     }
 
-    const imageData = fs.readFileSync(thumbnailPath);
-    const fileSize = fs.statSync(thumbnailPath).size;
+    const form = new FormData();
+    form.append('media', fs.createReadStream(thumbnailPath));
 
     try {
+
+
         const response = await axios.post(
             `https://www.googleapis.com/upload/youtube/v3/thumbnails/set?videoId=${videoId}`,
-            imageData,
+            form,
             {
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'image/jpeg',
-                    'Content-Length': fileSize
-                }
+                    ...form.getHeaders(),
+                    Authorization: `Bearer ${accessToken}`,
+                },
             }
         )
         console.log('Thumbnail uploaded:', response.data);
@@ -208,7 +210,8 @@ const uploadThumbnail = async ({ taskId, videoId, accessToken, onComplete }: upl
 
     }
     catch (error) {
-        console.error('Error uploading thumbnail:', error);
+        if (error instanceof AxiosError) console.error("error: ", error?.response?.data);
+        else console.error("err:", error);
         fs.unlinkSync(thumbnailPath); // Clean up the thumbnail file even if upload fails
         throw new Error(`Failed to upload thumbnail: ${error}`);
     }

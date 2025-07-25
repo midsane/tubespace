@@ -7,7 +7,7 @@ export function TNC() {
 
     return (
         <div className="w-full mix-blend-hard bg-background bg-[radial-gradient(circle_at_center,theme(colors.chart-bg)_10%,transparent_80%)]">
-            <div className="container relative mx-auto max-w-3xl py-10">
+            <div className="container relative mx-auto max-w-[90%] md:max-w-2xl py-10">
                 <div className="space-y-2">
                     <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Terms and Conditions</h1>
                     <p className="text-muted-foreground">Last updated: {lastUpdated}</p>
