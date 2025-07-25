@@ -62,6 +62,7 @@ const startSession = asyncHandler(async (req: customRequest, res: Response) => {
         return res.status(400).json(new ApiResponse(null, "taskId is required"));
     }
 
+    
     const ytDetails = await client.task.findFirst({
         where: { id: taskId },
         select: {

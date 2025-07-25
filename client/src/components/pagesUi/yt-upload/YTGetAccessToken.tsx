@@ -1,15 +1,15 @@
 import { useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { motion } from "framer-motion";
-import { baseUrl, googleIcon, logo } from "@/constast";
-import { LoadingTitle } from "@/components/loadingUI/loadingTitle";
+import { baseUrl, logo } from "@/constast";
 import { useUploadVideo } from "@/store/uploadVideo.store";
 import { toast } from "sonner";
 
 import { Loader2Icon } from "lucide-react";
 import axios from "axios";
 
-export function YtOAuthPage() {
+
+export function YTGetAccessToken() {
     const [searchParams] = useSearchParams();
     const code = searchParams.get('code');
     const taskId = useUploadVideo((state) => state.taskId);
@@ -54,38 +54,7 @@ export function YtOAuthPage() {
 
         }
 
-        const startVideoUploadSession = async () => {
-            try {
-                const response = await axios.post(`${baseUrl}yt-upload/start-session`, {
-                    code,
-                    taskId
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    withCredentials: true,
-                });
-                console.log("response", response);
-
-                if (response.status === 200) {
-                    toast.success("Successfully authorized to start video upload session");
-                    navigate(`/check-progress/${taskId}`);
-                } else {
-                    toast.error("Failed to start upload video session");
-
-                }
-            } catch (error) {
-                console.error("Error during OAuth login/register:", error);
-                toast.error("Failed to start upload video session");
-            }
-
-        }
-
-        const fnc = async () => {
-            await getAccessToken();
-            await startVideoUploadSession();
-        }
-        fnc();
+        getAccessToken()
 
     }, [code, taskId, navigate])
 
@@ -109,8 +78,9 @@ export function YtOAuthPage() {
                         className="text-4xl font-bold text-balance">TubeSpace</motion.h1>
                 </div>
                 <div className="flex flex-col w-screen px-5 justify-center text-center items-center gap-5" >
-                    Starting an upload session for your youtube video using google Oauth... <Loader2Icon className="animate-spin repeat-infinite" /> <img className="shadow-border w-10 shadow-2xl" src={googleIcon} />
-                    <LoadingTitle />
+                    
+                    Authorizing you to start uploading your video... <Loader2Icon className="animate-spin repeat-infinite" />
+                 
 
                 </div>
 

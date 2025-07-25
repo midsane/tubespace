@@ -10,7 +10,7 @@ import { LandingPage } from './components/landingpage/landingpage'
 import { VideoPreviewPage } from './pages/videoPreviewPage'
 import { OAuthPage } from './components/pagesUi/authPage/OAuthPage'
 import { TaskUpdatePage } from './pages/taskUpdatePage'
-import { YtOAuthPage } from './components/pagesUi/yt-upload/Oauth'
+import { YTGetAccessToken } from './components/pagesUi/yt-upload/YTGetAccessToken'
 import { CheckProgressPage } from './pages/checkProgressPage'
 import { PricingPage } from './pages/staticPages/pricingPage'
 import { WorkingPage } from './pages/staticPages/workingPage'
@@ -18,6 +18,7 @@ import { PrivacyPolicyPage } from './pages/staticPages/privacyPolicyPage'
 import { VerifyOTPPage } from './components/pagesUi/authPage/verifyOtp'
 import { ResetPasswordPage } from './components/pagesUi/authPage/resetPassword'
 import { TNC } from './pages/staticPages/termsAndConditionsPage'
+import { YTStartUploadSession } from './components/pagesUi/yt-upload/StartUploadSession'
 const router = createBrowserRouter([
 
   {
@@ -67,7 +68,11 @@ const router = createBrowserRouter([
       },
       {
         path: "yt-upload",
-        element: <YtOAuthPage />
+        element: <YTGetAccessToken />
+      },
+      {
+        path: "yt-startUpload",
+        element: <YTStartUploadSession />
       },
       {
         path: "video-preview/:taskId",
