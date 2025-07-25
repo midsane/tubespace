@@ -43,6 +43,7 @@ export function YTGetAccessToken() {
 
                 if (response.status === 200) {
                     toast.success("Successfully authorized to start video upload session");
+                    navigate("/yt-startUpload")
                 } else {
                     toast.error("Failed to login/register with OAuth. Please try again.");
 

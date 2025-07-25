@@ -67,7 +67,7 @@ const router = createBrowserRouter([
         element: <OAuthPage />
       },
       {
-        path: "yt-upload",
+        path: "authorize-youtube-upload",
         element: <YTGetAccessToken />
       },
       {
