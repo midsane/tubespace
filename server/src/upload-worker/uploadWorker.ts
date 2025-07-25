@@ -3,7 +3,7 @@ import { uploadChunkedVideoToYouTube } from "../controllers/yt-upload/chunk-uplo
 import { io, userSocketMap } from "../lib/webSocketClient";
 import { redisClient } from "../lib/redisClient";
 import { publishVideo, uploadThumbnail } from "../controllers/yt-upload/yt-startSession";
-import { publishVideoQueue, youtubeUploadQueue } from "../lib/bullmq";
+import { publishVideoQueue } from "../lib/bullmq";
 import { YOUTUBE_UPLOAD_TYPES } from "../types/types";
 import { UploadSocketEvent } from "../types/socketEventEnums";
 

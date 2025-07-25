@@ -22,14 +22,25 @@ export const userSocketMap = new Map<string, string>();
 io.use((socket, next) => {
   console.log("\n\n\nInside socket middleware")
   try {
+    const socketToken = socket.handshake.auth.token
     const rawCookie = socket.handshake.headers.cookie;
     console.log("raw cookie: ", rawCookie);
-    if (!rawCookie) {
+    if (!rawCookie || !socketToken) {
       return next()
     }
 
-    const parsed = cookie.parse(rawCookie);
-    const token = parsed['socketAuth']?.split(' ')[1];
+    let token = null;
+    if (!rawCookie) {
+      const parsed = cookie.parse(rawCookie);
+      token = parsed['socketAuth']?.split(' ')[1];
+    }
+    else {
+      token = socketToken
+    }
+
+    if (!token) {
+      return next()
+    }
 
     if (!jwtSecretConfig) {
       return next();
@@ -38,6 +49,8 @@ io.use((socket, next) => {
       return next()
     }
 
+
+    console.log("here randi")
     console.log("SocketAuth:", token);
 
     const payload = jwt.verify(token, jwtSecretConfig);
@@ -52,8 +65,10 @@ io.use((socket, next) => {
 
 
 io.on(UploadSocketEvent.CONNECT, (socket) => {
+
   const user = (socket as any).user;
-  console.log(`socketId: ${socket.id},  User connected: ${user?.email}`);
+  console.log("user: ", user);
+  console.log(`socketId: ${socket.id},  Userid connected: ${user?.id}`);
 
   if (user && user.id)
     userSocketMap.set(user.id, socket.id);
@@ -61,6 +76,6 @@ io.on(UploadSocketEvent.CONNECT, (socket) => {
   socket.on(UploadSocketEvent.DISCONNECT, () => {
     if (user && user.id)
       userSocketMap.delete(user.id);
-    console.log(`socketId: ${socket.id}, User disconnected: ${user?.email}`);
+    console.log(`socketId: ${socket.id}, Userid disconnected: ${user?.id}`);
   });
 });

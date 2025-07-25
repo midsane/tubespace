@@ -16,8 +16,15 @@ export const CheckProgressPage = () => {
     const socketRef = useRef<Socket | null>(null)
 
     useEffect(() => {
+        const token = localStorage.getItem("socketToken");
+
         const socket = io(socketUrl, {
             withCredentials: true,
+            auth: (cb) => {
+                cb({
+                    token
+                });
+            }
         })
 
         socketRef.current = socket;
