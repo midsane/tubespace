@@ -13,6 +13,5 @@ router.use(authMiddleware)
 router.patch('/update-meta-data', upload.single("thumbnail"), updateMetaDataYoutube)
 router.get('/authorize', authorize)
 router.post('/get-accessToken', getAccessToken)
-router.post('/start-session', authMiddleware, startSession)
 
 export { router }

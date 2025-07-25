@@ -34,7 +34,7 @@ const getAccessToken = asyncHandler(async (req: customRequest, res: Response) =>
     if (!token)
         return res.status(500).json(new ApiResponse(null, "internal server err, couldn't sign token"))
 
-    res.cookie("auth", "Bearer " + token, {
+    res.cookie("socketAuth", "Bearer " + token, {
         secure: mode !== "development",
         httpOnly: true,
         sameSite: mode === "development" ? "lax" : "none"

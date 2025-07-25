@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import { httpServer } from '../app';
 import { CLIENT_URL1, CLIENT_URL2, jwtSecretConfig } from '../config';
 import { UploadSocketEvent } from '../types/socketEventEnums';
@@ -20,15 +20,16 @@ export const io = new Server(httpServer, {
 export const userSocketMap = new Map<string, string>();
 
 io.use((socket, next) => {
-  console.log("inside socket middleware")
+  console.log("\n\n\nInside socket middleware")
   try {
     const rawCookie = socket.handshake.headers.cookie;
+    console.log("raw cookie: ", rawCookie);
     if (!rawCookie) {
       return next()
     }
 
     const parsed = cookie.parse(rawCookie);
-    const token = parsed['token']?.split(' ')[1];
+    const token = parsed['socketAuth']?.split(' ')[1];
 
     if (!jwtSecretConfig) {
       return next();
@@ -37,7 +38,7 @@ io.use((socket, next) => {
       return next()
     }
 
-    console.log("token:", token);
+    console.log("SocketAuth:", token);
 
     const payload = jwt.verify(token, jwtSecretConfig);
     (socket as any).user = payload;

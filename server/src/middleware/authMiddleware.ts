@@ -5,7 +5,10 @@ import jwt from "jsonwebtoken"
 import { jwtSecretConfig } from "../config";
 
 export const authMiddleware = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
+
+    console.log("\n\n\n Inside Auth middleware");
     const token = req.cookies.token?.split(" ")[1];
+    console.log("token: ", token)
     if (!token)
         return res.status(403).json(new ApiResponse(null, "user not authenticated"))
 
@@ -16,3 +19,4 @@ export const authMiddleware = asyncHandler(async (req: any, res: Response, next:
     req.user = decoded;
     next();
 })
+
