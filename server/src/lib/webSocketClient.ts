@@ -30,8 +30,10 @@ io.use((socket, next) => {
     }
 
     let token = null;
-    if (!rawCookie) {
+    if (rawCookie) {
+
       const parsed = cookie.parse(rawCookie);
+      console.log("parsed token:", parsed['socketAuth']);
       token = parsed['socketAuth']?.split(' ')[1];
     }
     else {
@@ -51,7 +53,9 @@ io.use((socket, next) => {
 
 
     console.log("here randi")
-    console.log("SocketAuth:", token);
+    console.log("\n\nSocketAuth:", token);
+
+
 
     const payload = jwt.verify(token, jwtSecretConfig);
     (socket as any).user = payload;

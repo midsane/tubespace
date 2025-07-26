@@ -13,7 +13,9 @@ const videoUploadWorker = new Worker(YOUTUBE_UPLOAD_TYPES.VIDEO_UPLOAD, async (j
     await uploadChunkedVideoToYouTube({
         ...job.data,
         onProgress: (percent) => {
+            console.log("youtuberId:", youtuberId)
             const socketId = userSocketMap.get(youtuberId);
+            console.log("socketid:", socketId)
             if (socketId)
                 io.to(socketId).emit(UploadSocketEvent.UPLOAD_PROGRESS, { taskId, youtuberId, percent });
             else
