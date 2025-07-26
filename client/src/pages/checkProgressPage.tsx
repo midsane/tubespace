@@ -121,7 +121,7 @@ export const CheckProgressPage = () => {
 
                 {error ? <div className="flex flex-col items-center gap-2">
 
-                    <Link to={"/video-preview"}>
+                    <Link to={"/video-preview/" + taskId}>
                         <Button>Go Back To Video Preview Page</Button>
                     </Link>
 

@@ -25,7 +25,7 @@ io.use((socket, next) => {
     const socketToken = socket.handshake.auth.token
     const rawCookie = socket.handshake.headers.cookie;
     console.log("raw cookie: ", rawCookie);
-    if (!rawCookie || !socketToken) {
+    if (!rawCookie && !socketToken) {
       return next()
     }
 
@@ -33,8 +33,9 @@ io.use((socket, next) => {
     if (rawCookie) {
 
       const parsed = cookie.parse(rawCookie);
-      console.log("parsed token:", parsed['socketAuth']);
-      token = parsed['socketAuth']?.split(' ')[1];
+      const socketAuth = decodeURIComponent(parsed['socketAuth'] || '');
+      console.log("socketAuth:", socketAuth)
+      token = socketAuth.split(' ')[1];
     }
     else {
       token = socketToken
