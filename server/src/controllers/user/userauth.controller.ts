@@ -128,6 +128,12 @@ const logout = asyncHandler(async (req: any, res: Response) => {
         httpOnly: true,
         sameSite: mode === "development" ? "lax" : "none"
     });
+
+    res.clearCookie("socketAuth", {
+        secure: mode !== "development",
+        httpOnly: true,
+        sameSite: mode === "development" ? "lax" : "none"
+    });
     res.status(200).json(new ApiResponse(null, "user logged out successfully!"));
 })
 
@@ -168,7 +174,7 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
             const { id_token } = tokenRes.data;
 
             const decoded = jwt.decode(id_token);
-          
+
 
             const { email, picture } = decoded as { email: string, name: string, picture: string };
 
