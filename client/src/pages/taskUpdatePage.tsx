@@ -195,10 +195,10 @@ export const TaskUpdatePage = () => {
                 )} />
 
                 <label className="font-semibold">Upload Thumbnail</label>
-                <p>Make your thumbnail 1280 by 720 pixels (16:9 ratio)
+                <p className="text-muted-foreground text-sm" >Make your thumbnail 1280 by 720 pixels (16:9 ratio)
                     Ensure that your thumbnail is less than 2MB
                     Use a JPG, PNG, or GIF file format
-                    Make sure your thumbnail follows YOUTUBE <a href="https://www.youtube.com/howyoutubeworks/our-policies/" >Community Guidelines</a></p>
+                    Make sure your thumbnail follows YOUTUBE <a target="_blank"  href="https://www.youtube.com/howyoutubeworks/our-policies/" >Community Guidelines</a></p>
                 <Input
                     type="file"
                     accept="image/*"

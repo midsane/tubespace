@@ -6,19 +6,18 @@ import { Progress } from "@/components/ui/progress";
 import { socketUrl } from "@/constast";
 import { UploadSocketEvent } from "@/types/socketEventEnums";
 import { YTUploadStages } from "@/types/types";
-import { LoaderIcon } from "lucide-react";
+import { LoaderIcon, PartyPopper, YoutubeIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import { toast } from "sonner";
-
-
+import AnimatedNumberCounter from "@/components/ui/animated-number-random"
 
 export const CheckProgressPage = () => {
     const { taskId } = useParams();
     const [progres, setProgress] = useState(0);
     const [videoUploadStage, setVideoUploadStage] = useState(YTUploadStages.VIDEO_UPLOAD);
-
+    const videoIdRef = useRef<string | null>(null);
     const numericTaskId = taskId ? Number(taskId) : undefined;
     console.log("CheckProgressPage taskId:", numericTaskId);
     const socketRef = useRef<Socket | null>(null)
@@ -33,7 +32,6 @@ export const CheckProgressPage = () => {
                 });
             }
         })
-
         socketRef.current = socket;
 
         socket.on(UploadSocketEvent.CONNECT, () => {
@@ -46,7 +44,7 @@ export const CheckProgressPage = () => {
 
         socket.on(UploadSocketEvent.UPLOAD_PROGRESS, (data) => {
             console.log("Upload progress:", data);
-            setProgress(data.progres);
+            setProgress(data.percent);
         });
         socket.on(UploadSocketEvent.UPLOAD_COMPLETE, (data) => {
             console.log("Upload complete:", data);
@@ -72,6 +70,7 @@ export const CheckProgressPage = () => {
 
         socket.on(UploadSocketEvent.PUBLISH_VIDEO, (data) => {
             console.log("Video published:", data);
+            videoIdRef.current = data.videoId;
             toast.success("video published successfully");
             setVideoUploadStage(YTUploadStages.SUCCESSFULL);
         });
@@ -118,7 +117,7 @@ export const CheckProgressPage = () => {
             <CardContent className="flex flex-col items-center justify-center gap-4">
                 <h1 className="text-2xl font-bold">{error ? "An Error Occured!" : "Check Progress"}</h1>
                 <p className="text-lg text-center opacity-80">{error ? error : displayPara}</p>
-                {!error && <p className="text-sm text-center text-muted opacity-80">{displayMuted}</p>}
+                {!error && <p className="text-sm text-center text-muted-foreground opacity-80">{displayMuted}</p>}
 
                 {error ? <div className="flex flex-col items-center gap-2">
 
@@ -137,9 +136,17 @@ export const CheckProgressPage = () => {
                         <LoadingTitle />
 
                         <Progress value={progres} />
-                        <p className="text-left w-full text-sm opacity-70" >{"12% completed "}</p>
+                        <p className="text-left w-full text-sm opacity-70" >
+                            <AnimatedNumberCounter value={progres} />
+                        </p>
                     </div> :
-                        <LoaderIcon className="animate-spin repeat-infinite" />}
+                        videoUploadStage !== YTUploadStages.SUCCESSFULL ? <LoaderIcon className="animate-spin repeat-infinite" /> :
+                            <PartyPopper className="w-10 h-10 text-green-500 animate-bounce" />
+                    }
+                    {videoUploadStage === YTUploadStages.SUCCESSFULL &&
+                        <a target="_blank" href={`https://www.youtube.com/watch?v=${videoIdRef.current}`} >
+                            <Button className="mt-4">Go Checkout the Video on Youtube <YoutubeIcon /> </Button>
+                        </a>}
                 </>}
             </CardContent>
         </Card>

@@ -7,7 +7,24 @@ import { Flame } from "lucide-react";
 import { GetStartedButton } from "./getStartedButton";
 import { logo } from "@/constast";
 import { GradientText, LandingPara } from "../text-animation/text-animations";
+import AnimatedNumberCounter from "@/components/ui/animated-number-random"
+import { useEffect, useState } from "react";
 export const LandingPage = () => {
+
+    const [progress, setProgress] = useState(0);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setProgress((prev) => {
+                if (prev >= 100) {
+                    clearInterval(interval);
+                    return 100;
+                }
+                return prev + 30; // Increment by 5% every second
+            });
+        }, 1000); // Update every second
+
+        return () => clearInterval(interval); // Cleanup on unmount
+    }, [])
 
     return (<div className="flex overflow-hidden w-full flex-col bg mix-blend-hard bg-background
         bg-[radial-gradient(circle_at_center,theme(colors.chart-bg)_20%,transparent_90%)]">
@@ -39,6 +56,8 @@ export const LandingPage = () => {
             <LandingPara />
             <GetStartedButton />
         </div>
+
+        <AnimatedNumberCounter value={progress} />
 
         <HowToUseSections
             id="features"
@@ -88,13 +107,13 @@ const HowToUseSections = ({ id, imgPath, title, text }: { id?: string, imgPath: 
                         {title}
                     </h4>
                     <h4 className="scroll-m-20 absolute top-1 left-1 z-10 text-lg md:text-xl font-semibold tracking-tight">
-                        {title} 
+                        {title}
                     </h4>
-                    <motion.div 
-                    whileInView={{ opacity: 1, scale: 1, originX: "left", originY: "top" }}
-                    initial={{ opacity: 0, scale: 0.7 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                    className="absolute top-0 left-0 w-full h-full bg-chart-3/70 border border-chart-4 rounded p-3" ></motion.div>
+                    <motion.div
+                        whileInView={{ opacity: 1, scale: 1, originX: "left", originY: "top" }}
+                        initial={{ opacity: 0, scale: 0.7 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className="absolute top-0 left-0 w-full h-full bg-chart-3/70 border border-chart-4 rounded p-3" ></motion.div>
                 </div>
                 <p className="leading-7 md:text-lg  [&:not(:first-child)]:mt-1">
                     {text}

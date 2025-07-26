@@ -115,6 +115,7 @@ const publishVideoWorker = new Worker(YOUTUBE_UPLOAD_TYPES.PUBLISH_VIDEO, async 
 
 publishVideoWorker.on("completed", (job) => {
     console.log(`Job ${job.id} completed successfully`);
+
 });
 
 publishVideoWorker.on("failed", (job, err) => {
