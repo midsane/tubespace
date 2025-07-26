@@ -20,7 +20,7 @@ export function CreateTaskSheet({ type = 1, TriggerJsx = <><FilePlus /> Create T
             open={submitting && !completed ? true : undefined} >
             <SheetTrigger asChild>
                 <Button className={`text-chart-3 ${type === 2 && "w-fit h-fit p-0"}`}
-                    variant={type === 1 ? "outline" : "ghost"}  disabled={submitting} size="sm">
+                    variant={type === 1 ? "outline" : "ghost"} disabled={submitting} size="sm">
                     {TriggerJsx}
                 </Button>
             </SheetTrigger>

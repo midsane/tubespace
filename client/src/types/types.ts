@@ -15,6 +15,14 @@ export interface profileDataType extends AuthDataType {
     tasksCompleted?: number,
 }
 
+export enum YTUploadStages {
+    VIDEO_UPLOAD,
+    THUMBNAIL_UPLOAD,
+    PUBLISH_VIDEO,
+    SUCCESSFULL,
+    ERROR
+}
+
 export type AuthDataType = {
     id: number,
     name: string,
