@@ -17,7 +17,7 @@ const videoUploadWorker = new Worker(YOUTUBE_UPLOAD_TYPES.VIDEO_UPLOAD, async (j
             if (socketId)
                 io.to(socketId).emit(UploadSocketEvent.UPLOAD_PROGRESS, { taskId, youtuberId, percent });
             else
-                io.emit(UploadSocketEvent.UPLOAD_PROGRESS, { taskId, youtuberId, percent });
+                io.emit(UploadSocketEvent.UPLOAD_FAILED, { taskId, youtuberId, message: "user not authenticated to see the progress" });
         }
     });
 
@@ -25,6 +25,13 @@ const videoUploadWorker = new Worker(YOUTUBE_UPLOAD_TYPES.VIDEO_UPLOAD, async (j
 
 videoUploadWorker.on("completed", (job) => {
     console.log(`Job ${job.id} completed successfully`);
+    const { youtuberId, taskId } = job.data;
+
+    const socketId = userSocketMap.get(youtuberId);
+    if (socketId)
+        io.to(socketId).emit(UploadSocketEvent.UPLOAD_PROGRESS, { taskId, youtuberId, percent: 100 });
+    else
+        io.emit(UploadSocketEvent.UPLOAD_FAILED, { taskId, youtuberId, message: "user not authenticated to see the progress" });
 });
 
 videoUploadWorker.on("failed", (job, err) => {

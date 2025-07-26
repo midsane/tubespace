@@ -198,13 +198,19 @@ export const TaskUpdatePage = () => {
                 <p className="text-muted-foreground text-sm" >Make your thumbnail 1280 by 720 pixels (16:9 ratio)
                     Ensure that your thumbnail is less than 2MB
                     Use a JPG, PNG, or GIF file format
-                    Make sure your thumbnail follows YOUTUBE <a target="_blank"  href="https://www.youtube.com/howyoutubeworks/our-policies/" >Community Guidelines</a></p>
+                    Make sure your thumbnail follows YOUTUBE <a
+                        className="underline text-chart-4"
+                        target="_blank" href="https://www.youtube.com/howyoutubeworks/our-policies/" >Community Guidelines</a></p>
                 <Input
                     type="file"
                     accept="image/*"
                     {...register("thumbnail")}
                     onChange={(e) => {
                         const file = e.target.files?.[0];
+                        if (!file || file?.size >= 2 * 1024 * 1024) {
+                            toast.error("Image should be less than 2 MB");
+                            return;
+                        }
                         if (file) setThumbnailPreviewUrl(URL.createObjectURL(file));
                         else setThumbnailPreviewUrl(null);
                     }}
