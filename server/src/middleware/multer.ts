@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
         cb(null, "./public/temp");
     },
     filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${randomUUID()}}${path.extname(file.originalname)}`);
+        cb(null, `${Date.now()}-${randomUUID()}${path.extname(file.originalname)}`);
     },
 });
 

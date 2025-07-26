@@ -16,6 +16,7 @@ export const authMiddleware = asyncHandler(async (req: any, res: Response, next:
     if (!jwtSecret)
         return res.status(500).json(new ApiResponse(null, "internal server error, jwt secret is not set"));
     const decoded = jwt.verify(token, jwtSecret);
+    console.log("decoded:", decoded)
     req.user = decoded;
     next();
 })

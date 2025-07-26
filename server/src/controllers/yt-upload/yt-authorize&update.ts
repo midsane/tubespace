@@ -37,6 +37,7 @@ const updateMetaDataYoutube = asyncHandler(async (req: customRequest, res: Respo
     const { taskId: taskid } = req.body;
     const taskId = Number(taskid);
     const { title, description, tags, madeForKids } = req.body;
+    console.log("inside updatemetadata")
     if (!taskId) {
         return res.status(400).json(new ApiResponse(null, "taskId is required"));
     }
@@ -55,6 +56,7 @@ const updateMetaDataYoutube = asyncHandler(async (req: customRequest, res: Respo
     }
 
     let thumnailUrl = null;
+    console.log("req file path:", req.file?.path,"\n");
     if (req.file) {
         const response = await uploadToCloudinary(req.file.path);
         if (response && response.secure_url) {
