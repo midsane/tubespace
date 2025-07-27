@@ -39,7 +39,7 @@ export const LandingPara = () => {
     text-lg sm:text-xl md:text-2xl font-semibold tracking-tight text-balance">
     <span
     ><span className="relative" >
-        <span className="opacity-0" >Upload once ✨ .</span>
+        <span className="opacity-0" >Upload once ✨.</span>
         <motion.span
           key={index}
           initial={{ opacity: 0, top: -20 }}

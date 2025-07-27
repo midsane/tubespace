@@ -31,7 +31,9 @@ export const requestPermission = async () => {
 };
 
 export const listenToMessages = () => {
+
   onMessage(messaging, (payload) => {
+    console.log("Message received. ", payload);
     showCustomNotification({
       title: payload.notification?.title || "Notification",
       body: payload.notification?.body || "",
