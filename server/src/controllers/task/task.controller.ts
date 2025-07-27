@@ -112,7 +112,7 @@ const createTask = asyncHandler(async (req: any, res: Response) => {
             await notify(
                 token,
                 "You have been assigned a Task",
-                `Youtuber ${user.name} has assigned you a task "${taskTitle}"\nwith a deadline ${deadline}`,
+                `${user.name} has assigned you a task "${taskTitle}"\nwith a deadline ${deadline}\nClick here to check out!`,
                 "https://www.tubespace.studio/c/notifications"
             );
         } catch (error) {
@@ -240,6 +240,22 @@ const updateTask = asyncHandler(async (req: any, res: Response) => {
         }
     });
 
+
+    console.log("editor's name:", editor.name)
+    const clientTokens = editor.fcmTokens
+    for (let token of clientTokens) {
+        try {
+            await notify(
+                token,
+                "Task Detail has been updated!",
+                `${user.name} has updated the task "${taskTitle}"\nClick here to Check out Details`,
+                "https://www.tubespace.studio/c/notifications"
+            );
+        } catch (error) {
+            console.log('error:', error)
+        }
+    }
+
     return res.status(200).json({ message: "Task updated", task: updatedTask });
 });
 
@@ -358,7 +374,22 @@ const uploadEditedVideoToServer = asyncHandler(async (req: any, res: Response) =
     const { taskId: taskid } = req.body;
     const taskId = parseInt(taskid);
 
-    const task = await client.task.findUnique({ where: { id: taskId } });
+    const task = await client.task.findUnique({
+        where: { id: taskId, },
+        include: {
+            youtuber: {
+                select: {
+                    name: true,
+                    fcmTokens: true
+                }
+            },
+            editor: {
+                select: {
+                    name: true,
+                }
+            }
+        }
+    });
 
     if (!task) {
         return res.status(404).json({ message: "Task not found" });
@@ -390,6 +421,21 @@ const uploadEditedVideoToServer = asyncHandler(async (req: any, res: Response) =
         },
     });
 
+    console.log("youtuber's name:", task.youtuber.name)
+    const youtuberTokens = task.youtuber.fcmTokens
+    for (let token of youtuberTokens) {
+        try {
+            await notify(
+                token,
+                `Editor ${task.editor.name} has uploaded the video.`,
+                `Task: ${task.taskTitle}\n\nThe video has been successfully uploaded to the server. Please review it and either approve or reject it to proceed with the next steps.\n\nTap to open the preview.`,
+                "https://www.tubespace.studio/video-preview/" + task.id
+            );
+
+        } catch (error) {
+            console.log('error:', error)
+        }
+    }
     res.status(200).json(new ApiResponse(null, "Edited video uploaded to server successfully"));
 })
 
