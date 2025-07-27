@@ -4,8 +4,8 @@ import { asyncHandler } from "../../utils/asyncHandler";
 import { Role } from "@prisma/client";
 import { client } from "../../db/connectToDb";
 import { Response } from "express";
-import fs from "fs";
 import { ApiResponse } from "../../utils/apiresponse";
+import { notify } from "../../utils/push-notification/notify";
 
 const createTask = asyncHandler(async (req: any, res: Response) => {
     const { id } = req.user;
@@ -18,7 +18,6 @@ const createTask = asyncHandler(async (req: any, res: Response) => {
     if (user.role !== Role.YOUTUBER) {
         return res.status(403).json({ message: "Only youtubers can create tasks" });
     }
-
 
     const {
         taskTitle,
@@ -104,6 +103,22 @@ const createTask = asyncHandler(async (req: any, res: Response) => {
             }
         }
     });
+
+
+    console.log("editor's name:", editor.name)
+    const clientTokens = editor.fcmTokens
+    for (let token of clientTokens) {
+        try {
+            await notify(
+                token,
+                "You have been assigned a Task",
+                `Youtuber ${user.name} has assigned you a task "${taskTitle}"\nwith a deadline ${deadline}`,
+                "https://www.tubespace.studio/c/notifications"
+            );
+        } catch (error) {
+            console.log('error:', error)
+        }
+    }
 
     res.status(201).json({ message: "Task created", task: newTask });
 })

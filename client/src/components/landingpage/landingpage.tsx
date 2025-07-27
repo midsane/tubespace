@@ -7,25 +7,8 @@ import { Flame } from "lucide-react";
 import { GetStartedButton } from "./getStartedButton";
 import { logo } from "@/constast";
 import { GradientText, LandingPara } from "../text-animation/text-animations";
-import AnimatedNumberCounter from "@/components/ui/animated-number-random"
-import { useEffect, useState } from "react";
+
 export const LandingPage = () => {
-
-    const [progress, setProgress] = useState(0);
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setProgress((prev) => {
-                if (prev >= 100) {
-                    clearInterval(interval);
-                    return 100;
-                }
-                return prev + 30; // Increment by 5% every second
-            });
-        }, 1000); // Update every second
-
-        return () => clearInterval(interval); // Cleanup on unmount
-    }, [])
-
     return (<div className="flex overflow-hidden w-full flex-col bg mix-blend-hard bg-background
         bg-[radial-gradient(circle_at_center,theme(colors.chart-bg)_20%,transparent_90%)]">
         <div className="flex
@@ -56,9 +39,6 @@ export const LandingPage = () => {
             <LandingPara />
             <GetStartedButton />
         </div>
-
-        <AnimatedNumberCounter value={progress} />
-
         <HowToUseSections
             id="features"
             title="Create Task / Assign Editor"

@@ -14,12 +14,11 @@ const GOOGLE_CLIENT_ID = OauthConfig.GOOGLE_CLIENT_ID
 const YOUR_REDIRECT_URI = OauthConfig.YOUR_REDIRECT_URI;
 const GOOGLE_CLIENT_SECRET = OauthConfig.GOOGLE_CLIENT_SECRET
 
-
-
 const login = asyncHandler(async (req: any, res: Response) => {
     const redirect_uri = getOrigin(req) + YOUR_REDIRECT_URI;
     console.log("redirect_uri:", redirect_uri, "\n");
-    const { email, password } = req.body;
+    const { email, password, fcmToken } = req.body;
+
     const userExist = await client.user.findFirst({ where: { email } });
     if (!userExist) return res.status(400).json(new ApiResponse(null, "user does not exist"));
 
@@ -42,12 +41,22 @@ const login = asyncHandler(async (req: any, res: Response) => {
         sameSite: mode === "development" ? "lax" : "none"
     })
     const { password: psw, salt, ...filteredData } = userExist;
+    if (!fcmToken) {
+        console.log("fcmToken not provided, returning user data without setting fcmToken");
+        return res.status(200).json(new ApiResponse(filteredData, "user logged in successfully!"));
+    }
+    try {
+        await setFCMToken(filteredData.id, fcmToken)
+    } catch (error) {
+        console.log("could not set fcmToken")
+    }
     res.status(200).json(new ApiResponse(filteredData, "user logged in successfully!"));
 
 })
 
 const signup = asyncHandler(async (req: any, res: Response) => {
-    const { email, password, role } = req.body;
+    const { email, password, role, fcmToken } = req.body;
+
     if (typeof email !== "string" || !email.includes("@") || typeof password !== "string" || typeof role !== "string")
         return res.status(400).json(new ApiResponse(null, "invalid data type"));
 
@@ -84,12 +93,26 @@ const signup = asyncHandler(async (req: any, res: Response) => {
     })
 
     const { password: psw, salt: sl, ...filteredData } = userDetail
+
+    if (!fcmToken) {
+        console.log("fcmToken not provided, returning user data without setting fcmToken");
+        return res.status(200).json(new ApiResponse(filteredData, "user created successfully"));
+    }
+    try {
+        await setFCMToken(filteredData.id, fcmToken)
+    } catch (error) {
+        console.log("could not set fcmToken")
+    }
     return res.status(200).json(new ApiResponse(filteredData, "user created successfully"));
 
 })
 
 const resetPassword = asyncHandler(async (req: any, res: Response) => {
+    const authorizedEmail = req.user?.email
     const { password, email } = req.body;
+    if (authorizedEmail !== email) {
+        return res.status(403).json(new ApiResponse(null, "User not authorized to change password"))
+    }
     if (typeof email !== "string" || !email.includes("@") || typeof password !== "string")
         return res.status(400).json(new ApiResponse(null, "invalid data type"));
 
@@ -137,7 +160,6 @@ const logout = asyncHandler(async (req: any, res: Response) => {
     res.status(200).json(new ApiResponse(null, "user logged out successfully!"));
 })
 
-
 const getOauthWindow = asyncHandler(async (req: any, res: Response) => {
     if (!GOOGLE_CLIENT_ID || !YOUR_REDIRECT_URI || !GOOGLE_CLIENT_SECRET)
         return res.status(500).json({ message: "could not load google client id" })
@@ -157,8 +179,7 @@ const getOauthWindow = asyncHandler(async (req: any, res: Response) => {
 
 const Oauth = asyncHandler(async (req: any, res: Response) => {
     {
-        const { code, role } = req.query;
-
+        const { code, role, fcmToken } = req.query;
         try {
 
             console.log("code:", code, "\n");
@@ -172,9 +193,7 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
             });
 
             const { id_token } = tokenRes.data;
-
             const decoded = jwt.decode(id_token);
-
 
             const { email, picture } = decoded as { email: string, name: string, picture: string };
 
@@ -192,8 +211,6 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
                         role: role.trim().toLowerCase() === "editor" ? "EDITOR" : "YOUTUBER"
                     }
                 })
-
-
             }
 
             const jwtSecret = jwtSecretConfig
@@ -212,6 +229,15 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
             })
 
             const { password: psw, salt: sl, ...filteredData } = user
+            if (!fcmToken) {
+                console.log("fcmToken not provided, returning user data without setting fcmToken");
+                return res.status(200).json(new ApiResponse(filteredData, "user logged in/registered successfully"))
+            }
+            try {
+                await setFCMToken(filteredData.id, fcmToken)
+            } catch (error) {
+                console.log("could not set fcmToken")
+            }
             return res.status(200).json(new ApiResponse(filteredData, "user logged in/registered successfully"))
 
         } catch (error) {
@@ -224,6 +250,17 @@ const Oauth = asyncHandler(async (req: any, res: Response) => {
     }
 })
 
+const setFCMToken = async (id: number, fcmToken: string) => {
+    await client.user.update({
+        where: {
+            id
+        },
+        data: {
+            fcmTokens: [fcmToken]
+        }
+    })
+    console.log("updated fcm token")
+}
 
 export {
     login,
@@ -232,5 +269,6 @@ export {
     checkAuth,
     logout,
     getOauthWindow,
-    Oauth
+    Oauth,
+    setFCMToken
 }

@@ -5,6 +5,7 @@ import "./lib/redisClient"
 import "./lib/webSocketClient";
 import "./realTime-chat/socket";
 import "./upload-worker/uploadWorker"
+import "./utils/push-notification/notify"
 const port = PORT
 
 const startServer = async () => {

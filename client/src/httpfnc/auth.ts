@@ -1,14 +1,21 @@
 import { baseUrl } from "@/constast";
+import { requestPermission } from "@/push-notification/askNotification";
 import type { httpRequstType, UserRole } from "@/types/types";
 
 const LoginUser = async (email: string, password: string) => {
+    let fcmToken;
+    try {
+        fcmToken = await requestPermission()
+    } catch (error) {
+        console.log("error:", error)
+    }
     const response = await fetch(baseUrl + `user/login`, {
         method: "POST",
         credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, fcmToken })
     });
 
     const resData: httpRequstType = await response.json();
@@ -19,13 +26,19 @@ const LoginUser = async (email: string, password: string) => {
 }
 
 const RegisterUser = async (email: string, password: string, role: UserRole) => {
+    let fcmToken;
+    try {
+        fcmToken = await requestPermission()
+    } catch (error) {
+        console.log("errfdfdfor:", error)
+    }
     const response = await fetch(baseUrl + `user/signup`, {
         method: "POST",
         credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password, role })
+        body: JSON.stringify({ email, password, role, fcmToken })
     });
 
     const resData: httpRequstType = await response.json();
@@ -33,6 +46,7 @@ const RegisterUser = async (email: string, password: string, role: UserRole) => 
         throw new Error(resData.message || "Failed to register user");
     };
     return resData.data;
+
 }
 
 const resetPassword = async (email: string, password: string) => {
@@ -103,19 +117,25 @@ const getOauthWindow = async () => {
 }
 
 const getOauthLoginRegister = async (code: string, role: UserRole) => {
-    const response = await fetch(baseUrl + `user/oauth/login-register?code=${code}&role=${role}`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    });
+    const fcmToken = await requestPermission()
+    try {
+        const response = await fetch(baseUrl + `user/oauth/login-register?code=${code}&role=${role}&fcmToken=${fcmToken}`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
 
-    const resData: httpRequstType = await response.json();
-    if (!response.ok || response.status >= 300) {
-        throw new Error(resData.message || "failed to get OAuth window");
-    };
-    return resData.data;
+        const resData: httpRequstType = await response.json();
+        if (!response.ok || response.status >= 300) {
+            throw new Error(resData.message || "failed to get OAuth window");
+        };
+        return resData.data;
+    } catch (error) {
+        console.log("error:", error)
+        throw new Error("Failed to login user, fcmToken is not provided");
+    }
 }
 
 
@@ -128,7 +148,6 @@ const generateOTP = async (email: string) => {
         },
         body: JSON.stringify({ email })
     });
-
     const resData: httpRequstType = await response.json();
     if (!response.ok || response.status >= 300) {
         throw new Error(resData.message || "Failed to generate OTP");
@@ -152,9 +171,6 @@ const verifyOTP = async (email: string, otp: number) => {
     };
     return resData.data;
 }
-
-
-
 
 export {
     LoginUser,
