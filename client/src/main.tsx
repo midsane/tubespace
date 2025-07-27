@@ -17,6 +17,7 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("/firebase-messaging-sw.js")
       .then((registration) => {
+        console.log('posting message:', firebaseConfig);
         registration.active?.postMessage({
           type: "INIT_FIREBASE",
           config: firebaseConfig

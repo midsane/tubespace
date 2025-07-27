@@ -7,8 +7,6 @@ export const youtubeUploadQueue = new Queue(YOUTUBE_UPLOAD_TYPES.VIDEO_UPLOAD, {
     connection: redisClient
 })
 
-
-
 export const thumbnailUploadQueue = new Queue(YOUTUBE_UPLOAD_TYPES.THUMBNAIL_UPLOAD, {
     connection: redisClient
 })

@@ -1,14 +1,11 @@
-importScripts("https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/10.12.1/firebase-messaging-compat.js");
-
-
 let firebaseInitialized = false;
 
 self.addEventListener('message', (event) => {
+  console.log("hello")
   if (event.data?.type === 'INIT_FIREBASE' && !firebaseInitialized) {
     importScripts("https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js");
     importScripts("https://www.gstatic.com/firebasejs/10.12.1/firebase-messaging-compat.js");
-
+    console.log(event.data.config)
     firebase.initializeApp(event.data.config);
     const messaging = firebase.messaging();
 

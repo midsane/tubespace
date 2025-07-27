@@ -187,7 +187,7 @@ publishVideoWorker.on("failed", async (job, err) => {
     } else {
         io.emit(UploadSocketEvent.PUBLISH_VIDEO_FAILED, { taskId, youtuberId, error: err.message });
     }
-    
+
     if (!job) {
         console.error(`job undefined, failed to send notification.`);
         return;
