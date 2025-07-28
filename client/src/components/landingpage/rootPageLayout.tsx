@@ -57,7 +57,7 @@ export const RootPageLayout: React.FC = () => {
 
 
     return (<main >
-        <nav className="flex h-[8dvh] md:h-[10dvh] border text-sidebar-foreground border-sidebar-border z-50 
+        <nav className="flex h-[7dvh] md:h-[9dvh] border text-sidebar-foreground border-sidebar-border z-50 
         fixed top-2 left-1/2 -translate-x-1/2 w-[95%] sm:w-[90%] md:w-[80%] items-center justify-between
         rounded-4xl bg-sidebar px-10 
         " >
@@ -70,14 +70,11 @@ export const RootPageLayout: React.FC = () => {
                     <span className="opacity-0">asdf</span>
                     <img className="h-8 opacity-0" src={logo} />
                     <div
-
                         className="w-fit h-full fixed top-0 flex gap-2 items-center left-10 z-[310]">
                         <span
                             onClick={(e) => {
                                 e.stopPropagation()
-                                e.preventDefault();
-
-
+                                e.preventDefault()
                             }}
                         ><MorphedMenu openMenu={openMenu} setOpenMenu={setOpenMenu} />
                         </span>

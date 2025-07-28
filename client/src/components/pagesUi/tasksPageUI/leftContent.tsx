@@ -12,9 +12,10 @@ import { useUserStore } from "@/store/user.store"
 
 export const LeftContent = () => {
     const role = useUserStore((state) => state.user.role)
+    const id = useUserStore((state) => state.user.id)
     const [activeTab, setActiveTab] = useState<number>(1)
     const { data, isLoading, error } = useQuery<TaskDataType[]>({
-        queryKey: ["fetchTask", activeTab, role],
+        queryKey: ["fetchTask", activeTab, role, id],
         queryFn: () => fetchTasks(),
         enabled: true,
         staleTime: 1000 * 60 * 5, // 5 minutes

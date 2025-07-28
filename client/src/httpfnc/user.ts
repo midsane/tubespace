@@ -53,7 +53,7 @@ const getTopYoutubers = async () => {
 }
 
 const searchUsers = async (query: string) => {
-    
+
     const response = await fetch(baseUrl + `user/search-user?query=${query}`, {
         method: "GET",
         headers: {
@@ -70,11 +70,28 @@ const searchUsers = async (query: string) => {
     return resData.data;
 }
 
+const searchEditros = async (query: string) => {
 
+    const response = await fetch(baseUrl + `user/search-editors?query=${query}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    });
+    if (!response.ok) throw new Error("Failed to fetch editors");
+    const resData: httpRequstType = await response.json();
+
+    if (!response.ok || response.status >= 300) {
+        throw new Error(resData.message || "Failed to fetch editors");
+    };
+    return resData.data;
+}
 
 export {
     getProfileData,
     getTopEditors,
     getTopYoutubers,
-    searchUsers
+    searchUsers,
+    searchEditros
 }

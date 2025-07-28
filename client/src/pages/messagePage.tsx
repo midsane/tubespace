@@ -1,14 +1,14 @@
-import { Send } from "lucide-react";
-import {
-    ChatBubble,
-    ChatBubbleAvatar,
-    ChatBubbleMessage,
-} from "@/components/ui/chat/chat-bubble";
+// import { Send } from "lucide-react";
+// import {
+//     ChatBubble,
+//     ChatBubbleAvatar,
+//     ChatBubbleMessage,
+// } from "@/components/ui/chat/chat-bubble";
 
-import { ChatMessageList } from "@/components/ui/chat/chat-message-list";;
-import { Button } from "@/components/ui/button";
+// import { ChatMessageList } from "@/components/ui/chat/chat-message-list";;
+// import { Button } from "@/components/ui/button";
 import { PageWrapper } from "@/components/pagesWrapper/pagesWrapper"
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 
 export const MessagesPage = () => {
     return (<PageWrapper
@@ -20,7 +20,7 @@ export const MessagesPage = () => {
 
 const LeftContent = () => {
     return <div className="h-full w-full flex flex-col relative items-center justify-start" >
-        <div className="h-[90%] w-full p-1">
+        {/* <div className="h-[90%] w-full p-1">
             <ChatMessageList >
                 <ChatBubble variant='sent'>
                     <ChatBubbleAvatar fallback='US' />
@@ -96,7 +96,8 @@ const LeftContent = () => {
             <Button>
                 <Send />
             </Button>
-        </div>
+        </div> */}
+        <h1>Not Implmented</h1>
     </div>
 }
 

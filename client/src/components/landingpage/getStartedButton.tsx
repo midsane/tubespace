@@ -11,7 +11,7 @@ export function GetStartedButton() {
         >
             <Button
                 asChild
-                className="group relative border-border border-2 h-12 px-6 rounded-2xl text-base font-semibold bg-background text-foreground hover:bg-background shadow-lg transition-all duration-300 hover:scale-[1.03]"
+                className="group relative border-border border-2 h-12 px-6 rounded-3xl text-base font-semibold bg-background text-foreground hover:bg-background shadow-lg transition-all duration-300 hover:scale-[1.03]"
                 size="lg"
             >
                 <Link to="/auth">

@@ -50,7 +50,7 @@ import { Check, Search } from "lucide-react";
 import { VideoTaskForm } from "../pagesUi/tasksPageUI/taskForm";
 import { useOpenTaskUpdate } from "@/store/updateTaskSheet";
 import { toast } from "sonner";
-import { searchUsers } from "@/httpfnc/user";
+import { searchEditros } from "@/httpfnc/user";
 import { useQuery } from "@tanstack/react-query";
 import type { userSearchType } from "@/types/types";
 import { Skeleton } from "../ui/skeleton";
@@ -68,8 +68,8 @@ export const EditorSelectDialog = ({ value, onChange }: EditorSelectDialogProps)
     const [query, setQuery] = useState("")
     const [debouncedQuery, setDebouncedQuery] = useState("")
     const { data: users, isLoading, error } = useQuery<userSearchType[]>({
-        queryKey: ["search-users", debouncedQuery],
-        queryFn: () => searchUsers(debouncedQuery),
+        queryKey: ["search-editors", debouncedQuery],
+        queryFn: () => searchEditros(debouncedQuery),
         enabled: open,
         refetchOnWindowFocus: false,
     })

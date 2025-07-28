@@ -1,7 +1,7 @@
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FullTextDialogView } from "../common/fullTextDialogView"
 import { UserRole, type TaskDataType } from "@/types/types";
-import { Paperclip, UploadCloudIcon } from "lucide-react";
+import { DownloadIcon, Paperclip, UploadCloudIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { noPfpImg } from "@/constast";
@@ -130,6 +130,16 @@ export const TaskCard = (
     )
 }
 
+async function downloadFile(url: string, filename: string) {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
+
 
 const PreviewAttachment = ({
     dialogOpen, setDialogOpen,
@@ -165,6 +175,10 @@ const PreviewAttachment = ({
                                                         <img src={previewUrl} className="max-h-[70vh] w-auto rounded-lg" />
                                                     )}
                                                 </div>
+                                                <Button onClick={() => downloadFile(previewUrl, `file-${idx}`)} >
+                                                    <DownloadIcon />
+                                                    Download File
+                                                </Button>
                                             </CarouselItem>
                                         );
                                     })}
@@ -173,6 +187,7 @@ const PreviewAttachment = ({
                                 <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10" />
                             </Carousel>
                         </DialogContent>
+
                     </Dialog>
                 </div>
             )

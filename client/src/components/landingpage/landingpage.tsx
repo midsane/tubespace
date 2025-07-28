@@ -1,5 +1,8 @@
 import Footer from "./footer"
-import gif from "@/assets/form.gif"
+import editorUploadsVideo from "@/assets/editor-uploadVIdeo.mp4"
+import notifiedVideo from "@/assets/notified.mp4"
+import uploadRealTime from "@/assets/uploadWorkerRealTime.mp4"
+import createTaskVideo from "@/assets/create-task.mp4"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion";
 import "./style.css"
@@ -7,9 +10,10 @@ import { Flame } from "lucide-react";
 import { GetStartedButton } from "./getStartedButton";
 import { logo } from "@/constast";
 import { GradientText, LandingPara } from "../text-animation/text-animations";
+import { SelectSeparator } from "../ui/select"
 
 export const LandingPage = () => {
-    return (<div className="flex overflow-hidden w-full flex-col bg mix-blend-hard bg-background
+    return (<div className="flex justify-center items-center overflow-hidden w-full flex-col bg mix-blend-hard bg-background
         bg-[radial-gradient(circle_at_center,theme(colors.chart-bg)_20%,transparent_90%)]">
         <div className="flex
         flex-col gap-10 items-center justify-center h-screen" >
@@ -39,67 +43,118 @@ export const LandingPage = () => {
             <LandingPara />
             <GetStartedButton />
         </div>
+
+        {/* <div className="flex gap-4 py-5 sm:px-12 w-full max-w-[900px]">
+            <div className="flex flex-col gap-2 w-[40%] ">
+                <img src={gif} className="rounded-xl w-full border-accent border-2 shadow-2xl shadow-label h-72" />
+                <h2>Scaling</h2>
+                <SelectSeparator />
+                <p>Focus on building applications with time and money-saving features like instant provisioning, autoscaling according to load, and scale to zero.</p>
+            </div>
+            <div className="flex flex-col gap-2 w-[60%] ">
+                <img src={gif} className="rounded-xl  border-accent border-2 shadow-2xl shadow-label h-72 object-cover" />
+                <h2>Scaling</h2>
+                <SelectSeparator />
+                <p>Focus on building applications with time and money-saving features like instant provisioning, autoscaling according to load, and scale to zero.</p>
+            </div>
+        </div> */}
+
         <HowToUseSections
             id="features"
             title="Create Task / Assign Editor"
-            imgPath={gif}
+            imgPath={createTaskVideo}
             text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
         />
 
         <HowToUseSections
-            title="Get Notified When Task is Completed"
-            imgPath={gif}
-            text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
+            id="features"
+            title="Editors uploads the video"
+            imgPath={editorUploadsVideo}
+            text="Once the editor has edited the video, they can upload it to our server, which will be stored securely and ready for preview."
         />
 
         <HowToUseSections
             title="Preview and Publish"
-            imgPath={gif}
-            text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
+            imgPath={uploadRealTime}
+            text="Preview your video with the assigned editor, make necessary changes, and publish it to your channel with just a few clicks."
         />
 
-        <div className="flex flex-col gap-4 border items-center justify-center h-screen" >
-            <div className="hidden md:flex h-3/4  flex-col justify-center items-center gap-10" >
-                <GradientText text="What are you Waiting For?" size="medium" />
+        <HowToUseSections
+            title="RealTime notifications"
+            imgPath={notifiedVideo}
+            text="Get real-time notifications about task updates, and video status changes to stay informed and engaged with your projects."
+        />
+
+
+
+        <div className="flex flex-col gap-4 border items-center justify-center px-4 h-screen pt-20" >
+            <div className="flex flex-col justify-center items-center gap-10" >
+                <GradientText text="What are you Waiting For?" size="small" />
                 <GetStartedButton />
+
             </div>
             <Footer />
         </div>
     </div>)
 }
 
-const HowToUseSections = ({ id, imgPath, title, text }: { id?: string, imgPath: string, title: string, text: string }) => {
-    return (<div
-        id={id && id}
-        className="h-screen flex px-5 sm:px-20 justify-center items-center" >
-        <div className="flex md:flex-row md:max-w-full max-[340px]:max-w-[90%] max-w-[350px] flex-col gap-4  sm:items-start items-center justify-center
-        h-fit
-        " >
-            <motion.img
-                initial={{ opacity: 0.5, scale: 0.7 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="max-[340px]:max-w-[90%] max-w-[350px] lg:max-w-[600px] rounded-2xl border " src={imgPath} />
+import arrowImg from "@/assets/arrow.gif"
+const HowToUseSections = ({
+    id,
+    imgPath,
+    title,
+    text,
+}: {
+    id?: string;
+    imgPath: string;
+    title: string;
+    text: string;
+}) => {
+    return (
+        <div
+            id={id}
+            className="h-fit py-20 flex px-5 sm:px-20 justify-center items-center"
+        >
+            <div
+                className="flex relative md:flex-row md:max-w-full max-[340px]:max-w-[95%] max-w-[400px] flex-col gap-4 sm:items-start items-center justify-center h-fit"
+            >
+                <motion.video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    initial={{ opacity: 0.5, scale: 0.7 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="max-[340px]:max-w-[90%] max-w-[350px] lg:max-w-[600px] rounded-2xl border"
+                    src={imgPath}
+                />
 
-            <div className="flex px-2 flex-col gap-4 justify-start items-start sm:w-[80%] md:w-[70%] h-full">
-                <div className="relative border p-1 " >
-                    <h4 className="scroll-m-20 md:text-xl font-semibold text-lg tracking-tight">
-                        {title}
-                    </h4>
-                    <h4 className="scroll-m-20 absolute top-1 left-1 z-10 text-lg md:text-xl font-semibold tracking-tight">
-                        {title}
-                    </h4>
+                <img
+                    className="absolute -scale-y-100 -scale-x-100 left-0 -top-5 sm:-top-8 transform -translate-y-1/2 w-8 sm:w-12 flip"
+                    src={arrowImg}
+                />
+
+                <div className="flex px-2 flex-col gap-2 justify-start items-start sm:w-[80%] md:w-[70%] h-full">
+                    <h1 className="text-lg md:text-2xl font-semibold">{title}</h1>
+
                     <motion.div
-                        whileInView={{ opacity: 1, scale: 1, originX: "left", originY: "top" }}
-                        initial={{ opacity: 0, scale: 0.7 }}
-                        transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="absolute top-0 left-0 w-full h-full bg-chart-3/70 border border-chart-4 rounded p-3" ></motion.div>
+                        className="w-full h-[2px] bg-foreground/30"
+                        initial={{ scaleX: 0 }}
+                        whileInView={{ scaleX: 1 }}
+                        viewport={{ once: false, amount: 0.5 }} 
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        style={{ originX: 0 }}
+                    />
+
+                    <p className="leading-7 lg:text-lg text-md text-accent-foreground [&:not(:first-child)]:mt-1">
+                        {text}
+                    </p>
                 </div>
-                <p className="leading-7 md:text-lg  [&:not(:first-child)]:mt-1">
-                    {text}
-                </p>
             </div>
         </div>
-    </div>)
-}
+    );
+};
+
+
 
