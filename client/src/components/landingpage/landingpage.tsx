@@ -10,7 +10,7 @@ import { Flame } from "lucide-react";
 import { GetStartedButton } from "./getStartedButton";
 import { logo } from "@/constast";
 import { GradientText, LandingPara } from "../text-animation/text-animations";
-import { SelectSeparator } from "../ui/select"
+
 
 export const LandingPage = () => {
     return (<div className="flex justify-center items-center overflow-hidden w-full flex-col bg mix-blend-hard bg-background
