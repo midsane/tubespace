@@ -63,14 +63,14 @@ export const LandingPage = () => {
             id="features"
             title="Create Task / Assign Editor"
             imgPath={createTaskVideo}
-            text="Fill out Video details like title, description, tags, and thumbnail before assigning editing task to someone or fill it out before uploading the video."
+            text="Fill in video details such as title, work description, deadline, and attach files for the editor. Also provide YouTube-specific info like title, description, tags, and thumbnail — either before assigning the task or before uploading the video."
         />
 
         <HowToUseSections
             id="features"
             title="Editors uploads the video"
             imgPath={editorUploadsVideo}
-            text="Once the editor has edited the video, they can upload it to our server, which will be stored securely and ready for preview."
+            text="After editing, the video is uploaded to secure storage and made available for preview by the YouTuber."
         />
 
         <HowToUseSections
@@ -84,8 +84,6 @@ export const LandingPage = () => {
             imgPath={notifiedVideo}
             text="Get real-time notifications about task updates, and video status changes to stay informed and engaged with your projects."
         />
-
-
 
         <div className="flex flex-col gap-4 border items-center justify-center px-4 h-screen pt-20" >
             <div className="flex flex-col justify-center items-center gap-10" >
