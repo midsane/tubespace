@@ -8,6 +8,7 @@ import type { NotificationType } from "@/types/types";
 import { useQuery } from "@tanstack/react-query"
 import { useEffect } from "react";
 import { NotificationCard } from "./notificationCard";
+import { BrushCleaning } from "lucide-react";
 
 export const LeftContent = () => {
     const id = useUserStore((state) => state.user.id);
@@ -48,7 +49,7 @@ export const LeftContent = () => {
         </div>
         {notificationsData?.length === 0 && !isLoading && (
             <div className="flex flex-col items-center justify-center h-full w-full">
-                <img src={noPfpImg} alt="No notifications" className="w-16 h-16 mb-4" />
+                <BrushCleaning size={30} />
                 <p className="text-gray-500">No notifications available</p>
             </div>
         )}

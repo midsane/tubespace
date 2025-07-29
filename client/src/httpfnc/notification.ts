@@ -3,7 +3,7 @@ import type { httpRequstType } from "@/types/types";
 
 const fetchNotification = async () => {
     console.log("fetching notifications");
-    const response = await fetch(baseUrl + `notification/fetch-notifications`, {
+    const response = await fetch(baseUrl + `notification/fetch-notification`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -14,7 +14,7 @@ const fetchNotification = async () => {
     const resData: httpRequstType = await response.json();
 
     if (!response.ok || response.status >= 300) {
-        throw new Error(resData.message || "Failed to fetch user's notifications");
+        throw new Error(resData.message || "Failed to fetch user's notification");
     };
     return resData.data;
 }
