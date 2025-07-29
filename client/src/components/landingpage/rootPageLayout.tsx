@@ -99,7 +99,7 @@ export const RootPageLayout: React.FC = () => {
                             src={data.profileImgUrl || fallback_profileImg}
                         />
                         :
-                        <Button onClick={() => navigate("/auth")} variant="outline">Signup</Button>
+                        <Button  className="rounded-3xl" onClick={() => navigate("/auth")} variant="outline">Signup</Button>
                     :
                     <Skeleton className="w-9 sm:w-10 rounded-full border border-border aspect-square object-cover" />
                 }

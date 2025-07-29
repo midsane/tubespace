@@ -18,9 +18,9 @@ export function GradientText({ text, size = "large" }: { size?: string, text: st
 
 export const LandingPara = () => {
 
-  const textArr = ["Upload once", "Cozy up", "Travel"]
+  const textArr = ["Assign Editors", "Chill & Relax", "Preview & Publish"]
   const [index, setIndex] = useState<number>(0);
-  const emojiArr = ["✨", "🏝️🍹", "🧳✈️⛱️"]
+  const emojiArr = ["✨","✈️⛱️", ""]
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,7 +39,7 @@ export const LandingPara = () => {
     text-lg sm:text-xl md:text-2xl font-semibold tracking-tight text-balance">
     <span
     ><span className="relative" >
-        <span className="opacity-0" >Upload once ✨.</span>
+        <span className="opacity-0" >Preview & Publish. </span>
         <motion.span
           key={index}
           initial={{ opacity: 0, top: -20 }}

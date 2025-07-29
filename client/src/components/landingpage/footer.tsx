@@ -9,7 +9,7 @@ export default function Footer() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className=" w-screen border-t bg-background text-muted-foreground"
+            className=" w-screen h-full border-t bg-background text-muted-foreground "
         >
             <Separator />
 
