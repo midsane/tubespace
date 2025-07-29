@@ -9,6 +9,7 @@ import { forgotPasswordRouter } from "./router/forgot-pasword/forgot-password.ro
 import { CLIENT_URL1, CLIENT_URL2, CLIENT_URL3 } from "./config";
 import { createServer } from "http";
 import { notifyRouter } from "./router/RealTimeMessaging/reatTimeMessaging.routes";
+import { notificationRouter } from "./router/notification/notification.router";
 
 const app = express();
 export const httpServer = createServer(app)
@@ -34,6 +35,7 @@ app.use("/api/v1/forgot-password", forgotPasswordRouter);
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/task", taskRouter)
 app.use("/api/v1/yt-upload", youtubeUploadRouter)
+app.use("/api/v1/notification", notificationRouter)
 app.use("/api/v1/notify", notifyRouter)
 app.use((err: any, _: any, res: express.Response, next: express.NextFunction) => {
     console.error(err.stack);

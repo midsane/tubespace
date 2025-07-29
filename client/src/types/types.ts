@@ -85,3 +85,15 @@ export interface userSearchType {
     profileImgUrl?: string;
     role: UserRole
 }
+
+
+export interface NotificationType {
+    id: number;
+    title: string;
+    content: string;
+    read: boolean;
+    userId: number;
+    user: Partial<AuthDataType>;
+    createdAt?: string;
+    link?: string;
+}

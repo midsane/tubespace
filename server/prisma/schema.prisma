@@ -19,23 +19,26 @@ enum Role {
 }
 
 model User {
-  id               Int       @id @default(autoincrement())
-  name             String?   @unique
-  email            String    @unique
-  password         String?
-  profileImgUrl    String?
-  salt             String?
-  Oauth            Boolean   @default(false)
-  role             Role
-  createdAt        DateTime  @default(now())
-  bio              String?
-  attachedLinks    String?
-  bannerImgUrl     String?
-  editorTasks      Task[]    @relation("EditorTasks", fields: [], references: [])
-  youtuberTasks    Task[]    @relation("YoutuberTasks", fields: [], references: [])
-  sentMessages     Message[] @relation("SenderMessages")
-  receivedMessages Message[] @relation("ReceiverMessages")
-  fcmTokens        String[]
+  id                        Int       @id @default(autoincrement())
+  name                      String?   @unique
+  email                     String    @unique
+  password                  String?
+  profileImgUrl             String?
+  salt                      String?
+  Oauth                     Boolean   @default(false)
+  role                      Role
+  createdAt                 DateTime  @default(now())
+  bio                       String?
+  attachedLinks             String?
+  bannerImgUrl              String?
+  editorTasks               Task[]    @relation("EditorTasks", fields: [], references: [])
+  youtuberTasks             Task[]    @relation("YoutuberTasks", fields: [], references: [])
+  sentMessages              Message[] @relation("SenderMessages")
+  receivedMessages          Message[] @relation("ReceiverMessages")
+  fcmTokens                 String[]
+  pushNotificationsEnabled  Boolean   @default(true)
+  emailNotificationsEnabled Boolean   @default(true)
+  notifications             Notification[]
 }
 
 enum Rating_val {
@@ -96,4 +99,15 @@ model Message {
   messageStatus MessageStatus @default(PENDING)
   deleted       Boolean       @default(false)
   attachments   String[]      @default([])
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  title       String
+  content     String
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  link        String?
 }

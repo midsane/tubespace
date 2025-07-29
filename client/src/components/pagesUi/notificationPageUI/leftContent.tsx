@@ -1,78 +1,58 @@
 // import { NotificationCard } from "./notificationCard"
 
-// const dummyNotifications = [
-//     {
-//         title: "",
-//         description: `  editor lavru has ediited the video, go to this link to 
-//         preview and upload your video to youtube. You have 
-//         10 hours to do this, after that link will expire, and you
-//         will need to ask your editor to reupload the video.
-//         http://baseurl;/preview/video=8kdfj  `,
-//         read: false,
-//         userPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-//         userId: 12,
-//         time: +new Date("2023-10-01T12:00:00Z")
-
-//     },
-//     {
-//         title: "",
-//         description: `video pushed to editor lavru has been deleted from our
-//         server, ask him too upload again, make sure review and
-//         upload before the expriy time .  `,
-//         read: false,
-//         userPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-//         userId: 12,
-//         time: +new Date("2023-10-01T12:00:00Z")
-
-//     },
-//     {
-//         title: "",
-//         description: `  editor lavru has ediited the video, go to this link to 
-//         preview and upload your video to youtube.
-//         http://baseurl;/preview/video=8kdfj `,
-//         read: true,
-//         time: +new Date("2023-10-01T12:00:00Z")
-
-//     },
-//     {
-//         title: "",
-//         description: `  youtube adi has assigned you a task . check it out.
-//         http://baseurl/task  `,
-//         read: true,
-//         time: +new Date("2023-10-01T12:00:00Z")
-
-//     },
-//     {
-//         title: "",
-//         description: `  youtuber adi rejected your video saying --
-//         make better b-rolls and color grading. `,
-//         read: true,
-//         userPfp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl3hM7q8okYUEKE0G3MlPmfz8My4Yu2ONgsQ&s",
-//         userId: 12,
-//         time: +new Date("2023-10-01T12:00:00Z")
-
-//     },
-//     {
-//         title: "",
-//         description: `your video got successfully uploaded to youtube.
-//         check it out. http:lkalasdkfj `,
-//         read: true,
-//         time: +new Date("2023-10-01T12:00:00Z")
-
-//     }
-// ]
+import { noPfpImg } from "@/constast";
+import { fetchNotification } from "@/httpfnc/notification";
+import { useNotificationStore } from "@/store/notification.store";
+import { useUserStore } from "@/store/user.store";
+import type { NotificationType } from "@/types/types";
+import { useQuery } from "@tanstack/react-query"
+import { useEffect } from "react";
+import { NotificationCard } from "./notificationCard";
 
 export const LeftContent = () => {
+    const id = useUserStore((state) => state.user.id);
+
+    const { data, isLoading, error } = useQuery<NotificationType[]>({
+        queryKey: ["fetchNotification", id],
+        queryFn: fetchNotification,
+        enabled: !!id,
+        staleTime: 5 * 60 * 1000 // 5 minutes
+    });
+
+    console.log("error:", error)
+    const notificationsData = useNotificationStore((state) => state.notifications)
+    const setNotificationsData = useNotificationStore((state) => state.setState)
+
+
+    useEffect(() => {
+        if (data) {
+            setNotificationsData(data);
+        }
+    }, [data]);
+
     return (<div className="h-full w-full flex flex-col justify-center items-center " >
         <div className="flex h-full py-5 items-center w-full flex-col gap-5 overflow-y-scroll">
-            <h1>Not Implmented</h1>
-            {/* {dummyNotifications.map((notification, index) => (
+            {notificationsData?.length > 0 && notificationsData.map((notification, index) => (
                 <NotificationCard
+                    loading={isLoading}
                     key={index}
-                    {...notification}
+                    title={notification.title}
+                    description={notification.content}
+                    read={notification.read ?? false}
+                    userPfp={notification.user?.profileImgUrl || noPfpImg}
+                    userId={notification.userId}
+                    time={notification.createdAt ? new Date(notification.createdAt).getTime() : 0}
+                    id={notification.id ?? 0}
                 />
-            ))} */}
+            ))}
         </div>
+        {notificationsData?.length === 0 && !isLoading && (
+            <div className="flex flex-col items-center justify-center h-full w-full">
+                <img src={noPfpImg} alt="No notifications" className="w-16 h-16 mb-4" />
+                <p className="text-gray-500">No notifications available</p>
+            </div>
+        )}
+
 
     </div>)
 }

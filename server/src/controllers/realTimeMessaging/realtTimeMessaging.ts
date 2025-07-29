@@ -3,6 +3,7 @@ import { customRequest } from "../../types/types";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { notify } from "../../utils/push-notification/notify";
 import { ApiResponse } from "../../utils/apiresponse";
+import { client } from "../../db/connectToDb";
 
 
 const sendPushNotification = asyncHandler(async (req: customRequest, res: Response) => {
