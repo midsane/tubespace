@@ -1,6 +1,6 @@
 # 🎬 TubeSpace
 
-**TubeSpace** is an **automated YouTube collaboration and publishing platform** that connects creators and editors in a seamless, end-to-end workflow — from raw footage upload to public video — without ever touching YouTube Studio.
+**TubeSpace** is an **automated YouTube collaboration and publishing platform** that connects creators and editors in a seamless, end-to-end workflow from raw footage upload to public video without ever touching YouTube Studio.
 
 It automates the entire process using the **YouTube Data API**, **Cloudinary**, and **WebSocket-driven streaming**, enabling a clean, fast, and bandwidth-efficient experience for both creators and editors.
 
@@ -46,7 +46,7 @@ It automates the entire process using the **YouTube Data API**, **Cloudinary**, 
 | **Communication** | Secure WebSockets                           |
 | **Notifications** | Email + Push via Backend Events             |
 | **Storage**       | Cloudinary for video & thumbnail management |
-| **Deployment**    | Render / Vercel (based on configuration)    |
+| **Deployment**    | Digital Ocean / Vercel (based on configuration)    |
 
 ---
 
